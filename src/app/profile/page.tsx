@@ -36,6 +36,16 @@ interface MonthlyData {
     approved: number;
 }
 
+// Perks JSON (edit this array to add/remove perks)
+const clokaPerks = [
+    {
+        name: 'Bask Café',
+        description: '10% to all cloka members on showing their cloka profile at the counter.',
+        image: '/bask.png', // Optionally add an image URL here
+        link: 'https://www.baskcafe.com', // Optionally add a link to the partner
+    },
+];
+
 export default function ProfilePage() {
     const { user, isLoading, isAuthenticated, logout } = useAuth();
     const router = useRouter();
@@ -172,9 +182,14 @@ export default function ProfilePage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin h-12 w-12 border-t-2 border-b-2 border-white mx-auto"></div>
-                        <p className="mt-4">Loading...</p>
+                    <div className="flex flex-col items-center space-y-4">
+                        <div className="relative">
+                            <div className="animate-spin h-16 w-16 border-4 border-zinc-800 border-t-white rounded-full"></div>
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                <div className="h-8 w-8 bg-black rounded-full"></div>
+                            </div>
+                        </div>
+                        <p className="text-lg font-medium text-zinc-400">Loading your dashboard...</p>
                     </div>
                 </div>
                 <Footer />
@@ -204,7 +219,7 @@ export default function ProfilePage() {
                         transition={{ duration: 0.5 }}
                         className="text-3xl font-bold mb-8"
                     >
-                        My Cloka Dashboard
+                        Cloka Dashboard
                     </motion.h1>
 
                     {user && (
@@ -315,6 +330,7 @@ export default function ProfilePage() {
                         </motion.div>
                     )}
 
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -384,7 +400,12 @@ export default function ProfilePage() {
 
                             {isEventsLoading ? (
                                 <div className="flex justify-center py-12">
-                                    <div className="animate-spin h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                                    <div className="relative">
+                                        <div className="animate-spin h-12 w-12 border-4 border-zinc-800 border-t-white rounded-full"></div>
+                                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                            <div className="h-6 w-6 bg-black rounded-full"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             ) : displayedEvents.length > 0 ? (
                                 <div className="space-y-4 max-h-[500px] overflow-y-auto pr-2">
@@ -456,6 +477,56 @@ export default function ProfilePage() {
                             </div>
                         </motion.div>
                     </div>
+
+
+                    {/* Perks Section: Show if user joined > 5 events */}
+                    {userEvents.length > 5 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.25 }}
+                            className="mt-8"
+                        >
+                            <Card className="bg-black border border-zinc-800 p-6">
+                                <Title className="text-xl mb-4 flex items-center gap-2">
+                                    Cloka Perks
+                                </Title>
+                                <div className="text-zinc-300 mb-4">
+                                    As a thank you for being an active Cloka runner, enjoy these exclusive perks from our affiliate partners!
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {clokaPerks.map((perk, idx) => (
+                                        <div key={idx} className="border border-zinc-800 bg-white text-black p-4 flex flex-col items-start">
+                                            <div className="flex justify-between w-full items-center gap-3 mb-2">
+                                                <span className="font-bold text-3xl text-black">{perk.name}</span>
+                                                {perk.image ? (
+                                                    <img src={perk.image} alt={perk.name} className="w-12 h-12 object-cover rounded-full border border-zinc-800" />
+                                                ) : (
+                                                    <div className="w-12 h-12 flex items-center justify-center bg-white text-2xl border border-zinc-800">
+                                                        🏅
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="text-black font-bold mb-2">{perk.description}</div>
+                                            {perk.link && (
+                                                <a href={perk.link} target="_blank" rel="noopener noreferrer" className="text-zinc-700 hover:underline text-sm">Learn More</a>
+                                            )}
+                                        </div>
+                                    ))}
+                                    <div className="border border-zinc-800 bg-zinc-900 text-zinc-500 p-4 flex flex-col items-start opacity-50">
+                                        <div className="flex justify-between w-full items-center gap-3 mb-2">
+                                            <span className="font-bold text-3xl">More perks incoming...</span>
+                                            <div className="w-12 h-12 mb-4 flex items-center justify-center bg-zinc-800 text-2xl border border-zinc-700">
+                                                🎁
+                                            </div>
+                                        </div>
+                                        <div className="font-bold mb-2">Stay tuned for more exclusive perks from our partners!</div>
+                                    </div>
+                                </div>
+                            </Card>
+                        </motion.div>
+                    )}
+
                 </div>
             </div>
             <Footer />

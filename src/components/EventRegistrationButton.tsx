@@ -20,7 +20,7 @@ export default function EventRegistrationButton({
 }: EventRegistrationButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, logout } = useAuth();
     const router = useRouter();
 
     const handleRegister = async () => {
@@ -48,6 +48,12 @@ export default function EventRegistrationButton({
             });
 
             const data = await response.json();
+
+            if (response.status === 401) {
+                await logout();
+                router.push(`/auth?redirect=/events/${eventId}&message=Session%20expired.%20Please%20log%20in%20again.`);
+                return;
+            }
 
             if (response.ok) {
                 // Refresh the page to show updated registration status
@@ -82,6 +88,12 @@ export default function EventRegistrationButton({
 
             const data = await response.json();
 
+            if (response.status === 401) {
+                await logout();
+                router.push(`/auth?redirect=/events/${eventId}&message=Session%20expired.%20Please%20log%20in%20again.`);
+                return;
+            }
+
             if (response.ok) {
                 // Refresh the page to show updated registration status
                 router.refresh();
@@ -102,7 +114,7 @@ export default function EventRegistrationButton({
                 <button
                     onClick={handleRegister}
                     disabled={isLoading}
-                    className={`w-full py-3 px-6 rounded-md transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                    className={`w-full py-3 px-6 cursor-pointer transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                         }`}
                 >
                     {isLoading ? 'Registering...' : 'Register for Event'}
@@ -117,15 +129,15 @@ export default function EventRegistrationButton({
         <div>
             <div className="mb-4">
                 {isApproved === true ? (
-                    <div className="p-3 bg-green-900/30 border border-green-800 text-green-300 rounded-md">
+                    <div className="p-3 bg-green-900/30 border border-green-800 text-green-300 ">
                         Your registration has been approved!
                     </div>
                 ) : isApproved === false ? (
-                    <div className="p-3 bg-red-900/30 border border-red-800 text-red-300 rounded-md">
+                    <div className="p-3 bg-red-900/30 border border-red-800 text-red-300 ">
                         Your registration has been declined.
                     </div>
                 ) : (
-                    <div className="p-3 bg-yellow-900/30 border border-yellow-800 text-yellow-300 rounded-md">
+                    <div className="p-3 bg-yellow-900/30 border border-yellow-800 text-yellow-300 ">
                         Your registration is pending approval.
                     </div>
                 )}
@@ -134,7 +146,7 @@ export default function EventRegistrationButton({
             <Button
                 onClick={handleCancel}
                 disabled={isLoading}
-                className={`w-full py-3 px-6 rounded-md transition-colors bg-red-900 hover:bg-red-800 text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                className={`w-full py-3 px-6 transition-colors bg-red-900 hover:bg-red-800 text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                     }`}
             >
                 {isLoading ? 'Cancelling...' : 'Cancel Registration'}
