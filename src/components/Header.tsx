@@ -82,6 +82,9 @@ const Header = () => {
 
                 {/* Desktop Navigation - Right Side */}
                 <nav className="hidden md:flex w-full md:w-1/3 justify-end space-x-8 items-center">
+                    <Link href="/merch" className="luxury-text hover:text-accent transition-colors hover:underline">
+                        Merch
+                    </Link>
                     <Link href="/events" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Events
                     </Link>
