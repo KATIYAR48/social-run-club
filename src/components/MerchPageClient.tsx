@@ -75,7 +75,7 @@ export default function MerchPageClient() {
                 <h1 className="text-3xl text-center pb-12 font-bold">Join the waitlist for merch drops</h1>
                 <div className="text-center">
                     <p className="mb-4">Please log in to join the merch waitlist.</p>
-                    <a href="/login" className="text-white hover:underline">Log in</a>
+                    <a href="/auth?redirect=/merch" className="text-white hover:underline">Log in</a>
                 </div>
             </main>
         );
