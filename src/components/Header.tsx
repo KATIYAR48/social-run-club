@@ -83,7 +83,7 @@ const Header = () => {
                 {/* Desktop Navigation - Right Side */}
                 <nav className="hidden md:flex w-full md:w-1/3 justify-end space-x-8 items-center">
                     <Link href="/merch" className="luxury-text hover:text-accent transition-colors hover:underline">
-                        Merch
+                        <span className="bg-white text-black rounded-md px-2 py-1 w-full animate-pulse font-bold">Get Merch</span>
                     </Link>
                     <Link href="/events" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Events
@@ -203,6 +203,13 @@ const Header = () => {
                                         onClick={() => setIsMenuOpen(false)}
                                     >
                                         My Events
+                                    </Link>
+                                    <Link
+                                        href="/merch"
+                                        className="animate-pulse font-bold block py-2 luxury-text hover:text-accent"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <span className="bg-white text-black rounded-md px-2 py-1 w-full animate-pulse font-bold">Get Merch</span>
                                     </Link>
                                     {user.role === 'admin' || user.role === 'super-admin' && (
                                         <Link

@@ -124,10 +124,16 @@ export default function MerchPageClient() {
                             width={400}
                             height={100}
                             className="w-full max-w-xs md:max-w-md select-none pointer-events-none"
-                            style={{ filter: "brightness(1.2)" }}
+                            style={{ filter: "brightness(1.1)" }}
                             animate={{
-                                y: [0, -4, 0, 4, 0],
-                                opacity: [1, 0.96, 1, 0.98, 1],
+                                filter: [
+                                    "brightness(1.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff)",
+                                    "brightness(1.1) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)",
+                                    "brightness(1.3) drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #fff)",
+                                    "brightness(1.1) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)",
+                                    "brightness(1.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff)"
+                                ],
+                                opacity: [1, 0.95, 1, 0.97, 1],
                             }}
                             transition={{
                                 duration: 3,
@@ -135,20 +141,21 @@ export default function MerchPageClient() {
                                 repeatType: "mirror",
                             }}
                         />
+
                     </motion.div>
                 </div>
                 {/* Right: Button or Form */}
                 <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
                     {!showForm ? (
                         <motion.button
-                            className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                            className="relative px-12 cursor-pointer bg-white/80 text-black rounded-l-full shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                             onClick={() => setShowForm(true)}
                             initial={{ boxShadow: '0 0 0 0 #fff' }}
                             animate={{
                                 boxShadow: [
-                                    '0 0 0 0 #fff',
-                                    '0 0 12px 2px #ffffff',
-                                    '0 0 0 0 #fff'
+                                    '0 0 5px 2px rgba(255, 255, 255, 0.8)',
+                                    '0 0 15px 4px rgba(255, 255, 255, 0.9)',
+                                    '0 0 5px 2px rgba(255, 255, 255, 0.8)',
                                 ]
                             }}
                             transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
@@ -161,9 +168,9 @@ export default function MerchPageClient() {
                                     animate={{
                                         opacity: [0.7, 1, 0.7],
                                         filter: [
-                                            'blur(0px) brightness(1)',
-                                            'blur(2px) brightness(1.2)',
-                                            'blur(0px) brightness(1)'
+                                            'blur(2px) brightness(1)',
+                                            'blur(5px) brightness(1.2)',
+                                            'blur(3px) brightness(1)'
                                         ]
                                     }}
                                     transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
