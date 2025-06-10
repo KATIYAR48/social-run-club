@@ -16,6 +16,8 @@ export default function MerchPageClient() {
     const [error, setError] = useState<string | null>(null);
     const [user, setUser] = useState<{ name: string; email: string } | null>(null);
     const [checkedAuth, setCheckedAuth] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [formError, setFormError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchUser() {
@@ -35,11 +37,28 @@ export default function MerchPageClient() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const validateForm = () => {
+        if (!form.preferredMerch) {
+            return "Please select a preferred merch type.";
+        }
+        if (!form.size) {
+            return "Please select a size.";
+        }
+        return null;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormError(null);
         setLoading(true);
         setMessage(null);
         setError(null);
+        const validationError = validateForm();
+        if (validationError) {
+            setFormError(validationError);
+            setLoading(false);
+            return;
+        }
         try {
             const res = await fetch("/api/merch-waitlist", {
                 method: "POST",
@@ -118,42 +137,85 @@ export default function MerchPageClient() {
                         />
                     </motion.div>
                 </div>
-                {/* Right: Form */}
-                <form onSubmit={handleSubmit} className="flex-1 w-[90%] md:w-1/2 border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/30 backdrop-blur-xs relative z-10 max-w-md mx-auto">
-                    <div>
-                        <label className="block font-medium mb-1">Preferred Merch<span className="text-red-500">*</span></label>
-                        <select name="preferredMerch" value={form.preferredMerch} onChange={handleChange} required className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2">
-                            <option value="T-shirt">T-shirt</option>
-                            <option value="Hoodie">Hoodie</option>
-                            <option value="Cap">Cap</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block font-medium mb-1">Size (optional)</label>
-                        <select name="size" value={form.size} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2">
-                            <option value="">Select size</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block font-medium mb-1">Color Preference (optional)</label>
-                        <input name="colorPreference" value={form.colorPreference} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2" />
-                    </div>
-                    <div>
-                        <label className="block font-medium mb-1">Additional Info (optional)</label>
-                        <textarea name="additionalInfo" value={form.additionalInfo} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2" rows={2} />
-                    </div>
-                    {message && <div className="text-green-600 font-medium">{message}</div>}
-                    {error && <div className="text-red-600 font-medium">{error}</div>}
-                    <Button variant="secondary" type="submit" className="w-full font-bold py-2 rounded disabled:opacity-60" disabled={loading}>
-                        <strong> {loading ? "Joining..." : "Join Waitlist"}</strong>
-                    </Button>
-                </form>
+                {/* Right: Button or Form */}
+                <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
+                    {!showForm ? (
+                        <motion.button
+                            className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                            onClick={() => setShowForm(true)}
+                            initial={{ boxShadow: '0 0 0 0 #fff' }}
+                            animate={{
+                                boxShadow: [
+                                    '0 0 0 0 #fff',
+                                    '0 0 12px 2px #ffffff',
+                                    '0 0 0 0 #fff'
+                                ]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                        >
+                            <span className="absolute inset-0 z-0 rounded-2xl pointer-events-none">
+                                <motion.span
+                                    className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
+                                    style={{ borderImage: 'linear-gradient(90deg, #ffffff, #ffffff, #ffffff) 1' }}
+                                    initial={{ opacity: 0.7 }}
+                                    animate={{
+                                        opacity: [0.7, 1, 0.7],
+                                        filter: [
+                                            'blur(0px) brightness(1)',
+                                            'blur(2px) brightness(1.2)',
+                                            'blur(0px) brightness(1)'
+                                        ]
+                                    }}
+                                    transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                                />
+                            </span>
+                            <span className="relative z-10">Join Waitlist</span>
+                        </motion.button>
+                    ) : (
+                        <motion.form
+                            onSubmit={handleSubmit}
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, ease: "easeOut" }}
+                            className="flex-1 w-full border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/30 backdrop-blur-xs relative z-10 max-w-md mx-auto"
+                        >
+                            {formError && <div className="text-red-600 font-medium">{formError}</div>}
+                            <div>
+                                <label className="block font-medium mb-1">Preferred Merch<span className="text-red-500">*</span></label>
+                                <select name="preferredMerch" value={form.preferredMerch} onChange={handleChange} required className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2">
+                                    <option value="T-shirt">T-shirt</option>
+                                    <option value="Hoodie">Hoodie</option>
+                                    <option value="Cap">Cap</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-medium mb-1">Size <span className="text-red-500">*</span></label>
+                                <select name="size" value={form.size} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2" required>
+                                    <option value="">Select size</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-medium mb-1">Color Preference (optional)</label>
+                                <input name="colorPreference" value={form.colorPreference} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2" />
+                            </div>
+                            <div>
+                                <label className="block font-medium mb-1">Additional Info (optional)</label>
+                                <textarea name="additionalInfo" value={form.additionalInfo} onChange={handleChange} className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2" rows={2} />
+                            </div>
+                            {message && <div className="text-green-600 font-medium">{message}</div>}
+                            {error && <div className="text-red-600 font-medium">{error}</div>}
+                            <Button variant="secondary" type="submit" className="w-full font-bold bg-white/60 text-black py-2 rounded disabled:opacity-60" disabled={loading || !!formError}>
+                                <strong> {loading ? "Joining..." : "Join Waitlist"}</strong>
+                            </Button>
+                        </motion.form>
+                    )}
+                </div>
             </div>
         </main>
     );
