@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import Button from "@/components/Button";
-import { motion } from "framer-motion";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function MerchPageClient() {
     const [form, setForm] = useState({
@@ -82,80 +82,44 @@ export default function MerchPageClient() {
     }
 
     return (
-        <main className="flex flex-col md:flex-row justify-center items-start max-w-4xl mx-auto px-2 md:px-4 py-6 md:py-8 gap-6 md:gap-0">
-            {/* Animated Merch Images */}
-            <div className="flex flex-row md:flex-col justify-center items-center md:mr-10 w-full md:w-auto mb-6 md:mb-0">
-                <div className="flex flex-row md:flex-col gap-4 md:gap-6 px-3 justify-center items-end w-full md:max-w-xs">
-                    {["1.png", "2.png", "3.png"].map((img, i) => (
-                        <motion.div
-                            key={img}
-                            initial={{ y: 40, opacity: 0, scale: 0.95, rotateX: 0, rotateY: 0 }}
+        <main className="relative flex justify-center items-center min-h-[400px] md:min-h-[500px] max-w-7xl mx-auto px-2 md:px-4 py-6 md:py-8">
+            {/* Banner background */}
+            <div className="absolute inset-0 w-full h-full z-0 rounded-xl overflow-hidden">
+                <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
+                <div className="absolute inset-0 bg-black/60" />
+            </div>
+            {/* Content */}
+            <div className="relative z-10 flex flex-col md:flex-row w-full h-full items-center justify-between gap-0 md:gap-8">
+                {/* Left: Animated Join Waitlist Text */}
+                <div className="flex-1 mb-24 md:mb-0 flex items-center justify-center md:justify-start w-full md:w-1/2 h-full min-h-[300px]">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
+                        whileHover={{ scale: 1.04, rotate: -2 }}
+                        className="drop-shadow-xl"
+                    >
+                        <motion.img
+                            src="/images/join-waitlist-text.png"
+                            alt="Join Waitlist Text"
+                            width={400}
+                            height={100}
+                            className="w-full max-w-xs md:max-w-md select-none pointer-events-none"
+                            style={{ filter: "brightness(1.2)" }}
                             animate={{
-                                y: [40, -10, 0, 10, 0, 40],
-                                opacity: [0, 1, 1, 1, 1, 0.8],
-                                scale: [0.95, 1.05, 1, 1.03, 1, 0.97],
-                                rotateX: [0, 8, -8, 6, 0, -6, 0],
-                                rotateY: [0, -10, 10, -8, 0, 8, 0],
-                                filter: [
-                                    "contrast(1) brightness(1)",
-                                    "contrast(1.2) brightness(1.1)",
-                                    "contrast(1.1) brightness(1.2)",
-                                    "contrast(1.3) brightness(0.9)",
-                                    "contrast(1) brightness(1)",
-                                    "contrast(1.1) brightness(1.1)"
-                                ],
-                            }}
-                            whileHover={{
-                                scale: 1.08,
-                                rotateX: 12,
-                                rotateY: -12,
-                                boxShadow: "0 8px 32px 0 rgba(255,0,255,0.25)",
+                                y: [0, -4, 0, 4, 0],
+                                opacity: [1, 0.96, 1, 0.98, 1],
                             }}
                             transition={{
-                                duration: 2.5,
+                                duration: 3,
                                 repeat: Infinity,
                                 repeatType: "mirror",
-                                delay: i * 0.3,
                             }}
-                            className="relative rounded-xl overflow-hidden shadow-lg border border-zinc-800 bg-black/80"
-                            style={{ width: 180, height: 180, zIndex: 2 - i }}
-                        >
-                            <Image
-                                height={200}
-                                width={200}
-                                src={`/images/merch/${img}`}
-                                alt={`Merch ${i + 1}`}
-                                className="object-cover w-full h-full select-none pointer-events-none"
-                                draggable={false}
-                            />
-                            {/* Glitch overlay */}
-                            <motion.div
-                                className="absolute inset-0 pointer-events-none"
-                                style={{ mixBlendMode: "screen" }}
-                                animate={{
-                                    opacity: [0.1, 0.3, 0.15, 0.25, 0.1],
-                                    x: [0, 2, -2, 1, 0],
-                                    y: [0, -2, 2, -1, 0],
-                                }}
-                                transition={{
-                                    duration: 0.7,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                    delay: i * 0.2,
-                                }}
-                            >
-                                <div className="w-full h-full bg-gradient-to-tr from-pink-500/30 via-blue-400/20 to-purple-500/20" />
-                            </motion.div>
-                        </motion.div>
-                    ))}
+                        />
+                    </motion.div>
                 </div>
-            </div>
-            <div className="w-full p-2 md:p-5">
-                <div>
-                    <h1 className="text-4xl md:text-5xl text-start mb-2 font-bold">Want Limited Edition Merch Drops?</h1>
-                    <p className="text-start text-zinc-400 pb-5 ">Join the waitlist to be notified when new merch drops!</p>
-                </div>
-                <form onSubmit={handleSubmit} className="border border-zinc-800 rounded-lg shadow p-4 md:p-6 space-y-4 bg-black/80">
+                {/* Right: Form */}
+                <form onSubmit={handleSubmit} className="flex-1 w-[90%] md:w-1/2 border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/20 backdrop-blur-xs relative z-10 max-w-md mx-auto">
                     <div>
                         <label className="block font-medium mb-1">Preferred Merch<span className="text-red-500">*</span></label>
                         <select name="preferredMerch" value={form.preferredMerch} onChange={handleChange} required className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2">
