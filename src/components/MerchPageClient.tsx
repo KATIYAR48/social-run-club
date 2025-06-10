@@ -86,7 +86,7 @@ export default function MerchPageClient() {
             {/* Banner background */}
             <div className="absolute inset-0 w-full h-full z-0 rounded-xl overflow-hidden">
                 <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
-                <div className="absolute inset-0 bg-black/60" />
+                <div className="absolute inset-0 bg-black/20 filter contrast-125" />
             </div>
             {/* Content */}
             <div className="relative z-10 flex flex-col md:flex-row w-full h-full items-center justify-between gap-0 md:gap-8">
@@ -119,7 +119,7 @@ export default function MerchPageClient() {
                     </motion.div>
                 </div>
                 {/* Right: Form */}
-                <form onSubmit={handleSubmit} className="flex-1 w-[90%] md:w-1/2 border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/20 backdrop-blur-xs relative z-10 max-w-md mx-auto">
+                <form onSubmit={handleSubmit} className="flex-1 w-[90%] md:w-1/2 border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/30 backdrop-blur-xs relative z-10 max-w-md mx-auto">
                     <div>
                         <label className="block font-medium mb-1">Preferred Merch<span className="text-red-500">*</span></label>
                         <select name="preferredMerch" value={form.preferredMerch} onChange={handleChange} required className="w-full border border-zinc-800 bg-black/90 rounded px-3 py-2">
