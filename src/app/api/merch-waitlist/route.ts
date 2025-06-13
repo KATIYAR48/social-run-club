@@ -65,37 +65,37 @@ export async function POST(request: NextRequest) {
       };
       await sgMail.send(userMsg);
 
-      // Send notification to support
-      const supportMsg = {
-        to: "support@cloka.in",
-        from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
-        subject: `New Merch Waitlist Entry - ${user.name}`,
-        text: `Name: ${user.name}\nEmail: ${user.email}\nPhone: ${
-          user.phone
-        }\nPreferred Merch: ${preferredMerch}\n${
-          size ? `Size: ${size}` : ""
-        }\n${colorPreference ? `Color: ${colorPreference}` : ""}\n${
-          user.instagramUsername ? `Instagram: ${user.instagramUsername}` : ""
-        }\n${
-          additionalInfo ? `Additional Info: ${additionalInfo}` : ""
-        }\nUserId: ${user._id}`,
-        html: `<h3>New Merch Waitlist Entry</h3><p><b>Name:</b> ${
-          user.name
-        }</p><p><b>Email:</b> ${user.email}</p><p><b>Phone:</b> ${
-          user.phone
-        }</p><p><b>Preferred Merch:</b> ${preferredMerch}</p>${
-          size ? `<p><b>Size:</b> ${size}</p>` : ""
-        }${colorPreference ? `<p><b>Color:</b> ${colorPreference}</p>` : ""}${
-          user.instagramUsername
-            ? `<p><b>Instagram:</b> ${user.instagramUsername}</p>`
-            : ""
-        }${
-          additionalInfo
-            ? `<p><b>Additional Info:</b> ${additionalInfo}</p>`
-            : ""
-        }`,
-      };
-      await sgMail.send(supportMsg);
+      // // Send notification to support
+      // const supportMsg = {
+      //   to: "support@cloka.in",
+      //   from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
+      //   subject: `New Merch Waitlist Entry - ${user.name}`,
+      //   text: `Name: ${user.name}\nEmail: ${user.email}\nPhone: ${
+      //     user.phone
+      //   }\nPreferred Merch: ${preferredMerch}\n${
+      //     size ? `Size: ${size}` : ""
+      //   }\n${colorPreference ? `Color: ${colorPreference}` : ""}\n${
+      //     user.instagramUsername ? `Instagram: ${user.instagramUsername}` : ""
+      //   }\n${
+      //     additionalInfo ? `Additional Info: ${additionalInfo}` : ""
+      //   }\nUserId: ${user._id}`,
+      //   html: `<h3>New Merch Waitlist Entry</h3><p><b>Name:</b> ${
+      //     user.name
+      //   }</p><p><b>Email:</b> ${user.email}</p><p><b>Phone:</b> ${
+      //     user.phone
+      //   }</p><p><b>Preferred Merch:</b> ${preferredMerch}</p>${
+      //     size ? `<p><b>Size:</b> ${size}</p>` : ""
+      //   }${colorPreference ? `<p><b>Color:</b> ${colorPreference}</p>` : ""}${
+      //     user.instagramUsername
+      //       ? `<p><b>Instagram:</b> ${user.instagramUsername}</p>`
+      //       : ""
+      //   }${
+      //     additionalInfo
+      //       ? `<p><b>Additional Info:</b> ${additionalInfo}</p>`
+      //       : ""
+      //   }`,
+      // };
+      // await sgMail.send(supportMsg);
     }
 
     return NextResponse.json({
