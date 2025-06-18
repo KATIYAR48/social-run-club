@@ -24,6 +24,7 @@ export default function AdminDashboard() {
         { name: 'Check-In', href: '/admin/event-check-in', description: 'Check in attendees for events.' },
         ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users', description: 'Manage all users (super-admin only).' }] : []),
         { name: 'Volunteers', href: '/admin/volunteers', description: 'Manage volunteers.' },
+        ...(isSuperAdmin ? [{ name: 'Merch Waitlist', href: '/admin/merch-waitlist', description: 'Manage merch waitlist.' }] : []),
     ];
 
     return (
