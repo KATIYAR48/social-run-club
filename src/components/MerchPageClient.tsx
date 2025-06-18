@@ -3,8 +3,10 @@ import { useState, useEffect } from "react";
 import Button from "@/components/Button";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function MerchPageClient() {
+    const router = useRouter();
     const [form, setForm] = useState({
         preferredMerch: "T-shirt",
         size: "",
@@ -90,20 +92,123 @@ export default function MerchPageClient() {
 
     if (!user) {
         return (
-            <main className="container max-w-4xl mx-auto px-4 py-8">
-                <h1 className="text-3xl text-center pb-12 font-bold">Join the waitlist for merch drops</h1>
-                <div className="text-center">
-                    <p className="mb-4">Please log in to join the merch waitlist.</p>
-                    <a href="/auth?redirect=/merch" className="text-white hover:underline">Log in</a>
+            <main className="container max-w-8xl mx-auto mt-12 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
+                {/* Banner background */}
+                <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+                    <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
+                    <div className="absolute inset-0 bg-black/20 filter contrast-125" />
+                </div>
+                {/* Content */}
+                <div className="relative z-10 flex flex-col md:flex-row w-full h-full items-center justify-between gap-0 md:gap-8">
+                    {/* Left: Animated Join Waitlist Text */}
+                    <div className="flex-1 mb-24 md:mb-0 flex items-center justify-center md:justify-start w-full md:w-1/2 h-full min-h-[300px]">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30, scale: 1 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            whileHover={{ scale: 1.04, }}
+                            className="drop-shadow-xl hover:cursor-pointer"
+                        >
+                            <motion.img
+                                src="/images/join-waitlist-text.png"
+                                alt="Join Waitlist Text"
+                                width={400}
+                                height={100}
+                                className="w-full max-w-xs md:max-w-md select-none pointer-events-none"
+                                style={{ filter: "brightness(1.1)" }}
+                                animate={{
+                                    filter: [
+                                        "brightness(1.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff)",
+                                        "brightness(1.1) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)",
+                                        "brightness(1.3) drop-shadow(0 0 3px #fff) drop-shadow(0 0 6px #fff)",
+                                        "brightness(1.1) drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px #fff)",
+                                        "brightness(1.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff)"
+                                    ],
+                                    opacity: [1, 0.95, 1, 0.97, 1],
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    repeatType: "mirror",
+                                }}
+                            />
+
+                        </motion.div>
+                    </div>
+                    {/* Right: Button or Form */}
+                    <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
+                        {user ?
+                            <motion.button
+                                className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                                onClick={() => setShowForm(true)}
+                                initial={{ boxShadow: '0 0 0 0 #fff' }}
+                                animate={{
+                                    boxShadow: [
+                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
+                                        '0 0 15px 4px rgba(255, 255, 255, 0.9)',
+                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
+                                    ]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                            >
+                                <span className="absolute inset-0 z-0 rounded-2xl pointer-events-none">
+                                    <motion.span
+                                        className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
+                                        style={{ borderImage: 'linear-gradient(90deg, #ffffff, #ffffff, #ffffff) 1' }}
+                                        initial={{ opacity: 0.7 }}
+                                        animate={{
+                                            opacity: [0.7, 1, 0.7],
+                                            filter: [
+                                                'blur(2px) brightness(1)',
+                                                'blur(5px) brightness(1.2)',
+                                                'blur(3px) brightness(1)'
+                                            ]
+                                        }}
+                                        transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                                    />
+                                </span>
+                                <span className="relative z-10">Join Waitlist</span>
+                            </motion.button> : <motion.button
+                                className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                                onClick={() => router.push("/auth?redirect=/")}
+                                initial={{ boxShadow: '0 0 0 0 #fff' }}
+                                animate={{
+                                    boxShadow: [
+                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
+                                        '0 0 15px 4px rgba(255, 255, 255, 0.9)',
+                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
+                                    ]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                            >
+                                <span className="absolute inset-0 z-0 rounded-2xl pointer-events-none">
+                                    <motion.span
+                                        className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
+                                        style={{ borderImage: 'linear-gradient(90deg, #ffffff, #ffffff, #ffffff) 1' }}
+                                        initial={{ opacity: 0.7 }}
+                                        animate={{
+                                            opacity: [0.7, 1, 0.7],
+                                            filter: [
+                                                'blur(2px) brightness(1)',
+                                                'blur(5px) brightness(1.2)',
+                                                'blur(3px) brightness(1)'
+                                            ]
+                                        }}
+                                        transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+                                    />
+                                </span>
+                                <span className="uppercase font-normal relative z-10">Login to Join <strong className="font-bold">Waitlist</strong></span>
+                            </motion.button>}
+                    </div>
                 </div>
             </main>
         );
     }
 
     return (
-        <main className="relative flex justify-center items-center min-h-[400px] md:min-h-[500px] max-w-7xl mx-auto px-2 md:px-4 py-6 md:py-8">
+        <main className="mt-12 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] container mx-auto px-2 md:px-4 py-6 md:py-8">
             {/* Banner background */}
-            <div className="absolute inset-0 w-full h-full z-0 rounded-xl overflow-hidden">
+            <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                 <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
                 <div className="absolute inset-0 bg-black/20 filter contrast-125" />
             </div>
@@ -112,10 +217,10 @@ export default function MerchPageClient() {
                 {/* Left: Animated Join Waitlist Text */}
                 <div className="flex-1 mb-24 md:mb-0 flex items-center justify-center md:justify-start w-full md:w-1/2 h-full min-h-[300px]">
                     <motion.div
-                        initial={{ opacity: 0, y: 30, scale: 0.96 }}
+                        initial={{ opacity: 0, y: 30, scale: 1 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
-                        whileHover={{ scale: 1.04, rotate: -2 }}
+                        whileHover={{ scale: 1.04, }}
                         className="drop-shadow-xl"
                     >
                         <motion.img
@@ -123,8 +228,9 @@ export default function MerchPageClient() {
                             alt="Join Waitlist Text"
                             width={400}
                             height={100}
-                            className="w-full max-w-xs md:max-w-md select-none pointer-events-none"
+                            className="w-full max-w-xs md:max-w-md select-none  hover:cursor-pointer"
                             style={{ filter: "brightness(1.1)" }}
+                            whileTap={{ scale: 1.2 }}
                             animate={{
                                 filter: [
                                     "brightness(1.2) drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #fff)",
@@ -148,7 +254,7 @@ export default function MerchPageClient() {
                 <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
                     {!showForm ? (
                         <motion.button
-                            className="relative px-12 cursor-pointer bg-white/80 text-black rounded-l-full shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                            className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                             onClick={() => setShowForm(true)}
                             initial={{ boxShadow: '0 0 0 0 #fff' }}
                             animate={{
@@ -176,7 +282,7 @@ export default function MerchPageClient() {
                                     transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
                                 />
                             </span>
-                            <span className="relative z-10">Join Waitlist</span>
+                            <span className="relative z-10 uppercase font-bold">Join Waitlist</span>
                         </motion.button>
                     ) : (
                         <motion.form

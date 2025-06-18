@@ -91,7 +91,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative h-[400px] md:h-[500px] overflow-hidden rounded-lg"
+                        className="relative h-[400px] md:h-[500px] overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-10 hidden md:block"></div>
                         <video

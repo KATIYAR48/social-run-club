@@ -162,7 +162,7 @@ function AdminLayoutContent({
                                                         {item.name}
                                                     </button>
                                                 ))}
-                                                {isAdmin && (
+                                                {isAdmin && isSuperAdmin && (
                                                     <button
                                                         onClick={logout}
                                                         className="cursor-pointer w-full px-3 py-2 text-base font-medium text-left rounded text-zinc-400 hover:text-white hover:bg-zinc-800"
