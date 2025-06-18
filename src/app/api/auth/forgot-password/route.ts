@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     // Only send email if SendGrid API key is configured
     if (process.env.SENDGRID_API_KEY) {
       const resetUrl = `${
-        process.env.FRONTEND_URL || "http://localhost:3000"
+        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
       }/auth/reset-password/${token}`;
 
       const msg = {

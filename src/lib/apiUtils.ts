@@ -26,8 +26,8 @@ export function getApiUrl(endpoint: string): string {
   }
 
   // If the environment variable is set, use it
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    return `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    return `${process.env.NEXT_PUBLIC_BASE_URL}${endpoint}`;
   }
 
   // For client-side rendering, we can use a relative URL

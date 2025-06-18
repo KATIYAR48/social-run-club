@@ -25,7 +25,7 @@ export const metadata = {
 // Fetch products from the API
 async function getProducts(): Promise<ApiProduct[]> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
         // Construct the API URL - if baseUrl exists, join it with the path, otherwise use relative path
         const apiUrl = baseUrl ? `${baseUrl}/api/products` : '/api/products';
 
