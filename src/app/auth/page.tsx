@@ -18,7 +18,7 @@ export default function AuthPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const router = useRouter();
-    const redirect = searchParams.get('redirect') || '/profile';
+    const redirect = searchParams.get('redirect') || '/';
     const { login, signup, isAuthenticated } = useAuth();
 
     // Redirect if user is already authenticated
