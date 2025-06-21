@@ -40,7 +40,7 @@ interface MonthlyData {
 const clokaPerks = [
     {
         name: 'Bask Café',
-        description: '10% to all cloka members on showing their cloka profile at the counter.',
+        description: '10% to all cloka members on showing their cloka profile at the counter. *Offer valid only during offical cloka event days.',
         image: '/bask.png', // Optionally add an image URL here
         link: 'https://www.baskcafe.com', // Optionally add a link to the partner
     },
