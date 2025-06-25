@@ -37,14 +37,7 @@ interface MonthlyData {
 }
 
 // Perks JSON (edit this array to add/remove perks)
-const clokaPerks = [
-    {
-        name: 'Bask Café',
-        description: '10% to all cloka members on showing their cloka profile at the counter. *Offer valid only during offical cloka event days.',
-        image: '/bask.png', // Optionally add an image URL here
-        link: 'https://www.baskcafe.com', // Optionally add a link to the partner
-    },
-];
+// const clokaPerks = [];
 
 export default function ProfilePage() {
     const { user, isLoading, isAuthenticated, logout } = useAuth();
@@ -480,7 +473,7 @@ export default function ProfilePage() {
 
 
                     {/* Perks Section: Show if user joined > 5 events */}
-                    {userEvents.length > 5 && (
+                    {/* {userEvents.length > 5 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -525,7 +518,7 @@ export default function ProfilePage() {
                                 </div>
                             </Card>
                         </motion.div>
-                    )}
+                    )} */}
 
                 </div>
             </div>
