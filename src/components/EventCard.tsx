@@ -12,7 +12,12 @@ export type EventCardProps = {
 
 // Format date similar to admin events page
 function formatDate(dateString: string) {
-    // If the string is already formatted (not ISO or timestamp), return as is
+    // If the string is already formatted (contains text like month names), return as is
+    // Check if it contains month names or other formatted text
+    if (/January|February|March|April|May|June|July|August|September|October|November|December|AM|PM/i.test(dateString)) {
+        return dateString;
+    }
+
     // Try to parse, if invalid, return original string
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
