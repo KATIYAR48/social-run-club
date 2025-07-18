@@ -28,8 +28,7 @@ export default async function EventsPage() {
             month: 'long',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'UTC'
+            minute: '2-digit'
         })
     }));
 
@@ -40,8 +39,7 @@ export default async function EventsPage() {
             month: 'long',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit',
-            timeZone: 'UTC'
+            minute: '2-digit'
         })
     }));
 
