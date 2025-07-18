@@ -7,10 +7,9 @@ import EventCard, { EventCardProps } from './EventCard';
 type ApiEventProps = {
     _id: string;
     title: string;
-    date: Date;
+    date: string; // ISO date string from server
     location: string;
     description: string;
-    formattedDate: string;
     bannerImageURL: string | null;
 };
 
@@ -27,7 +26,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
     const transformEvent = (event: ApiEventProps): EventCardProps => ({
         id: event._id,
         title: event.title,
-        date: event.formattedDate,
+        date: event.date, // Pass raw ISO date string for client-side formatting
         location: event.location,
         description: event.description,
         bannerImageURL: event.bannerImageURL,

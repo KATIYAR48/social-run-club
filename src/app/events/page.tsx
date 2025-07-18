@@ -20,27 +20,15 @@ export default async function EventsPage() {
     // Separate upcoming events
     const upcomingEvents = allEvents.filter(event => new Date(event.date) >= new Date());
 
-    // Pre-format dates for client component
+    // Pass raw dates to client component for proper timezone handling
     const formattedAllEvents = allEvents.map(event => ({
         ...event.toObject(),
-        formattedDate: new Date(event.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        })
+        date: event.date.toISOString() // Keep raw date as ISO string
     }));
 
     const formattedUpcomingEvents = upcomingEvents.map(event => ({
         ...event.toObject(),
-        formattedDate: new Date(event.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        })
+        date: event.date.toISOString() // Keep raw date as ISO string
     }));
 
     return (
