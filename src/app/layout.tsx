@@ -7,6 +7,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import Script from "next/script";
 import { AuthProvider } from "@/lib/auth-context";
 import PageTransition from "@/components/PageTransition";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -103,6 +104,7 @@ export default function RootLayout({
               <PageTransition>
                 {children}
               </PageTransition>
+              <PWAInstallPrompt />
             </AuthProvider>
           </LoadingProvider>
         </ErrorBoundary>
