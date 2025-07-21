@@ -1,0 +1,162 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useNotifications } from '@/lib/hooks/useNotifications';
+import { useAuth } from '@/lib/auth-context';
+import Button from './Button';
+import { cn } from '@/lib/utils';
+import { BellIcon } from '@heroicons/react/24/solid';
+
+interface NotificationPromptProps {
+    className?: string;
+    showOnlyWhenSupported?: boolean;
+}
+
+export default function NotificationPrompt({
+    className,
+    showOnlyWhenSupported = true
+}: NotificationPromptProps) {
+    const { isAuthenticated } = useAuth();
+    const {
+        isSupported,
+        permission,
+        isSubscribed,
+        isLoading,
+        error,
+        subscribe
+    } = useNotifications();
+
+    const [isDismissed, setIsDismissed] = useState(false);
+    const [isActionLoading, setIsActionLoading] = useState(false);
+
+    // Check if prompt was previously dismissed
+    useEffect(() => {
+        const dismissed = localStorage.getItem('notificationPromptDismissed');
+        setIsDismissed(dismissed === 'true');
+    }, []);
+
+
+    // Don't show if not authenticated
+    if (!isAuthenticated) {
+        return null;
+    }
+
+    // Don't show if not supported and showOnlyWhenSupported is true
+    if (showOnlyWhenSupported && !isSupported) {
+        return null;
+    }
+
+    // Don't show if already subscribed or dismissed
+    if (isSubscribed || isDismissed) {
+        return null;
+    }
+
+    // Don't show if permission is denied
+    if (permission === 'denied') {
+        return null;
+    }
+
+
+    const handleSubscribe = async () => {
+        setIsActionLoading(true);
+        const success = await subscribe();
+        setIsActionLoading(false);
+
+        if (success) {
+            setIsDismissed(true);
+            localStorage.setItem('notificationPromptDismissed', 'true');
+        }
+    };
+
+    const handleDismiss = () => {
+        setIsDismissed(true);
+        localStorage.setItem('notificationPromptDismissed', 'true');
+    };
+
+    const handleNotNow = () => {
+        setIsDismissed(true);
+        // Don't save to localStorage so it shows again next session
+    };
+
+    if (!isSupported) {
+        return (
+            <div className={cn(
+                "bg-yellow-900 border border-yellow-700 rounded-lg p-4",
+                className
+            )}>
+                <div className="flex items-start">
+                    <div className="flex-1">
+                        <h3 className="text-sm font-medium text-yellow-300 mb-1">
+                            Notifications Not Supported
+                        </h3>
+                        <p className="text-sm text-yellow-200">
+                            Your browser doesn&apos;t support push notifications. Consider updating your browser for the best experience.
+                        </p>
+                    </div>
+                    <button
+                        onClick={handleDismiss}
+                        className="text-yellow-400 hover:text-yellow-300 ml-4"
+                        aria-label="Dismiss"
+                    >
+                        ✕
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className={cn(
+            "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2",
+            className
+        )}>
+            <div className="flex items-start">
+                <div className="flex-1">
+                    <h3 className="text-sm font-medium text-zinc-300 mb-1">
+                        Stay Updated with CLOKA
+                    </h3>
+                    <p className="text-sm text-zinc-200 mb-3">
+                        Get notified about new runs, events, and important updates from CLOKA Run Club.
+                    </p>
+
+                    {error && (
+                        <div className="bg-red-900 border border-red-700 rounded p-2 mb-3">
+                            <p className="text-sm text-red-300">{error}</p>
+                        </div>
+                    )}
+
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={handleSubscribe}
+                            isLoading={isActionLoading || isLoading}
+                            className="luxury-button text-sm px-3 py-1 rounded transition-colors"
+                        >
+                            <div className='flex items-center gap-2 '><BellIcon className='h-4 w-4' />
+                                Enable Notifications</div>
+                        </Button>
+                        <Button
+                            onClick={handleNotNow}
+                            className="text-zinc-300 hover:text-zinc-200 text-sm px-3 py-1 transition-colors"
+                        >
+                            Not Now
+                        </Button>
+                        <Button
+                            onClick={handleDismiss}
+                            className="text-zinc-400 hover:text-zinc-300 text-sm px-3 py-1 transition-colors"
+                        >
+                            Don&apos;t Ask Again
+                        </Button>
+                    </div>
+                </div>
+
+                <button
+                    onClick={handleDismiss}
+                    className="text-zinc-400 hover:text-zinc-300 ml-4"
+                    aria-label="Dismiss"
+                >
+                    ✕
+                </button>
+            </div>
+        </div>
+    );
+} 

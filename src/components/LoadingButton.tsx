@@ -30,6 +30,7 @@ export default function LoadingButton({
     href,
     fullWidth = false,
 }: LoadingButtonProps) {
+    console.log('LoadingButton render:', { text, isLoading }); // Debug log
     return (
         <Button
             type={type}

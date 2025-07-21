@@ -24,6 +24,7 @@ export default function AdminDashboard() {
         { name: 'Check-In', href: '/admin/event-check-in', description: 'Check in attendees for events.' },
         ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users', description: 'Manage all users (super-admin only).' }] : []),
         { name: 'Volunteers', href: '/admin/volunteers', description: 'Manage volunteers.' },
+        { name: 'Notifications', href: '/admin/notifications', description: 'Send push notifications to users.' },
         ...(isSuperAdmin ? [{ name: 'Merch Waitlist', href: '/admin/merch-waitlist', description: 'Manage merch waitlist.' }] : []),
     ];
 
@@ -36,7 +37,7 @@ export default function AdminDashboard() {
                         <h1 className="text-6xl font-bold">
                             Hello, {adminUser?.name || 'Admin'}
                         </h1>
-                        <div className="text-2xl font-normal">Here&apos;s what you can do as a Cloka Admin</div>
+                        <div className="text-2xl font-normal">Here&apos;s what you can do as a <Link href='/' className='font-bold'>Cloka</Link> Admin</div>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 w-full max-w-4xl">

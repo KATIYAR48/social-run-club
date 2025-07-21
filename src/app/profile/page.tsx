@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Card, Title, Legend, AreaChart } from '@tremor/react';
 import tremorTheme from '@/lib/tremor-theme';
 import { motion } from 'framer-motion';
+import NotificationPrompt from '@/components/NotificationPrompt';
 
 // Define event types
 interface Event {
@@ -214,6 +215,8 @@ export default function ProfilePage() {
                     >
                         Cloka Dashboard
                     </motion.h1>
+
+                    <NotificationPrompt className="" />
 
                     {user && (
                         <motion.div
