@@ -30,6 +30,7 @@ interface EventRegistration {
     checkedIn: boolean;
     checkedInAt: string | null;
     createdAt: string;
+    additionalInfo?: string;
     user: User | null;
     event: Event | null;
 }
@@ -797,6 +798,11 @@ export default function EventRegistrationsPage() {
                                                                     </a>
                                                                 )}
                                                             </div>
+                                                            {registration.additionalInfo && (
+                                                                <div className="text-sm text-green-400 mt-1 font-medium">
+                                                                    Additional Info: {registration.additionalInfo}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <span className="text-zinc-500">User not found</span>

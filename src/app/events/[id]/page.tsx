@@ -202,6 +202,7 @@ export default async function EventDetailPage({
                                                     isRegistered={isRegistered}
                                                     isApproved={isApproved}
                                                     isPastEvent={isPastEvent}
+                                                    additionalInfoField={event.additionalInfoField}
                                                 />
 
                                                 {/* Show payment button if approved and razorpayButtonId exists */}
