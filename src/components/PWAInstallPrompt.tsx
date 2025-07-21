@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { XMarkIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, DevicePhoneMobileIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -127,6 +127,7 @@ export default function PWAInstallPrompt() {
 
   const isIOS = userAgent ? /iPad|iPhone|iPod/.test(userAgent) : false;
   const isAndroid = userAgent ? /Android/.test(userAgent) : false;
+  const isInstagram = userAgent ? /Instagram/i.test(userAgent) : false;
 
   if (isInstalled) {
     return null;
@@ -135,6 +136,52 @@ export default function PWAInstallPrompt() {
   // Don't render on server-side
   if (typeof window === 'undefined') {
     return null;
+  }
+
+  // Show Instagram browser detection message
+  if (isInstagram) {
+    return (
+      <AnimatePresence>
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed bottom-4 left-4 right-4 z-50 bg-black/90 backdrop-blur-sm text-white rounded-lg shadow-lg p-4"
+        >
+          <div className="flex items-start space-x-3">
+            <GlobeAltIcon className="h-6 w-6 text-white flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium mb-2">Instagram Browser Detected</p>
+              <p className="text-xs text-gray-300 mb-3">
+                Please open this in your default browser to use the app.
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center text-xs text-gray-300">
+                  <span className="flex items-center justify-center w-5 h-5 bg-white/20 rounded-full text-white mr-2 text-[10px]">
+                    1
+                  </span>
+                  Tap the <span className="mx-1 font-mono">⋯</span> in the top right corner
+                </div>
+                <div className="flex items-center text-xs text-gray-300">
+                  <span className="flex items-center justify-center w-5 h-5 bg-white/20 rounded-full text-white mr-2 text-[10px]">
+                    2
+                  </span>
+                  Choose &ldquo;Open in browser&rdquo;
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={handleNotNow}
+              className="text-gray-300 px-2 py-1 rounded text-sm hover:text-white transition-colors flex items-center justify-center flex-shrink-0"
+              aria-label="Close"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    );
   }
 
   return (
@@ -244,7 +291,7 @@ export default function PWAInstallPrompt() {
                   </div>
                 )}
 
-                <div className="bg-zinc-100 p-3">
+                <div className="bg-zinc-100 p-3 rounded">
                   <p className="text-sm text-zinc-700">
                     <strong>Benefits:</strong> Faster access, offline capability, and a native app experience!
                   </p>
@@ -260,7 +307,7 @@ export default function PWAInstallPrompt() {
                 </button>
                 <button
                   onClick={handleCloseModal}
-                  className="px-4 py-2 bg-black text-white hover:bg-gray-800"
+                  className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
                 >
                   Got It
                 </button>
