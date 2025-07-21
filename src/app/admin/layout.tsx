@@ -93,7 +93,7 @@ function AdminLayoutContent({
                 <div className="backdrop-blur-md text-white p-4">
                     <div className="container mx-auto flex justify-between items-center relative">
                         <div className="flex items-center space-x-2">
-                            <Link href="/admin" className="flex items-center space-x-2">
+                            <Link href="/" className="flex items-center space-x-2">
                                 <Image
                                     src="/logo.png"
                                     alt="CLOKA Logo"
@@ -101,24 +101,11 @@ function AdminLayoutContent({
                                     height={100}
                                     className="h-auto invert -mr-2"
                                 />
-                                <Image
-                                    src="/logo-text-mark.PNG"
-                                    alt="CLOKA Text"
-                                    width={80}
-                                    height={25}
-                                    className="h-auto invert"
-                                />
                             </Link>
-                            <h1 className="text-xl font-bold ml-2">Admin</h1>
+                            <h1 className="text-xl font-bold">Admin</h1>
                         </div>
 
                         <div className="flex items-center space-x-4">
-                            {isAdmin && (
-                                <div className="text-sm text-zinc-400">
-                                    {adminUser?.email}
-                                </div>
-                            )}
-
                             {/* Hamburger and dropdown */}
                             <div className="relative">
                                 <button
@@ -149,6 +136,12 @@ function AdminLayoutContent({
                                     >
                                         <div className="p-4 flex flex-col space-y-2">
                                             <nav className="flex flex-col space-y-2">
+                                                {isAdmin && (
+                                                    <div className="text-sm text-zinc-400">
+                                                        {adminUser?.email}
+                                                    </div>
+                                                )}
+
                                                 {navItems.map((item) => (
                                                     <button
                                                         key={item.href}

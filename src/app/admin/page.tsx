@@ -31,13 +31,13 @@ export default function AdminDashboard() {
     return (
         <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
             <div className="mb-8">
-                <div className="flex items-center gap-2">
+                <div className="flex items-start md:items-center gap-2">
                     <img src="/android-chrome-512x512.png" className='mb-3 w-24 h-24' alt="Admin Icon" width={500} height={500} />
                     <div className="ml-4 flex flex-col items-start justify-start gap-2">
-                        <h1 className="text-6xl font-bold">
+                        <h1 className="text-4xl md:text-6xl font-bold">
                             Hello, {adminUser?.name || 'Admin'}
                         </h1>
-                        <div className="text-2xl font-normal">Here&apos;s what you can do as a <Link href='/' className='font-bold'>Cloka</Link> Admin</div>
+                        <div className="text-xl md:text-2xl font-normal">Here&apos;s what you can do as a <Link href='/' className='font-bold'>Cloka</Link> Admin</div>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8 w-full max-w-4xl">

@@ -5,7 +5,7 @@ import { useNotifications } from '@/lib/hooks/useNotifications';
 import { useAuth } from '@/lib/auth-context';
 import Button from './Button';
 import { cn } from '@/lib/utils';
-import { BellIcon } from '@heroicons/react/24/solid';
+import { BellIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 interface NotificationPromptProps {
     className?: string;
@@ -129,22 +129,22 @@ export default function NotificationPrompt({
                         <Button
                             onClick={handleSubscribe}
                             isLoading={isActionLoading || isLoading}
-                            className="luxury-button text-sm px-3 py-1 rounded transition-colors"
+                            className="luxury-button text-sm px-3 py-1 rounded transition-colors capitalize"
                         >
-                            <div className='flex items-center gap-2 '><BellIcon className='h-4 w-4' />
+                            <div className='flex items-center gap-2 text-left'>{!(isActionLoading || isLoading) && <BellIcon className='h-5 w-5 mr-1' />}
                                 Enable Notifications</div>
-                        </Button>
-                        <Button
-                            onClick={handleNotNow}
-                            className="text-zinc-300 hover:text-zinc-200 text-sm px-3 py-1 transition-colors"
-                        >
-                            Not Now
                         </Button>
                         <Button
                             onClick={handleDismiss}
                             className="text-zinc-400 hover:text-zinc-300 text-sm px-3 py-1 transition-colors"
                         >
                             Don&apos;t Ask Again
+                        </Button>
+                        <Button
+                            onClick={handleNotNow}
+                            className="text-zinc-300 hover:text-zinc-200 text-sm px-3 py-1 transition-colors"
+                        >
+                            <XMarkIcon className='h-4 w-4' />
                         </Button>
                     </div>
                 </div>
