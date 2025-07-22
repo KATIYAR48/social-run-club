@@ -17,6 +17,12 @@ interface Event {
     postRejectionMessage?: string;
     razorpayButtonId?: string;
     bannerImageURL?: string;
+    additionalInfoField?: {
+        label: string;
+        required: boolean;
+        fieldType: 'text' | 'number' | 'select';
+        options?: string[];
+    };
 }
 
 export default function AdminEventsPage() {
@@ -52,7 +58,13 @@ export default function AdminEventsPage() {
             postApprovalMessage: '',
             postRejectionMessage: '',
             razorpayButtonId: '',
-            bannerImageURL: ''
+            bannerImageURL: '',
+            additionalInfoField: {
+                label: '',
+                required: false,
+                fieldType: 'text',
+                options: []
+            }
         }
     });
     const [formError, setFormError] = useState('');
@@ -171,7 +183,13 @@ export default function AdminEventsPage() {
             isEdit,
             event: isEdit && event ? {
                 ...event,
-                date: toDatetimeLocal(event.date)
+                date: toDatetimeLocal(event.date),
+                additionalInfoField: event.additionalInfoField || {
+                    label: '',
+                    required: false,
+                    type: 'text',
+                    options: []
+                }
             } : {
                 title: '',
                 description: '',
@@ -181,7 +199,13 @@ export default function AdminEventsPage() {
                 postApprovalMessage: '',
                 postRejectionMessage: '',
                 razorpayButtonId: '',
-                bannerImageURL: ''
+                bannerImageURL: '',
+                additionalInfoField: {
+                    label: '',
+                    required: false,
+                    type: 'text',
+                    options: []
+                }
             }
         });
         setFormError('');
@@ -200,19 +224,27 @@ export default function AdminEventsPage() {
                 postApprovalMessage: '',
                 postRejectionMessage: '',
                 razorpayButtonId: '',
-                bannerImageURL: ''
+                bannerImageURL: '',
+                additionalInfoField: {
+                    label: '',
+                    required: false,
+                    type: 'text',
+                    options: []
+                }
             }
         });
         setFormError('');
     };
 
-    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+    const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        const checked = (e.target as HTMLInputElement).checked;
+        
         setEventForm(prev => ({
             ...prev,
             event: {
                 ...prev.event,
-                [name]: value
+                [name]: type === 'checkbox' ? checked : value
             }
         }));
 
@@ -220,6 +252,40 @@ export default function AdminEventsPage() {
         if (formError) {
             setFormError('');
         }
+    };
+
+    const handleAdditionalInfoChange = (field: string, value: string | boolean | string[]) => {
+        setEventForm(prev => ({
+            ...prev,
+            event: {
+                ...prev.event,
+                additionalInfoField: {
+                    ...prev.event.additionalInfoField!,
+                    [field]: value
+                }
+            }
+        }));
+
+        // Clear form error when user types
+        if (formError) {
+            setFormError('');
+        }
+    };
+
+    const addOption = () => {
+        const newOption = prompt('Enter new option:');
+        if (newOption && newOption.trim()) {
+            handleAdditionalInfoChange('options', [
+                ...(eventForm.event.additionalInfoField?.options || []),
+                newOption.trim()
+            ]);
+        }
+    };
+
+    const removeOption = (index: number) => {
+        handleAdditionalInfoChange('options', 
+            eventForm.event.additionalInfoField?.options?.filter((_, i) => i !== index) || []
+        );
     };
 
     // Validate if a URL is a Google Maps link
@@ -601,6 +667,107 @@ export default function AdminEventsPage() {
                                 <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                     Optional: Add a Razorpay payment button ID for this event.
                                 </p>
+                            </div>
+
+                            {/* Additional Info Field Configuration */}
+                            <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4 mt-6">
+                                <h4 className="text-lg font-semibold mb-4 text-black dark:text-white">
+                                    Additional Registration Info (Optional)
+                                </h4>
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+                                    Configure an additional field to collect extra information from participants during registration.
+                                </p>
+                                
+                                <div className="space-y-4">
+                                    <div>
+                                        <label htmlFor="additionalInfoLabel" className="block text-sm font-medium mb-1 text-black dark:text-white">
+                                            Field Label
+                                        </label>
+                                        <input
+                                            id="additionalInfoLabel"
+                                            type="text"
+                                            value={eventForm.event.additionalInfoField?.label || ''}
+                                            onChange={(e) => handleAdditionalInfoChange('label', e.target.value)}
+                                            className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
+                                            placeholder="e.g. Height, Distance preference, T-shirt size"
+                                        />
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                                            Leave empty to disable additional info collection
+                                        </p>
+                                    </div>
+
+                                    {eventForm.event.additionalInfoField?.label && (
+                                        <>
+                                            <div className="flex items-center space-x-2">
+                                                <input
+                                                    id="additionalInfoRequired"
+                                                    type="checkbox"
+                                                    checked={eventForm.event.additionalInfoField?.required || false}
+                                                    onChange={(e) => handleAdditionalInfoChange('required', e.target.checked)}
+                                                    className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                                                />
+                                                <label htmlFor="additionalInfoRequired" className="text-sm text-black dark:text-white">
+                                                    Required field
+                                                </label>
+                                            </div>
+
+                                            <div>
+                                                <label htmlFor="additionalInfoType" className="block text-sm font-medium mb-1 text-black dark:text-white">
+                                                    Field Type
+                                                </label>
+                                                <select
+                                                    id="additionalInfoType"
+                                                    value={eventForm.event.additionalInfoField?.fieldType || 'text'}
+                                                    onChange={(e) => handleAdditionalInfoChange('fieldType', e.target.value as 'text' | 'number' | 'select')}
+                                                    className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
+                                                >
+                                                    <option value="text">Text</option>
+                                                    <option value="number">Number</option>
+                                                    <option value="select">Select (Dropdown)</option>
+                                                </select>
+                                            </div>
+
+                                            {eventForm.event.additionalInfoField?.fieldType === 'select' && (
+                                                <div>
+                                                    <label className="block text-sm font-medium mb-1 text-black dark:text-white">
+                                                        Options
+                                                    </label>
+                                                    <div className="space-y-2">
+                                                        {eventForm.event.additionalInfoField?.options?.map((option, index) => (
+                                                            <div key={index} className="flex items-center space-x-2">
+                                                                <input
+                                                                    type="text"
+                                                                    value={option}
+                                                                    onChange={(e) => {
+                                                                        const newOptions = [...(eventForm.event.additionalInfoField?.options || [])];
+                                                                        newOptions[index] = e.target.value;
+                                                                        handleAdditionalInfoChange('options', newOptions);
+                                                                    }}
+                                                                    className="flex-1 p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
+                                                                    placeholder="Option text"
+                                                                />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => removeOption(index)}
+                                                                    className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                                                                >
+                                                                    ×
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                        <button
+                                                            type="button"
+                                                            onClick={addOption}
+                                                            className="px-3 py-2 bg-black text-white rounded hover:bg-zinc-900 transition-colors"
+                                                        >
+                                                            Add Option
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="flex justify-end space-x-3 pt-4">

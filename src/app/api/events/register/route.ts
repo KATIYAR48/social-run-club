@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // Get request body
     const body = await request.json();
-    const { eventId } = body;
+    const { eventId, additionalInfo } = body;
 
     if (!eventId) {
       return NextResponse.json(
@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
       eventId,
       approved: null, // Pending approval
       createdAt: new Date(),
+      additionalInfo: additionalInfo || undefined,
     });
 
     return NextResponse.json(

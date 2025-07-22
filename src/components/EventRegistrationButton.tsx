@@ -10,6 +10,12 @@ interface EventRegistrationButtonProps {
     isRegistered?: boolean;
     isApproved?: boolean | null;
     isPastEvent?: boolean;
+    additionalInfoField?: {
+        label: string;
+        required: boolean;
+        fieldType: 'text' | 'number' | 'select';
+        options?: string[];
+    };
 }
 
 export default function EventRegistrationButton({
@@ -17,13 +23,16 @@ export default function EventRegistrationButton({
     isRegistered = false,
     isApproved = null,
     isPastEvent = false,
+    additionalInfoField,
 }: EventRegistrationButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showAdditionalInfoForm, setShowAdditionalInfoForm] = useState(false);
+    const [additionalInfo, setAdditionalInfo] = useState('');
     const { isAuthenticated, logout } = useAuth();
     const router = useRouter();
 
-    const handleRegister = async () => {
+    const handleRegister = async (additionalInfoData?: string) => {
         if (!isAuthenticated) {
             router.push(`/auth?redirect=/events/${eventId}`);
             return;
@@ -32,6 +41,12 @@ export default function EventRegistrationButton({
         // Prevent registration for past events
         if (isPastEvent) {
             setError('This event has already taken place and is no longer open for registration.');
+            return;
+        }
+
+        // If additional info is required and not provided, show the form
+        if (additionalInfoField?.label && !additionalInfoData) {
+            setShowAdditionalInfoForm(true);
             return;
         }
 
@@ -44,7 +59,10 @@ export default function EventRegistrationButton({
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ eventId }),
+                body: JSON.stringify({ 
+                    eventId,
+                    additionalInfo: additionalInfoData || ''
+                }),
             });
 
             const data = await response.json();
@@ -56,7 +74,9 @@ export default function EventRegistrationButton({
             }
 
             if (response.ok) {
-                // Refresh the page to show updated registration status
+                // Close the form and refresh the page
+                setShowAdditionalInfoForm(false);
+                setAdditionalInfo('');
                 router.refresh();
             } else {
                 setError(data.message || 'Failed to register for event');
@@ -66,6 +86,18 @@ export default function EventRegistrationButton({
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleAdditionalInfoSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        // Validate required field
+        if (additionalInfoField?.required && !additionalInfo.trim()) {
+            setError(`${additionalInfoField.label} is required.`);
+            return;
+        }
+
+        handleRegister(additionalInfo.trim());
     };
 
     const handleCancel = async () => {
@@ -110,17 +142,87 @@ export default function EventRegistrationButton({
     // Render different button based on registration status
     if (!isRegistered) {
         return (
-            <div>
-                <button
-                    onClick={handleRegister}
-                    disabled={isLoading}
-                    className={`w-full py-3 px-6 cursor-pointer transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
-                        }`}
-                >
-                    {isLoading ? 'Registering...' : 'Register for Event'}
-                </button>
-                {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
-            </div>
+            <>
+                <div>
+                    <button
+                        onClick={() => handleRegister()}
+                        disabled={isLoading}
+                        className={`w-full py-3 px-6 cursor-pointer transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                            }`}
+                    >
+                        {isLoading ? 'Registering...' : 'Register for Event'}
+                    </button>
+                    {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
+                </div>
+
+                {/* Additional Info Modal */}
+                {showAdditionalInfoForm && additionalInfoField && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white text-black rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+                            <h3 className="text-xl font-bold mb-4">
+                                Additional Information Required
+                            </h3>
+                            
+                            <form onSubmit={handleAdditionalInfoSubmit}>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium mb-2">
+                                        {additionalInfoField.label}
+                                        {additionalInfoField.required && <span className="text-red-500 ml-1">*</span>}
+                                    </label>
+                                    
+                                    {additionalInfoField.fieldType === 'select' ? (
+                                        <select
+                                            value={additionalInfo}
+                                            onChange={(e) => setAdditionalInfo(e.target.value)}
+                                            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black"
+                                            required={additionalInfoField.required}
+                                        >
+                                            <option value="">Select an option</option>
+                                            {additionalInfoField.options?.map((option, index) => (
+                                                <option key={index} value={option}>
+                                                    {option}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type={additionalInfoField.fieldType}
+                                            value={additionalInfo}
+                                            onChange={(e) => setAdditionalInfo(e.target.value)}
+                                            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black"
+                                            required={additionalInfoField.required}
+                                            placeholder={`Enter ${additionalInfoField.label.toLowerCase()}`}
+                                        />
+                                    )}
+                                </div>
+
+                                {error && <p className="mb-4 text-red-500 text-sm">{error}</p>}
+
+                                <div className="flex space-x-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowAdditionalInfoForm(false);
+                                            setAdditionalInfo('');
+                                            setError('');
+                                        }}
+                                        className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className={`flex-1 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                    >
+                                        {isLoading ? 'Registering...' : 'Register'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </>
         );
     }
 

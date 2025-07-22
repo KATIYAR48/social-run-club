@@ -245,7 +245,7 @@ export default function PWAInstallPrompt() {
                 <h2 className="text-xl font-bold text-gray-900">Install CLOKA</h2>
                 <button
                   onClick={handleCloseModal}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 cursor-pointer hover:text-gray-600"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>

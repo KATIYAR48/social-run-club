@@ -7,6 +7,7 @@ export interface IUserEvent extends Document {
   checkedIn: boolean;
   checkedInAt: Date | null;
   createdAt: Date;
+  additionalInfo?: string;
 }
 
 const UserEventSchema: Schema = new Schema({
@@ -35,6 +36,10 @@ const UserEventSchema: Schema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  additionalInfo: {
+    type: String,
+    required: false,
   },
 });
 
