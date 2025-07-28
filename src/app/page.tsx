@@ -4,6 +4,7 @@ import UpcomingEvents from '@/components/UpcomingEvents';
 import Footer from '@/components/Footer';
 import JsonLd, { organizationSchema } from '@/components/JsonLd';
 import MerchPageClient from '@/components/MerchPageClient';
+import CityScapeSection from '@/components/CityScapeSection';
 
 export default function Home() {
   // Website schema
@@ -27,6 +28,7 @@ export default function Home() {
       <Hero />
       <UpcomingEvents />
       <MerchPageClient />
+      <CityScapeSection />
       <Footer />
     </main>
   );
