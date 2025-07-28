@@ -187,7 +187,7 @@ export default function AdminEventsPage() {
                 additionalInfoField: event.additionalInfoField || {
                     label: '',
                     required: false,
-                    type: 'text',
+                    fieldType: 'text',
                     options: []
                 }
             } : {
@@ -203,7 +203,7 @@ export default function AdminEventsPage() {
                 additionalInfoField: {
                     label: '',
                     required: false,
-                    type: 'text',
+                    fieldType: 'text',
                     options: []
                 }
             }
@@ -228,7 +228,7 @@ export default function AdminEventsPage() {
                 additionalInfoField: {
                     label: '',
                     required: false,
-                    type: 'text',
+                    fieldType: 'text',
                     options: []
                 }
             }
@@ -239,7 +239,7 @@ export default function AdminEventsPage() {
     const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         const checked = (e.target as HTMLInputElement).checked;
-        
+
         setEventForm(prev => ({
             ...prev,
             event: {
@@ -283,7 +283,7 @@ export default function AdminEventsPage() {
     };
 
     const removeOption = (index: number) => {
-        handleAdditionalInfoChange('options', 
+        handleAdditionalInfoChange('options',
             eventForm.event.additionalInfoField?.options?.filter((_, i) => i !== index) || []
         );
     };
@@ -372,85 +372,81 @@ export default function AdminEventsPage() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-black">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
+                <div className="bg-white dark:bg-black rounded-lg shadow-md mb-6">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl md:text-5xl font-bold text-black dark:text-white">Manage Events</h2>
+                        <Button
+                            onClick={() => openEventForm(false)}
+                            className="px-4 py-2 bg-black text-white text-right underline rounded-md hover:bg-zinc-900 transition-colors"
+                        >
+                            Add New Event
+                        </Button>
+                    </div>
 
-            <div className="mx-auto py-8 px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
-                    <div className="bg-white dark:bg-black rounded-lg shadow-md p-6 mb-6 border border-zinc-200 dark:border-zinc-800">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-black dark:text-white">Manage Events</h2>
-                            <Button
-                                onClick={() => openEventForm(false)}
-                                className="px-4 py-2 bg-black text-white rounded-md hover:bg-zinc-900 transition-colors"
-                            >
-                                Add New Event
-                            </Button>
+                    {error && (
+                        <div className="bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white p-4 rounded-md mb-4">
+                            {error}
                         </div>
+                    )}
 
-                        {error && (
-                            <div className="bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white p-4 rounded-md mb-4">
-                                {error}
-                            </div>
-                        )}
+                    {deleteError && (
+                        <div className="bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white p-4 rounded-md mb-4">
+                            {deleteError}
+                        </div>
+                    )}
 
-                        {deleteError && (
-                            <div className="bg-white dark:bg-black border border-black dark:border-white text-black dark:text-white p-4 rounded-md mb-4">
-                                {deleteError}
-                            </div>
-                        )}
+                    {loading ? (
+                        <div className="text-center py-8 text-black dark:text-white">
+                            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-black dark:border-white border-r-transparent"></div>
+                            <p className="mt-2">Loading events...</p>
+                        </div>
+                    ) : events.length === 0 ? (
+                        <div className="text-center py-8 text-black dark:text-white">
+                            No events found. Click &quot;Add New Event&quot; to create one.
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {events.map((event) => (
+                                <div key={event._id} className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-800">
+                                    <div className="p-4">
+                                        <h3 className="text-xl font-bold mb-2 text-black dark:text-white">{event.title}</h3>
+                                        <p className="text-black dark:text-white mb-2">
+                                            <span className="font-semibold">Date:</span> {formatDate(event.date)}
+                                        </p>
+                                        <p className="text-black dark:text-white mb-2">
+                                            <span className="font-semibold">Location:</span> {event.location}
+                                        </p>
+                                        <p className="text-black dark:text-white mb-4 line-clamp-3">
+                                            {event.description}
+                                        </p>
+                                        <div className="flex justify-between">
+                                            <Button
+                                                onClick={() => openEventForm(true, event)}
+                                                className="px-3 py-1 bg-black text-white border border-black rounded hover:bg-zinc-900 transition-colors"
+                                            >
+                                                Edit
+                                            </Button>
+                                            <Button
+                                                onClick={() => openConfirmDialog(event._id, event.title, 'delete')}
+                                                disabled={isDeleting === event._id}
+                                                className="border border-zinc-700 bg-zinc-800 text-white px-3 py-1 rounded hover:bg-black hover:text-white hover:border-zinc-700 transition-colors"
 
-                        {loading ? (
-                            <div className="text-center py-8 text-black dark:text-white">
-                                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-black dark:border-white border-r-transparent"></div>
-                                <p className="mt-2">Loading events...</p>
-                            </div>
-                        ) : events.length === 0 ? (
-                            <div className="text-center py-8 text-black dark:text-white">
-                                No events found. Click &quot;Add New Event&quot; to create one.
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {events.map((event) => (
-                                    <div key={event._id} className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-800">
-                                        <div className="p-4">
-                                            <h3 className="text-xl font-bold mb-2 text-black dark:text-white">{event.title}</h3>
-                                            <p className="text-black dark:text-white mb-2">
-                                                <span className="font-semibold">Date:</span> {formatDate(event.date)}
-                                            </p>
-                                            <p className="text-black dark:text-white mb-2">
-                                                <span className="font-semibold">Location:</span> {event.location}
-                                            </p>
-                                            <p className="text-black dark:text-white mb-4 line-clamp-3">
-                                                {event.description}
-                                            </p>
-                                            <div className="flex justify-between">
-                                                <Button
-                                                    onClick={() => openEventForm(true, event)}
-                                                    className="hover:cursor-pointer px-3 py-1 border-white text-white hover:text-black rounded hover:bg-zinc-100 transition-colors border"
-
-                                                >
-                                                    Edit
-                                                </Button>
-                                                <Button
-                                                    onClick={() => openConfirmDialog(event._id, event.title, 'delete')}
-                                                    disabled={isDeleting === event._id}
-                                                    className="border border-zinc-700 bg-zinc-800 text-white px-3 py-1 rounded hover:bg-black hover:text-white hover:border-zinc-700 transition-colors"
-
-                                                >
-                                                    {isDeleting === event._id ? 'Deleting...' : 'Delete'}
-                                                </Button>
-                                            </div>
+                                            >
+                                                {isDeleting === event._id ? 'Deleting...' : 'Delete'}
+                                            </Button>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </motion.div>
-            </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </motion.div>
 
             {/* Confirmation Dialog */}
             {confirmDialog.show && (
@@ -646,9 +642,11 @@ export default function AdminEventsPage() {
                                     className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
                                     placeholder="Enter the URL for the event banner image"
                                 />
-                                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                                <p className="mb-2 text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                     Optional: Add a URL for the event banner image. Use a direct image URL (e.g., .jpg, .png).
                                 </p>
+
+                                <img src={eventForm.event.bannerImageURL || ''} alt="Banner Image" className="rounded-xl w-full h-auto" />
                             </div>
 
                             <div>
@@ -677,7 +675,7 @@ export default function AdminEventsPage() {
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
                                     Configure an additional field to collect extra information from participants during registration.
                                 </p>
-                                
+
                                 <div className="space-y-4">
                                     <div>
                                         <label htmlFor="additionalInfoLabel" className="block text-sm font-medium mb-1 text-black dark:text-white">

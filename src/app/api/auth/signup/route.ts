@@ -3,6 +3,56 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
+// Function to generate username from email
+function generateUsernameFromEmail(email: string): string {
+  // Extract the part before @ symbol
+  const emailPrefix = email.split("@")[0];
+
+  // Replace dots with underscores, remove special characters
+  let username = emailPrefix
+    .toLowerCase()
+    .replace(/\./g, "_")
+    .replace(/[^a-z0-9_-]/g, "")
+    .trim();
+
+  // Ensure minimum length
+  if (username.length < 3) {
+    username = username + "_user";
+  }
+
+  // Ensure maximum length
+  if (username.length > 30) {
+    username = username.substring(0, 30);
+  }
+
+  return username;
+}
+
+// Function to find available username (handle duplicates)
+async function findAvailableUsername(baseUsername: string): Promise<string> {
+  let username = baseUsername;
+  let counter = 1;
+
+  while (true) {
+    const existingUser = await User.findOne({ username });
+    if (!existingUser) {
+      return username;
+    }
+
+    // If username exists, append a number
+    const suffix = `_${counter}`;
+    if (baseUsername.length + suffix.length > 30) {
+      // Truncate base username to fit the suffix
+      const maxBaseLength = 30 - suffix.length;
+      username = baseUsername.substring(0, maxBaseLength) + suffix;
+    } else {
+      username = baseUsername + suffix;
+    }
+
+    counter++;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Connect to the database
@@ -19,6 +69,7 @@ export async function POST(request: NextRequest) {
       emergencyContact,
       instagramUsername,
       joinCrew,
+      username: providedUsername, // Allow users to provide their own username
     } = body;
 
     // Validate required fields
@@ -58,6 +109,47 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Generate or validate username
+    let finalUsername: string;
+
+    if (providedUsername) {
+      // Validate provided username format
+      const usernameRegex = /^[a-z0-9_-]+$/;
+      const cleanUsername = providedUsername.toLowerCase().trim();
+
+      if (
+        !usernameRegex.test(cleanUsername) ||
+        cleanUsername.length < 3 ||
+        cleanUsername.length > 30
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Username must be 3-30 characters and contain only letters, numbers, underscores, and dashes",
+          },
+          { status: 400 }
+        );
+      }
+
+      // Check if provided username is already taken
+      const existingUserByUsername = await User.findOne({
+        username: cleanUsername,
+      });
+      if (existingUserByUsername) {
+        return NextResponse.json(
+          { success: false, message: "Username already taken" },
+          { status: 400 }
+        );
+      }
+
+      finalUsername = cleanUsername;
+    } else {
+      // Generate username from email
+      const baseUsername = generateUsernameFromEmail(email);
+      finalUsername = await findAvailableUsername(baseUsername);
+    }
+
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -66,6 +158,7 @@ export async function POST(request: NextRequest) {
     const user = await User.create({
       name,
       email,
+      username: finalUsername,
       password: hashedPassword,
       phone,
       age: age ? parseInt(age.toString()) : undefined,
@@ -87,6 +180,7 @@ export async function POST(request: NextRequest) {
           _id: user._id,
           name: user.name,
           email: user.email,
+          username: user.username,
           role: user.role,
         },
       },

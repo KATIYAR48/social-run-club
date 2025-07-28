@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard, Mail } from 'lucide-react';
 import Button from '@/components/Button';
 
 interface User {
@@ -74,7 +74,10 @@ export default function EventRegistrationsPage() {
     });
     const [copyingEmails, setCopyingEmails] = useState(false);
     const [emailsCopied, setEmailsCopied] = useState(false);
+    const [sendingEmails, setSendingEmails] = useState(false);
     const [downloadingCSV, setDownloadingCSV] = useState(false);
+    const [checkingInId, setCheckingInId] = useState<string | null>(null);
+    const [revokingCheckInId, setRevokingCheckInId] = useState<string | null>(null);
 
     // Filters
     const [selectedEvent, setSelectedEvent] = useState(searchParams.get('eventId') || '');
@@ -285,6 +288,7 @@ export default function EventRegistrationsPage() {
 
     // Handle check-in
     const handleCheckIn = async (registrationId: string) => {
+        setCheckingInId(registrationId);
         try {
             const response = await fetch('/api/admin/event-registrations/check-in', {
                 method: 'POST',
@@ -319,11 +323,14 @@ export default function EventRegistrationsPage() {
         } catch (err) {
             setError('An error occurred while checking in registration');
             console.error(err);
+        } finally {
+            setCheckingInId(null);
         }
     };
 
     // Handle revoke check-in
     const handleRevokeCheckIn = async (registrationId: string) => {
+        setRevokingCheckInId(registrationId);
         try {
             const response = await fetch('/api/admin/event-registrations/revoke-check-in', {
                 method: 'POST',
@@ -358,6 +365,8 @@ export default function EventRegistrationsPage() {
         } catch (err) {
             setError('An error occurred while revoking check-in');
             console.error(err);
+        } finally {
+            setRevokingCheckInId(null);
         }
     };
 
@@ -450,6 +459,58 @@ export default function EventRegistrationsPage() {
             setError('An error occurred while copying email addresses');
         } finally {
             setCopyingEmails(false);
+        }
+    };
+
+    // Function to send mail with all emails in BCC
+    const sendMailWithEmails = async () => {
+        setSendingEmails(true);
+        setError('');
+
+        try {
+            // Build query parameters (same as copyEmailsToClipboard)
+            const params = new URLSearchParams();
+            params.append('emailsOnly', 'true');
+
+            if (selectedEvent) {
+                params.append('eventId', selectedEvent);
+            }
+
+            if (approvalStatus) {
+                params.append('approved', approvalStatus);
+            }
+
+            if (searchTerm) {
+                params.append('search', searchTerm);
+            }
+
+            if (ageRange) {
+                params.append('ageRange', ageRange);
+            }
+
+            if (selectedSex) {
+                params.append('sex', selectedSex);
+            }
+
+            // Fetch all emails matching the current filters
+            const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
+            const data = await response.json();
+
+            if (response.ok && data.emails) {
+                // Create mailto link with emails in BCC
+                const bccEmails = data.emails.join(',');
+                const mailtoLink = `mailto:?bcc=${encodeURIComponent(bccEmails)}`;
+
+                // Open mailto link
+                window.location.href = mailtoLink;
+            } else {
+                setError(data.message || 'Failed to fetch email addresses');
+            }
+        } catch (error) {
+            console.error('Error sending mail:', error);
+            setError('An error occurred while preparing email addresses');
+        } finally {
+            setSendingEmails(false);
         }
     };
 
@@ -570,14 +631,14 @@ export default function EventRegistrationsPage() {
     }, [loadEvents, loadEventRegistrations]);
 
     return (
-        <div className="w-full py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-center md:text-left mb-4 md:mb-0">Event Registrations</h1>
+        <div className="mb-5">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-6">
+                <h1 className="text-3xl md:text-5xl font-bold text-start md:text-left mb-4 md:mb-0">Registrations</h1>
                 <div className="flex space-x-2">
                     <Button
                         onClick={copyEmailsToClipboard}
                         disabled={copyingEmails}
-                        className={`flex items-center ${emailsCopied ? 'bg-green-600' : 'bg-zinc-800 hover:bg-zinc-700'} text-white px-4 py-2 rounded`}
+                        className={`flex text-sm items-center ${emailsCopied ? 'bg-green-600' : 'bg-zinc-800 hover:bg-zinc-700'} text-white px-4 py-2 rounded`}
                     >
                         {copyingEmails ? (
                             <>
@@ -597,9 +658,26 @@ export default function EventRegistrationsPage() {
                         )}
                     </Button>
                     <Button
+                        onClick={sendMailWithEmails}
+                        disabled={sendingEmails}
+                        className="flex text-sm items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
+                    >
+                        {sendingEmails ? (
+                            <>
+                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
+                                Opening...
+                            </>
+                        ) : (
+                            <>
+                                <Mail className="h-4 w-4 mr-2" />
+                                Send mail
+                            </>
+                        )}
+                    </Button>
+                    <Button
                         onClick={downloadAsCSV}
                         disabled={downloadingCSV}
-                        className="flex items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
+                        className="flex text-sm items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
                     >
                         {downloadingCSV ? (
                             <>
@@ -615,7 +693,7 @@ export default function EventRegistrationsPage() {
                     </Button>
                     <Button
                         onClick={() => loadEventRegistrations()}
-                        className="flex items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
+                        className="flex text-sm items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
                     >
                         <RefreshCw className="h-4 w-4" />
                     </Button>
@@ -627,13 +705,13 @@ export default function EventRegistrationsPage() {
                 {/* Search bar in its own row */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Search</label>
-                    <div className="relative">
+                    <div className="relative z-0">
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Search by name, email, or Instagram"
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2 pl-10"
+                            className="z-0 w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2 pl-10"
                         />
                         <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
                     </div>
@@ -769,8 +847,8 @@ export default function EventRegistrationsPage() {
                                             <th className="px-4 py-3 text-left">Event</th>
                                             <th className="px-4 py-3 text-left">Registered On</th>
                                             <th className="px-4 py-3 text-left">Status</th>
-                                            <th className="px-4 py-3 text-left">Check-In</th>
                                             <th className="px-4 py-3 text-right">Actions</th>
+                                            <th className="px-4 py-3 text-left">Check-In</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-zinc-800">
@@ -841,28 +919,56 @@ export default function EventRegistrationsPage() {
                                                         </span>
                                                     )}
                                                 </td>
+                                                <td className="px-4 py-3 text-right">
+                                                    <div className="flex md:flex-row flex-col justify-end gap-2">
+                                                        {registration.approved !== true && registration.checkedIn === false && (
+                                                            <Button
+                                                                onClick={() => handleApproval(registration._id, true)}
+                                                                className="bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                                                            >
+                                                                Approve
+                                                            </Button>
+                                                        )}
+                                                        {registration.approved !== null && registration.checkedIn === false && (
+                                                            <Button
+                                                                onClick={() => handleApproval(registration._id, null)}
+                                                                className="bg-zinc-800 hover:bg-zinc-600 text-white px-3 py-1 rounded text-sm"
+                                                            >
+                                                                Reset
+                                                            </Button>
+                                                        )}
+                                                        {registration.approved !== false && registration.checkedIn === false && (
+                                                            <Button
+                                                                onClick={() => handleApproval(registration._id, false)}
+                                                                className="bg-red-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                                                            >
+                                                                Reject
+                                                            </Button>
+                                                        )}
+
+                                                    </div>
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     {registration.checkedIn ? (
-                                                        <div>
-                                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900/30 text-blue-300">
-                                                                <CheckCircle className="h-3 w-3 mr-1" />
-                                                                Checked In
+                                                        <div className='flex flex-col items-end justify-between gap-2'>
+                                                            <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-blue-900/30 text-blue-300">
+                                                                At {new Date(registration.checkedInAt || '').toLocaleString()}
                                                             </span>
-                                                            {registration.checkedInAt && (
-                                                                <div className="text-xs text-zinc-400 mt-1">
-                                                                    {new Date(registration.checkedInAt).toLocaleString()}
-                                                                </div>
-                                                            )}
+
                                                             <Button
                                                                 onClick={() => handleRevokeCheckIn(registration._id)}
-                                                                className="mt-2 bg-fuchsia-700 hover:bg-fuchsia-600 text-white px-3 py-1 rounded text-xs"
+                                                                isLoading={revokingCheckInId === registration._id}
+                                                                loadingText="Revoking..."
+                                                                className="mt-2 border border-fuchsia-700 hover:bg-fuchsia-600 text-white px-3 py-1 rounded text-xs"
                                                             >
-                                                                Revoke Check-In
+                                                                Revoke
                                                             </Button>
                                                         </div>
                                                     ) : registration.approved === true ? (
                                                         <Button
                                                             onClick={() => handleCheckIn(registration._id)}
+                                                            isLoading={checkingInId === registration._id}
+                                                            loadingText="Checking In..."
                                                             className="bg-blue-700 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
                                                         >
                                                             Check In
@@ -871,34 +977,7 @@ export default function EventRegistrationsPage() {
                                                         <span className="text-zinc-500 text-xs">-</span>
                                                     )}
                                                 </td>
-                                                <td className="px-4 py-3 text-right">
-                                                    <div className="flex justify-end space-x-2">
-                                                        {registration.approved !== true && (
-                                                            <Button
-                                                                onClick={() => handleApproval(registration._id, true)}
-                                                                className="bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
-                                                            >
-                                                                Approve
-                                                            </Button>
-                                                        )}
-                                                        {registration.approved !== false && (
-                                                            <Button
-                                                                onClick={() => handleApproval(registration._id, false)}
-                                                                className="bg-red-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                                                            >
-                                                                Reject
-                                                            </Button>
-                                                        )}
-                                                        {registration.approved !== null && (
-                                                            <Button
-                                                                onClick={() => handleApproval(registration._id, null)}
-                                                                className="bg-yellow-800 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                                                            >
-                                                                Mark as Pending
-                                                            </Button>
-                                                        )}
-                                                    </div>
-                                                </td>
+
                                             </tr>
                                         ))}
                                     </tbody>

@@ -180,8 +180,8 @@ export default function AdminNotificationsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white p-6">
-            <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen bg-black text-white">
+            <div className="">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold mb-2">Push Notifications</h1>
                     <p className="text-gray-400">Send push notifications to your app users</p>
@@ -190,15 +190,15 @@ export default function AdminNotificationsPage() {
                 {/* Stats Cards */}
                 {stats && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                        <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                        <div className="bg-zinc-900  p-4 border border-zinc-700">
                             <h3 className="text-sm font-medium text-gray-400 mb-1">Total Subscribers</h3>
                             <p className="text-2xl font-bold">{stats.subscribers}</p>
                         </div>
-                        <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                        <div className="bg-zinc-900  p-4 border border-zinc-700">
                             <h3 className="text-sm font-medium text-gray-400 mb-1">Crew Members</h3>
                             <p className="text-2xl font-bold">{stats.crewMembers}</p>
                         </div>
-                        <div className="bg-zinc-900 rounded-lg p-4 border border-zinc-700">
+                        <div className="bg-zinc-900  p-4 border border-zinc-700">
                             <h3 className="text-sm font-medium text-gray-400 mb-1">Non-Crew Members</h3>
                             <p className="text-2xl font-bold">{stats.nonCrewMembers}</p>
                         </div>
@@ -206,12 +206,12 @@ export default function AdminNotificationsPage() {
                 )}
 
                 {/* Send Notification Form */}
-                <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700 mb-8">
+                <div className="bg-zinc-900  p-6 border border-zinc-700 mb-8">
                     <h2 className="text-xl font-semibold mb-4">Send New Notification</h2>
 
                     {message && (
                         <div className={cn(
-                            "p-4 rounded-lg mb-4",
+                            "p-4  mb-4",
                             message.type === 'success' ? "bg-green-900 text-green-300" : "bg-red-900 text-red-300"
                         )}>
                             {message.text}
@@ -231,7 +231,7 @@ export default function AdminNotificationsPage() {
                                 onChange={handleInputChange}
                                 required
                                 placeholder="Enter notification title"
-                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600  text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 maxLength={100}
                             />
                         </div>
@@ -248,7 +248,7 @@ export default function AdminNotificationsPage() {
                                 required
                                 placeholder="Enter notification message"
                                 rows={3}
-                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600  text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 maxLength={300}
                             />
                         </div>
@@ -264,7 +264,7 @@ export default function AdminNotificationsPage() {
                                 value={formData.url}
                                 onChange={handleInputChange}
                                 placeholder="https://example.com (optional)"
-                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600  text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
 
@@ -277,7 +277,7 @@ export default function AdminNotificationsPage() {
                                 name="targetAudience"
                                 value={formData.targetAudience}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-600  text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="all">All Users</option>
                                 <option value="crew">Crew Members Only</option>
@@ -288,7 +288,7 @@ export default function AdminNotificationsPage() {
                         <Button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                            className="w-full border border-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-2 px-4  transition-colors"
                         >
                             {isSubmitting ? (
                                 <span className="flex items-center justify-center">
@@ -303,7 +303,7 @@ export default function AdminNotificationsPage() {
                 </div>
 
                 {/* Notification History */}
-                <div className="bg-zinc-900 rounded-lg p-6 border border-zinc-700">
+                <div className="bg-zinc-900  p-6 border border-zinc-700">
                     <h2 className="text-xl font-semibold mb-4">Recent Notifications</h2>
 
                     {isLoadingHistory ? (
@@ -316,7 +316,7 @@ export default function AdminNotificationsPage() {
                     ) : (
                         <div className="space-y-4">
                             {history.map((notification) => (
-                                <div key={notification._id} className="bg-zinc-800 rounded-lg p-4 border border-zinc-600">
+                                <div key={notification._id} className="bg-zinc-800  p-4 border border-zinc-600">
                                     <div className="flex justify-between items-start mb-2">
                                         <div>
                                             <h3 className="font-medium">{notification.title}</h3>

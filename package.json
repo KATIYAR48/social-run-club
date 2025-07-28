@@ -10,7 +10,8 @@
     "lint": "next lint",
     "download-images": "node scripts/download-placeholders.js",
     "seed-db": "node scripts/seed-db.js",
-    "migrate-users": "node scripts/migrate-users.js"
+    "migrate-users": "node scripts/migrate-users.js",
+    "generate-usernames": "node scripts/generate-usernames.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

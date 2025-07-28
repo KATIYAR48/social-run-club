@@ -79,7 +79,8 @@ export default async function EventDetailPage({
     const isLoggedIn = !!(authCookie && authCookie.value);
 
     // Check if event is in the past
-    const isPastEvent = new Date(event.date) < new Date();
+    // Consider the event as "past" only if it's more than 2 hours ago
+    const isPastEvent = new Date(event.date).getTime() + 2 * 60 * 60 * 1000 < Date.now();
 
     return (
         <>

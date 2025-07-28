@@ -68,7 +68,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                     <h2 className="text-3xl font-bold">Upcoming Events</h2>
                     <p className="text-zinc-400 mt-2 md:mt-0">
-                        Join us for our next exclusive gatherings
+                        Join us for our next exclusive roundups
                     </p>
                 </div>
 

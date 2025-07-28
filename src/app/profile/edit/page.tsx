@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,8 +11,11 @@ import Button from '@/components/Button';
 export default function EditProfilePage() {
     const { user, isLoading, isAuthenticated, updateProfile } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isSettingUpUsername = searchParams.get('setupUsername') === 'true';
     const [formData, setFormData] = useState({
         name: '',
+        username: '',
         phone: '',
         age: '',
         gender: '',
@@ -26,6 +29,11 @@ export default function EditProfilePage() {
     const [success, setSuccess] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [changePassword, setChangePassword] = useState(false);
+    const [usernameStatus, setUsernameStatus] = useState<{
+        checking: boolean;
+        available: boolean | null;
+        message: string;
+    }>({ checking: false, available: null, message: '' });
 
     // Redirect if not authenticated (this is a backup to middleware)
     useEffect(() => {
@@ -34,11 +42,36 @@ export default function EditProfilePage() {
         }
     }, [isLoading, isAuthenticated, router]);
 
+    // Function to generate username from email
+    const generateUsernameFromEmail = (email: string) => {
+        const emailPrefix = email.split('@')[0];
+        let username = emailPrefix
+            .toLowerCase()
+            .replace(/\./g, '_')
+            .replace(/[^a-z0-9_-]/g, '')
+            .trim();
+
+        if (username.length < 3) {
+            username = username + '_user';
+        }
+
+        if (username.length > 30) {
+            username = username.substring(0, 30);
+        }
+
+        return username;
+    };
+
     // Populate form with user data when available
     useEffect(() => {
         if (user) {
+            const defaultUsername = !user.username && user.email
+                ? generateUsernameFromEmail(user.email)
+                : user.username || '';
+
             setFormData({
                 name: user.name || '',
+                username: defaultUsername,
                 phone: user.phone || '',
                 age: user.age ? String(user.age) : '',
                 gender: user.gender || '',
@@ -51,9 +84,94 @@ export default function EditProfilePage() {
         }
     }, [user]);
 
+    // Function to check username availability
+    const checkUsernameAvailability = async (username: string) => {
+        if (!username || username.length < 3) {
+            setUsernameStatus({ checking: false, available: null, message: '' });
+            return;
+        }
+
+        // Don't check if it's the same as current username
+        if (user && username.toLowerCase() === user.username?.toLowerCase()) {
+            setUsernameStatus({ checking: false, available: true, message: 'Current username' });
+            return;
+        }
+
+        // Validate username format
+        const usernameRegex = /^[a-z0-9_-]+$/;
+        if (!usernameRegex.test(username)) {
+            setUsernameStatus({
+                checking: false,
+                available: false,
+                message: 'Username can only contain letters, numbers, underscores, and dashes'
+            });
+            return;
+        }
+
+        setUsernameStatus({ checking: true, available: null, message: 'Checking availability...' });
+
+        try {
+            const response = await fetch('/api/profile/check-username', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, excludeUserId: user?._id }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setUsernameStatus({
+                    checking: false,
+                    available: data.available,
+                    message: data.message
+                });
+            } else {
+                setUsernameStatus({
+                    checking: false,
+                    available: false,
+                    message: data.message || 'Error checking username'
+                });
+            }
+        } catch (error) {
+            console.error('Username check error:', error);
+            setUsernameStatus({
+                checking: false,
+                available: false,
+                message: 'Error checking username availability'
+            });
+        }
+    };
+
+    // Debounced username availability check
+    useEffect(() => {
+        if (!formData.username) {
+            setUsernameStatus({ checking: false, available: null, message: '' });
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            checkUsernameAvailability(formData.username);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [formData.username, user]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
-        const newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+        let newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+
+        // Special handling for username
+        if (name === 'username' && typeof newValue === 'string') {
+            // Convert to lowercase and remove invalid characters
+            newValue = newValue.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            // Limit to 30 characters
+            if (newValue.length > 30) {
+                newValue = newValue.substring(0, 30);
+            }
+        }
+
         setFormData({ ...formData, [name]: newValue });
     };
 
@@ -75,6 +193,27 @@ export default function EditProfilePage() {
             return;
         }
 
+        // Validate username
+        if (!formData.username) {
+            setError('Username is required');
+            return;
+        }
+
+        if (formData.username.length < 3) {
+            setError('Username must be at least 3 characters long');
+            return;
+        }
+
+        if (usernameStatus.available === false) {
+            setError('Please choose an available username');
+            return;
+        }
+
+        if (usernameStatus.checking) {
+            setError('Please wait for username availability check to complete');
+            return;
+        }
+
         // Validate new password if changing password
         if (changePassword) {
             if (!formData.newPassword) {
@@ -93,6 +232,7 @@ export default function EditProfilePage() {
         try {
             const updateData = {
                 name: formData.name,
+                username: formData.username,
                 phone: formData.phone,
                 age: formData.age ? parseInt(formData.age) : undefined,
                 gender: formData.gender as 'male' | 'female' | 'other' | undefined,
@@ -113,6 +253,13 @@ export default function EditProfilePage() {
                     newPassword: '',
                 });
                 setChangePassword(false);
+
+                // If this was username setup, redirect to their new public profile
+                if (isSettingUpUsername && formData.username) {
+                    setTimeout(() => {
+                        router.push(`/profile/${formData.username}`);
+                    }, 1500); // Give time to see success message
+                }
             } else {
                 setError(result.message);
             }
@@ -145,15 +292,30 @@ export default function EditProfilePage() {
             <div className="min-h-screen bg-black text-white py-12 px-4">
                 <div className="max-w-2xl mx-auto">
                     <div className="flex items-center justify-between mb-8">
-                        <h1 className="text-3xl font-bold">Edit Profile</h1>
-                        <Button
-                            variant="primary"
-                            onClick={() => router.push('/profile')}
-                            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"
-                        >
-                            Back to Profile
-                        </Button>
+                        <h1 className="text-3xl font-bold">
+                            {isSettingUpUsername ? 'Complete Your Profile' : 'Edit Profile'}
+                        </h1>
+                        {!isSettingUpUsername && (
+                            <Button
+                                variant="primary"
+                                onClick={() => router.push('/profile')}
+                                className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 rounded-md transition-colors"
+                            >
+                                Back to Profile
+                            </Button>
+                        )}
                     </div>
+
+                    {/* Username Setup Message */}
+                    {isSettingUpUsername && (
+                        <div className="bg-blue-900/50 border border-blue-500 text-blue-100 p-4 rounded-md mb-6">
+                            <h2 className="font-semibold mb-2">🎉 Welcome to Public Profiles!</h2>
+                            <p className="text-sm">
+                                We've added shareable public profiles to Cloka! To get started, please choose a username.
+                                We've suggested one based on your email, but feel free to customize it.
+                            </p>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="bg-red-900/50 border border-red-500 text-white p-4 rounded-md mb-6">
@@ -185,6 +347,33 @@ export default function EditProfilePage() {
                             </div>
 
                             <div>
+                                <label htmlFor="username" className="block mb-2 font-medium">
+                                    Username <span className="text-red-500">*</span>
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white pr-10"
+                                    />
+                                    {usernameStatus.checking && (
+                                        <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                                        </div>
+                                    )}
+                                    {usernameStatus.available !== null && (
+                                        <div className={`absolute inset-y-0 right-0 pr-3 flex items-center ${usernameStatus.available ? 'text-green-500' : 'text-red-500'}`}>
+                                            {usernameStatus.message}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div>
                                 <label htmlFor="phone" className="block mb-2 font-medium">
                                     Phone <span className="text-red-500">*</span>
                                 </label>
@@ -197,6 +386,46 @@ export default function EditProfilePage() {
                                     required
                                     className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white"
                                 />
+                            </div>
+
+                            <div>
+                                <label htmlFor="username" className="block mb-2 font-medium">
+                                    Username <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    required
+                                    className={`w-full p-3 bg-zinc-800 border rounded-md focus:outline-none focus:ring-2 ${usernameStatus.available === false
+                                        ? 'border-red-500 focus:ring-red-500'
+                                        : usernameStatus.available === true
+                                            ? 'border-green-500 focus:ring-green-500'
+                                            : 'border-zinc-700 focus:ring-white'
+                                        }`}
+                                    minLength={3}
+                                    maxLength={30}
+                                />
+                                {usernameStatus.message && (
+                                    <div className={`mt-1 text-sm flex items-center gap-1 ${usernameStatus.checking
+                                        ? 'text-zinc-400'
+                                        : usernameStatus.available === false
+                                            ? 'text-red-400'
+                                            : usernameStatus.available === true
+                                                ? 'text-green-400'
+                                                : 'text-zinc-400'
+                                        }`}>
+                                        {usernameStatus.checking && (
+                                            <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>
+                                        )}
+                                        {usernameStatus.message}
+                                    </div>
+                                )}
+                                <div className="mt-1 text-xs text-zinc-500">
+                                    3-30 characters, letters, numbers, underscores, and dashes only
+                                </div>
                             </div>
 
                             <div>

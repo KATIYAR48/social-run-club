@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
+  username: string;
   password: string;
   phone: string;
   age?: number;
@@ -18,6 +19,17 @@ export interface IUser extends Document {
 const UserSchema: Schema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    minlength: 3,
+    maxlength: 30,
+    match: /^[a-z0-9_-]+$/,
+    index: true,
+  },
   password: { type: String, required: true },
   phone: { type: String, required: true, unique: true },
   age: { type: Number },
