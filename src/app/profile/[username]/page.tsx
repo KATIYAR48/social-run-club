@@ -11,6 +11,8 @@ import tremorTheme from '@/lib/tremor-theme';
 import { motion } from 'framer-motion';
 import { Share2, Copy, Calendar, MapPin, Users, Trophy, Clock, CheckCircle } from 'lucide-react';
 import NotificationPrompt from '@/components/NotificationPrompt';
+import FollowButton from '@/components/FollowButton';
+import FollowStats from '@/components/FollowStats';
 import Link from 'next/link';
 
 interface PublicProfile {
@@ -301,11 +303,20 @@ export default function PublicProfilePage() {
                                                 Edit Profile
                                             </Button>
                                         )}
+
+                                        <FollowButton
+                                            userId={profile._id}
+                                            isOwnProfile={profile.isOwnProfile}
+                                        />
                                     </div>
                                 </div>
 
                                 {/* Additional Info */}
                                 <div className="mt-4 flex flex-wrap gap-4 text-sm text-zinc-400">
+                                    <FollowStats
+                                        userId={profile._id}
+                                        username={profile.username}
+                                    />
                                     <div className="flex items-center gap-1">
                                         <Calendar size={14} />
                                         Joined {formatDate(profile.joinDate)}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import UserEvent from "@/models/UserEvent";
+import Event from "@/models/Event";
 
 export async function GET(
   request: NextRequest,
@@ -35,16 +36,35 @@ export async function GET(
     const isOwnProfile = authCookie?.value === user._id.toString();
 
     // Get user's events
-    const userEvents = await UserEvent.find({ userId: user._id })
-      .populate("eventId")
-      .sort({ createdAt: -1 });
+    const userEvents = await UserEvent.find({ userId: user._id }).sort({
+      createdAt: -1,
+    });
+
+    // Get all event IDs
+    const eventIds = userEvents.map((userEvent) => userEvent.eventId);
+
+    // Fetch the actual events
+    const events = await Event.find({ _id: { $in: eventIds } });
+
+    // Combine user events with event data
+    const userEventsWithEventData = userEvents.map((userEvent) => {
+      const event = events.find(
+        (e) => e._id.toString() === userEvent.eventId.toString()
+      );
+      return {
+        ...userEvent.toObject(),
+        eventId: event || null,
+      };
+    });
 
     // Filter events based on approval status and whether it's own profile
-    const approvedEvents = userEvents.filter(
+    const approvedEvents = userEventsWithEventData.filter(
       (ue) => ue.approved === true && ue.eventId
     );
     const pendingEvents = isOwnProfile
-      ? userEvents.filter((ue) => ue.approved === null && ue.eventId)
+      ? userEventsWithEventData.filter(
+          (ue) => ue.approved === null && ue.eventId
+        )
       : [];
 
     // Calculate stats
