@@ -311,8 +311,8 @@ export default function EditProfilePage() {
                         <div className="bg-blue-900/50 border border-blue-500 text-blue-100 p-4 rounded-md mb-6">
                             <h2 className="font-semibold mb-2">🎉 Welcome to Public Profiles!</h2>
                             <p className="text-sm">
-                                We've added shareable public profiles to Cloka! To get started, please choose a username.
-                                We've suggested one based on your email, but feel free to customize it.
+                                We&apos;ve added shareable public profiles to Cloka! To get started, please choose a username.
+                                We&apos;ve suggested one based on your email, but feel free to customize it.
                             </p>
                         </div>
                     )}

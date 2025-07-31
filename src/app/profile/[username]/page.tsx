@@ -13,6 +13,7 @@ import { Share2, Copy, Calendar, MapPin, Users, Trophy, Clock, CheckCircle } fro
 import NotificationPrompt from '@/components/NotificationPrompt';
 import FollowButton from '@/components/FollowButton';
 import FollowStats from '@/components/FollowStats';
+import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Link from 'next/link';
 
 interface PublicProfile {
@@ -374,6 +375,21 @@ export default function PublicProfilePage() {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Three.js Running Figure */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="mb-8"
+                    >
+                        <div className="border border-zinc-800 p-6">
+                            <h2 className="text-xl font-bold mb-4 text-center">
+                                {profile.isOwnProfile ? 'Your Running Avatar' : `${profile.name}'s Running Avatar`}
+                            </h2>
+                            <ThreeJsRunner gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
                         </div>
                     </motion.div>
 
