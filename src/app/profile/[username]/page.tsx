@@ -14,6 +14,7 @@ import NotificationPrompt from '@/components/NotificationPrompt';
 import FollowButton from '@/components/FollowButton';
 import FollowStats from '@/components/FollowStats';
 import ThreeJsRunner from '@/components/ThreeJsRunner';
+import StravaStats from '@/components/StravaStats';
 import Link from 'next/link';
 
 interface PublicProfile {
@@ -261,9 +262,17 @@ export default function PublicProfilePage() {
                     >
                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
                             {/* Avatar */}
-                            <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.1 }}
+                            >
+                                <ThreeJsRunner gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
+                            </motion.div>
+                            {/* <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700">
                                 {profile.name.charAt(0).toUpperCase()}
-                            </div>
+                            </div> */}
+
 
                             {/* Profile Info */}
                             <div className="flex-1">
@@ -378,20 +387,20 @@ export default function PublicProfilePage() {
                         </div>
                     </motion.div>
 
-                    {/* Three.js Running Figure */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.1 }}
-                        className="mb-8"
-                    >
-                        <div className="border border-zinc-800 p-6">
-                            <h2 className="text-xl font-bold mb-4 text-center">
-                                {profile.isOwnProfile ? 'Your Running Avatar' : `${profile.name}'s Running Avatar`}
-                            </h2>
-                            <ThreeJsRunner gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
-                        </div>
-                    </motion.div>
+
+                    {/* Strava Stats - Only for own profile */}
+                    {/* {profile.isOwnProfile && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.15 }}
+                            className="mb-8"
+                        >
+                            <div className="border border-zinc-800 p-6">
+                                <StravaStats user={profile} />
+                            </div>
+                        </motion.div>
+                    )} */}
 
                     {/* NotificationPrompt - Only for own profile */}
                     {profile.isOwnProfile && (

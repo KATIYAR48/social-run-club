@@ -1,286 +1,399 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, Box, Cylinder, Cone } from '@react-three/drei';
+import { useRef, useMemo, useEffect, useState } from 'react';
+import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { FBXLoader } from 'three-stdlib';
 import * as THREE from 'three';
 
 interface RunnerProps {
-  gender: 'male' | 'female';
+    gender: 'male' | 'female';
 }
 
 function RunningFigure({ gender }: RunnerProps) {
-  const groupRef = useRef<THREE.Group>(null);
-  const leftLegRef = useRef<THREE.Group>(null);
-  const rightLegRef = useRef<THREE.Group>(null);
-  const leftArmRef = useRef<THREE.Group>(null);
-  const rightArmRef = useRef<THREE.Group>(null);
-  const torsoRef = useRef<THREE.Group>(null);
+    const groupRef = useRef<THREE.Group>(null);
+    const mixerRef = useRef<THREE.AnimationMixer | null>(null);
+    const modelRef = useRef<THREE.Group>(null);
 
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    
-    if (groupRef.current) {
-      // Subtle body bob
-      groupRef.current.position.y = Math.sin(time * 8) * 0.08;
-      // Slight forward lean for running posture
-      groupRef.current.rotation.x = 0.1;
-    }
+    // Load the FBX model - using male.fbx for now, could be extended for female
+    const modelPath = gender === 'male' ? '/models/male.fbx' : '/models/male.fbx';
+    const fbx = useLoader(FBXLoader, modelPath);
 
-    // Torso slight rotation for natural running motion
-    if (torsoRef.current) {
-      torsoRef.current.rotation.y = Math.sin(time * 8) * 0.05;
-    }
+    useEffect(() => {
+        if (fbx) {
+            // Calculate proper scaling based on model bounds
+            const box = new THREE.Box3().setFromObject(fbx);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
 
-    // Leg animation - alternating running motion with more realistic movement
-    if (leftLegRef.current && rightLegRef.current) {
-      leftLegRef.current.rotation.x = Math.sin(time * 8) * 0.8 - 0.2;
-      rightLegRef.current.rotation.x = Math.sin(time * 8 + Math.PI) * 0.8 - 0.2;
-      
-      // Hip movement
-      leftLegRef.current.position.y = 0.2 + Math.sin(time * 8) * 0.05;
-      rightLegRef.current.position.y = 0.2 + Math.sin(time * 8 + Math.PI) * 0.05;
-    }
+            // Scale the model to fit within a reasonable size (target height ~12 units for better visibility)
+            const maxDimension = Math.max(size.x, size.y, size.z);
+            const targetSize = 12; // Much larger target size for better visibility
+            const scale = targetSize / maxDimension;
+            fbx.scale.setScalar(scale);
 
-    // Arm animation - opposite to legs with more dynamic movement
-    if (leftArmRef.current && rightArmRef.current) {
-      leftArmRef.current.rotation.x = Math.sin(time * 8 + Math.PI) * 0.6 - 0.3;
-      rightArmRef.current.rotation.x = Math.sin(time * 8) * 0.6 - 0.3;
-      
-      // Slight arm swing back
-      leftArmRef.current.rotation.z = Math.sin(time * 8 + Math.PI) * 0.1;
-      rightArmRef.current.rotation.z = -Math.sin(time * 8) * 0.1;
-    }
-  });
+            // Center the model at origin after scaling
+            fbx.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+            fbx.rotation.y = 0; // No rotation initially
 
-  // Body proportions based on gender
-  const bodyScale = gender === 'male' ? 1.1 : 0.95;
-  const shoulderWidth = gender === 'male' ? 0.7 : 0.6;
-  const chestDepth = gender === 'male' ? 0.35 : 0.28;
-  const waistWidth = gender === 'male' ? 0.5 : 0.45;
+            // Set up shadows and inspect model structure
+            let boneCount = 0;
+            let meshCount = 0;
+            fbx.traverse((child: THREE.Object3D) => {
+                if (child instanceof THREE.Mesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    meshCount++;
+                    console.log('Mesh found:', child.name, 'Has skeleton:', !!child.skeleton);
+                    if (child.skeleton) {
+                        console.log('Skeleton bones:', child.skeleton.bones.length);
+                        boneCount += child.skeleton.bones.length;
+                    }
+                }
+                if (child instanceof THREE.Bone) {
+                    console.log('Bone found:', child.name);
+                }
+            });
+            console.log(`Model structure: ${meshCount} meshes, ${boneCount} bones`);
 
-  // Grey material for the entire body
-  const greyMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#6b7280',
-    roughness: 0.3,
-    metalness: 0.1,
-    flatShading: true // Low-poly aesthetic
-  }), []);
+            // Set up animations if they exist
+            if (fbx.animations && fbx.animations.length > 0) {
+                console.log('Setting up animations...');
 
-  const darkGreyMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#4b5563',
-    roughness: 0.4,
-    metalness: 0.1,
-    flatShading: true
-  }), []);
+                // Try creating mixer with the original FBX object instead of cloned model
+                const mixer = new THREE.AnimationMixer(fbx);
+                mixerRef.current = mixer;
 
-  const shoesMaterial = useMemo(() => new THREE.MeshStandardMaterial({ 
-    color: '#1f2937',
-    roughness: 0.6,
-    metalness: 0.0,
-    flatShading: true
-  }), []);
+                // Play all animations (in case there are multiple)
+                fbx.animations.forEach((clip, index) => {
+                    console.log(`Animation ${index}:`, clip.name, 'Duration:', clip.duration);
+                    console.log('Animation tracks:', clip.tracks.length);
 
-  return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Head - Low poly octahedron for more defined look */}
-      <mesh position={[0, 1.75, 0]} castShadow>
-        <octahedronGeometry args={[0.18, 1]} />
-        <primitive object={greyMaterial} />
-      </mesh>
+                    // Log some track info
+                    clip.tracks.slice(0, 3).forEach((track, i) => {
+                        console.log(`Track ${i}:`, track.name, 'Type:', track.constructor.name);
+                    });
 
-      {/* Neck */}
-      <Cylinder args={[0.06, 0.08, 0.15]} position={[0, 1.55, 0]} castShadow>
-        <primitive object={greyMaterial} />
-      </Cylinder>
+                    const action = mixer.clipAction(clip);
+                    action.setLoop(THREE.LoopRepeat, Infinity);
+                    action.clampWhenFinished = false;
+                    action.enabled = true;
+                    action.timeScale = 0.6; // Even slower for debugging
+                    action.weight = 1; // Full weight
+                    action.play();
 
-      <group ref={torsoRef}>
-        {/* Upper Torso/Chest */}
-        <mesh position={[0, 1.3, 0]} castShadow>
-          <boxGeometry args={[shoulderWidth, 0.5 * bodyScale, chestDepth]} />
-          <primitive object={greyMaterial} />
-        </mesh>
+                    console.log(`Started animation: ${clip.name} at ${action.timeScale}x speed`);
+                    console.log('Action isRunning:', action.isRunning(), 'paused:', action.paused);
+                });
 
-        {/* Lower Torso/Abs */}
-        <mesh position={[0, 0.9, 0]} castShadow>
-          <boxGeometry args={[waistWidth, 0.35 * bodyScale, chestDepth * 0.9]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-      </group>
 
-      {/* Left Shoulder */}
-      <Sphere args={[0.12]} position={[-shoulderWidth/2, 1.45, 0]} castShadow>
-        <primitive object={darkGreyMaterial} />
-      </Sphere>
+            } else {
+                console.warn('No animations found in FBX model');
+            }
 
-      {/* Right Shoulder */}
-      <Sphere args={[0.12]} position={[shoulderWidth/2, 1.45, 0]} castShadow>
-        <primitive object={darkGreyMaterial} />
-      </Sphere>
+            // Add the FBX to the group
+            if (groupRef.current) {
+                groupRef.current.clear();
+                groupRef.current.add(fbx);
+                modelRef.current = fbx;
+            }
+        }
+    }, [fbx]);
 
-      {/* Left Arm */}
-      <group ref={leftArmRef} position={[-shoulderWidth/2 - 0.05, 1.3, 0]}>
-        {/* Upper Arm */}
-        <mesh position={[0, -0.2, 0]} rotation={[0, 0, 0]} castShadow>
-          <boxGeometry args={[0.12, 0.4, 0.12]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Elbow */}
-        <Sphere args={[0.08]} position={[0, -0.42, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Forearm */}
-        <mesh position={[0, -0.65, 0]}>
-          <boxGeometry args={[0.1, 0.35, 0.1]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Hand */}
-        <mesh position={[0, -0.88, 0]}>
-          <boxGeometry args={[0.08, 0.12, 0.06]} />
-          <primitive object={darkGreyMaterial} />
-        </mesh>
-      </group>
+    useFrame((state, delta) => {
+        // Update animation mixer with delta time - this is crucial for animations to work
+        if (mixerRef.current) {
+            mixerRef.current.update(delta);
+        }
+    });
 
-      {/* Right Arm */}
-      <group ref={rightArmRef} position={[shoulderWidth/2 + 0.05, 1.3, 0]}>
-        {/* Upper Arm */}
-        <mesh position={[0, -0.2, 0]} rotation={[0, 0, 0]} castShadow>
-          <boxGeometry args={[0.12, 0.4, 0.12]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Elbow */}
-        <Sphere args={[0.08]} position={[0, -0.42, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Forearm */}
-        <mesh position={[0, -0.65, 0]}>
-          <boxGeometry args={[0.1, 0.35, 0.1]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Hand */}
-        <mesh position={[0, -0.88, 0]}>
-          <boxGeometry args={[0.08, 0.12, 0.06]} />
-          <primitive object={darkGreyMaterial} />
-        </mesh>
-      </group>
-
-      {/* Waist/Hip */}
-      <mesh position={[0, 0.55, 0]} castShadow>
-        <boxGeometry args={[waistWidth, 0.25, chestDepth * 0.8]} />
-        <primitive object={greyMaterial} />
-      </mesh>
-
-      {/* Left Leg */}
-      <group ref={leftLegRef} position={[-0.18, 0.2, 0]}>
-        {/* Hip Joint */}
-        <Sphere args={[0.1]} position={[0, 0.15, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Thigh */}
-        <mesh position={[0, -0.15, 0]} castShadow>
-          <boxGeometry args={[0.15, 0.45, 0.15]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Knee */}
-        <Sphere args={[0.09]} position={[0, -0.42, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Shin */}
-        <mesh position={[0, -0.65, 0]} castShadow>
-          <boxGeometry args={[0.12, 0.35, 0.12]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Ankle */}
-        <Sphere args={[0.07]} position={[0, -0.85, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Foot */}
-        <mesh position={[0.12, -0.95, 0]} castShadow>
-          <boxGeometry args={[0.28, 0.1, 0.15]} />
-          <primitive object={shoesMaterial} />
-        </mesh>
-      </group>
-
-      {/* Right Leg */}
-      <group ref={rightLegRef} position={[0.18, 0.2, 0]}>
-        {/* Hip Joint */}
-        <Sphere args={[0.1]} position={[0, 0.15, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Thigh */}
-        <mesh position={[0, -0.15, 0]} castShadow>
-          <boxGeometry args={[0.15, 0.45, 0.15]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Knee */}
-        <Sphere args={[0.09]} position={[0, -0.42, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Shin */}
-        <mesh position={[0, -0.65, 0]} castShadow>
-          <boxGeometry args={[0.12, 0.35, 0.12]} />
-          <primitive object={greyMaterial} />
-        </mesh>
-        {/* Ankle */}
-        <Sphere args={[0.07]} position={[0, -0.85, 0]}>
-          <primitive object={darkGreyMaterial} />
-        </Sphere>
-        {/* Foot */}
-        <mesh position={[0.12, -0.95, 0]} castShadow>
-          <boxGeometry args={[0.28, 0.1, 0.15]} />
-          <primitive object={shoesMaterial} />
-        </mesh>
-      </group>
-    </group>
-  );
+    return (
+        <group ref={groupRef} position={[0, 0, 0]}>
+            {/* Reference cube to help with positioning */}
+            <mesh position={[2, 0, 0]} castShadow>
+                <boxGeometry args={[0.5, 0.5, 0.5]} />
+            </mesh>
+        </group>
+    );
 }
+
+
 
 export default function ThreeJsRunner({ gender }: RunnerProps) {
-  const cameraPosition = useMemo(() => new THREE.Vector3(0, 1, 4), []);
+    const [cameraHeight, setCameraHeight] = useState(6); // Much closer to model
+    const [cameraDistance, setCameraDistance] = useState(13); // Much closer distance
+    const [cameraRotationY, setCameraRotationY] = useState(491 * Math.PI / 180); // Yaw (horizontal) - 124°
+    const [cameraRotationX, setCameraRotationX] = useState(-23 * Math.PI / 180); // Pitch (vertical) - -23°
+    const [cameraFov, setCameraFov] = useState(75); // Slightly narrower FOV for better focus
+    const [showControls, setShowControls] = useState(false);
+    const [useCustomCamera, setUseCustomCamera] = useState(true);
 
-  return (
-    <div className="w-full h-64 bg-black rounded-lg overflow-hidden border border-zinc-800">
-      <Canvas
-        camera={{ position: cameraPosition, fov: 45 }}
-        gl={{ antialias: true }}
-        shadows
-      >
-        {/* Enhanced gym-like lighting setup for low-poly grey model */}
-        {/* Key light from top-front for main illumination */}
-        <directionalLight
-          position={[3, 5, 3]}
-          intensity={1.2}
-          color="#ffffff"
-          castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
-        />
-        
-        {/* Rim light from behind-left to create dramatic silhouette */}
-        <directionalLight
-          position={[-3, 3, -2]}
-          intensity={0.6}
-          color="#8b9dc3"
-        />
-        
-        {/* Fill light from the right for muscle definition */}
-        <pointLight
-          position={[2, 1.5, 2]}
-          intensity={0.5}
-          color="#ffffff"
-        />
-        
-        {/* Subtle ambient light to prevent harsh shadows */}
-        <ambientLight intensity={0.15} color="#404040" />
-        
-        {/* Ground plane for shadows */}
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.1, 0]} receiveShadow>
-          <planeGeometry args={[5, 5]} />
-          <meshStandardMaterial color="#0a0a0a" transparent opacity={0.3} />
-        </mesh>
+    const initialCameraPosition = useMemo(() => {
+        const x = Math.cos(cameraRotationY) * Math.cos(cameraRotationX) * cameraDistance;
+        const y = Math.sin(cameraRotationX) * cameraDistance + cameraHeight;
+        const z = Math.sin(cameraRotationY) * Math.cos(cameraRotationX) * cameraDistance;
+        return new THREE.Vector3(x, y, z);
+    }, [cameraRotationY, cameraRotationX, cameraDistance, cameraHeight]);
 
-        <RunningFigure gender={gender} />
-      </Canvas>
-    </div>
-  );
-}
+    return (
+        <div className="h-64 w-64 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
+            <Canvas
+                camera={{ position: initialCameraPosition, fov: cameraFov }}
+                gl={{ antialias: true }}
+                shadows
+            >
+
+                {/* Enhanced lighting setup for the FBX model */}
+                {/* Key light from top-front for main illumination */}
+                <directionalLight
+                    position={[3, 5, 3]}
+                    intensity={1.5}
+                    color="#ffffff"
+                    castShadow
+                    shadow-mapSize-width={1024}
+                    shadow-mapSize-height={1024}
+                />
+
+                {/* Rim light from behind-left to create dramatic silhouette */}
+                <directionalLight
+                    position={[-3, 3, -2]}
+                    intensity={0.8}
+                    color="#8b9dc3"
+                />
+
+                {/* Fill light from the right for definition */}
+                <pointLight
+                    position={[2, 1.5, 2]}
+                    intensity={0.7}
+                    color="#ffffff"
+                />
+
+                {/* Subtle ambient light to prevent harsh shadows */}
+                <ambientLight intensity={0.4} color="#404040" /> {/* Increased ambient light */}
+
+                {/* Ground plane for shadows */}
+                {/* 
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]} receiveShadow>
+                    <planeGeometry args={[10, 10]} />  
+                    <meshStandardMaterial color="#0a0a0a" transparent opacity={0.3} />
+                </mesh> 
+                */}
+
+                <RunningFigure gender={gender} />
+            </Canvas>
+
+            {/* Camera Control Panel */}
+            {showControls && (
+                <div className="absolute top-2 left-2 text-white text-xs bg-black bg-opacity-80 p-3 rounded border border-gray-600">
+                    <div className="font-bold mb-2">🎮 Camera Controls</div>
+
+                    {/* Camera Mode Toggle */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>Mode:</span>
+                            <button
+                                onClick={() => setUseCustomCamera(true)}
+                                className={`px-2 py-1 rounded text-xs ${useCustomCamera ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                            >
+                                Custom
+                            </button>
+                            <button
+                                onClick={() => setUseCustomCamera(false)}
+                                className={`px-2 py-1 rounded text-xs ${!useCustomCamera ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-700'}`}
+                            >
+                                Mouse
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Height Controls */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>Height:</span>
+                            <button
+                                onClick={() => setCameraHeight(h => Math.max(0, h - 0.5))}
+                                className="bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↓
+                            </button>
+                            <span className="w-8 text-center">{cameraHeight.toFixed(1)}</span>
+                            <button
+                                onClick={() => setCameraHeight(h => h + 0.5)}
+                                className="bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↑
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Distance Controls */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>Distance:</span>
+                            <button
+                                onClick={() => setCameraDistance(d => Math.max(0.5, d - 0.5))}
+                                className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ←
+                            </button>
+                            <span className="w-8 text-center">{cameraDistance.toFixed(1)}</span>
+                            <button
+                                onClick={() => setCameraDistance(d => d + 0.5)}
+                                className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                →
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Horizontal Rotation (Yaw) Controls */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>Yaw:</span>
+                            <button
+                                onClick={() => setCameraRotationY(r => r - 0.2)}
+                                className="bg-purple-600 hover:bg-purple-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↶
+                            </button>
+                            <span className="w-8 text-center">{(cameraRotationY * 180 / Math.PI).toFixed(0)}°</span>
+                            <button
+                                onClick={() => setCameraRotationY(r => r + 0.2)}
+                                className="bg-purple-600 hover:bg-purple-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↷
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Vertical Rotation (Pitch) Controls */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>Pitch:</span>
+                            <button
+                                onClick={() => setCameraRotationX(r => Math.max(-Math.PI / 2 + 0.1, r - 0.2))}
+                                className="bg-orange-600 hover:bg-orange-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↓
+                            </button>
+                            <span className="w-8 text-center">{(cameraRotationX * 180 / Math.PI).toFixed(0)}°</span>
+                            <button
+                                onClick={() => setCameraRotationX(r => Math.min(Math.PI / 2 - 0.1, r + 0.2))}
+                                className="bg-orange-600 hover:bg-orange-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                ↑
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* FOV Controls */}
+                    <div className="mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                            <span>FOV:</span>
+                            <button
+                                onClick={() => setCameraFov(f => Math.max(10, f - 10))}
+                                className="bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                −
+                            </button>
+                            <span className="w-8 text-center">{cameraFov}°</span>
+                            <button
+                                onClick={() => setCameraFov(f => Math.min(180, f + 10))}
+                                className="bg-teal-600 hover:bg-teal-700 px-2 py-1 rounded text-xs"
+                                disabled={!useCustomCamera}
+                            >
+                                +
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Preset Views */}
+                    <div className="mb-3">
+                        <div className="text-xs mb-1">Presets:</div>
+                        <div className="flex gap-1">
+                            <button
+                                onClick={() => {
+                                    setCameraHeight(6);
+                                    setCameraDistance(15);
+                                    setCameraRotationY(0);
+                                    setCameraRotationX(0);
+                                    setUseCustomCamera(true);
+                                }}
+                                className="bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded text-xs"
+                            >
+                                Front
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setCameraHeight(6);
+                                    setCameraDistance(15);
+                                    setCameraRotationY(Math.PI / 2);
+                                    setCameraRotationX(0);
+                                    setUseCustomCamera(true);
+                                }}
+                                className="bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded text-xs"
+                            >
+                                Right
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setCameraHeight(8);
+                                    setCameraDistance(18);
+                                    setCameraRotationY(Math.PI / 4);
+                                    setCameraRotationX(Math.PI / 6);
+                                    setUseCustomCamera(true);
+                                }}
+                                className="bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded text-xs"
+                            >
+                                Elevated
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setCameraHeight(6);
+                                    setCameraDistance(12);
+                                    setCameraRotationY(0);
+                                    setCameraRotationX(Math.PI / 2 - 0.1);
+                                    setUseCustomCamera(true);
+                                }}
+                                className="bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded text-xs"
+                            >
+                                Top
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Current Position Display */}
+                    <div className="text-xs text-gray-300 mb-2">
+                        Position: ({(Math.cos(cameraRotationY) * Math.cos(cameraRotationX) * cameraDistance).toFixed(1)}, {(Math.sin(cameraRotationX) * cameraDistance + cameraHeight).toFixed(1)}, {(Math.sin(cameraRotationY) * Math.cos(cameraRotationX) * cameraDistance).toFixed(1)})
+                    </div>
+
+                    {/* Toggle Controls */}
+                    <button
+                        onClick={() => setShowControls(false)}
+                        className="bg-red-600 hover:bg-red-700 px-2 py-1 rounded text-xs"
+                    >
+                        Hide Controls
+                    </button>
+                </div>
+            )}
+
+            {/* Show Controls Button */}
+            {/* {!showControls && (
+                <button
+                    onClick={() => setShowControls(true)}
+                    className="absolute top-2 left-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs"
+                >
+                    Show Controls
+                </button>
+            )} */}
+        </div>
+    );
+} 

@@ -86,7 +86,7 @@ const Header = () => {
                         Events
                     </Link>
                     <Link href="/feed" className="luxury-text hover:text-accent transition-colors hover:underline">
-                        Feed
+                        Explore
                     </Link>
                     <Link href="/auth?mode=signup" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Join

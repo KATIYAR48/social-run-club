@@ -166,8 +166,8 @@ export default function FollowersPage() {
                     transition={{ duration: 0.5, delay: 0.1 }}
                 >
                     {followers.length === 0 ? (
-                        <div className="text-center py-16">
-                            <div className="text-zinc-600 mb-4">
+                        <div className="text-center flex-col items-center justify-center py-16">
+                            <div className="text-zinc-600 mb-4 flex-col items-center justify-center">
                                 <Users size={48} />
                             </div>
                             <h3 className="text-xl font-semibold mb-2">No followers yet</h3>
