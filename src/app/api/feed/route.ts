@@ -85,29 +85,33 @@ export async function GET(request: NextRequest) {
     }
 
     // Get check-in activities
-    const checkIns = await UserEvent.find(userEventQuery)
+    const checkIns = (await UserEvent.find(userEventQuery)
       .populate("userId", "username name _id")
       .sort({ checkedInAt: -1 })
       .skip(offset)
       .limit(limit + 1) // Get one extra to check if there are more
-      .lean() as unknown as CheckInWithUser[];
+      .lean()) as unknown as CheckInWithUser[];
 
     // Get all event IDs
     const eventIds = checkIns.map((checkIn) => checkIn.eventId);
 
     // Fetch the actual events
-    const events = await Event.find({ _id: { $in: eventIds } }).lean() as unknown as EventData[];
+    const events = (await Event.find({
+      _id: { $in: eventIds },
+    }).lean()) as unknown as EventData[];
 
     // Combine check-ins with event data
-    const checkInsWithEventData: CheckInWithEventData[] = checkIns.map((checkIn) => {
-      const event = events.find(
-        (e) => e._id?.toString() === checkIn.eventId?.toString()
-      );
-      return {
-        ...checkIn,
-        eventId: event || null,
-      };
-    });
+    const checkInsWithEventData: CheckInWithEventData[] = checkIns.map(
+      (checkIn) => {
+        const event = events.find(
+          (e) => e._id?.toString() === checkIn.eventId?.toString()
+        );
+        return {
+          ...checkIn,
+          eventId: event || null,
+        };
+      }
+    );
 
     // Check if there are more results
     const hasMore = checkInsWithEventData.length > limit;
