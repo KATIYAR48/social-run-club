@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
@@ -36,14 +36,7 @@ export default function FollowersPage() {
     const [error, setError] = useState<string | null>(null);
     const [userProfile, setUserProfile] = useState<Record<string, unknown> | null>(null);
 
-    useEffect(() => {
-        if (username) {
-            fetchFollowers();
-            fetchUserProfile();
-        }
-    }, [username]);
-
-    const fetchUserProfile = async () => {
+    const fetchUserProfile = useCallback(async () => {
         try {
             const response = await fetch(`/api/profile/${username}`);
             const data = await response.json();
@@ -53,9 +46,9 @@ export default function FollowersPage() {
         } catch (error) {
             console.error('Error fetching user profile:', error);
         }
-    };
+    }, [username]);
 
-    const fetchFollowers = async () => {
+    const fetchFollowers = useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -85,7 +78,14 @@ export default function FollowersPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [username]);
+
+    useEffect(() => {
+        if (username) {
+            fetchFollowers();
+            fetchUserProfile();
+        }
+    }, [username, fetchFollowers, fetchUserProfile]);
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {

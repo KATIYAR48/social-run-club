@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -46,11 +46,7 @@ export default function FeedPage() {
     const [hasMore, setHasMore] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        loadFeed(true);
-    }, [activeTab]);
-
-    const loadFeed = async (reset = false) => {
+    const loadFeed = useCallback(async (reset = false) => {
         try {
             if (reset) {
                 setLoading(true);
@@ -80,7 +76,11 @@ export default function FeedPage() {
             setLoading(false);
             setLoadingMore(false);
         }
-    };
+    }, [activeTab, activities.length]);
+
+    useEffect(() => {
+        loadFeed(true);
+    }, [loadFeed]);
 
     const formatTimeAgo = (dateString: string) => {
         const date = new Date(dateString);

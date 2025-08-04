@@ -14,7 +14,6 @@ import NotificationPrompt from '@/components/NotificationPrompt';
 import FollowButton from '@/components/FollowButton';
 import FollowStats from '@/components/FollowStats';
 import ThreeJsRunner from '@/components/ThreeJsRunner';
-import StravaStats from '@/components/StravaStats';
 import Link from 'next/link';
 
 interface PublicProfile {

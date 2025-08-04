@@ -139,7 +139,7 @@ export default function AuthPage() {
                     message: data.message || 'Error checking username'
                 });
             }
-        } catch (error) {
+        } catch {
             setUsernameStatus({
                 checking: false,
                 available: false,
@@ -539,10 +539,10 @@ export default function AuthPage() {
                                             value={signupData.username}
                                             onChange={handleSignupChange}
                                             className={`w-full p-3 border focus:outline-none focus:ring-2 bg-zinc-900 ${usernameStatus.available === false
-                                                    ? 'border-red-500 focus:ring-red-500'
-                                                    : usernameStatus.available === true
-                                                        ? 'border-green-500 focus:ring-green-500'
-                                                        : 'border-zinc-700 focus:ring-blue-500'
+                                                ? 'border-red-500 focus:ring-red-500'
+                                                : usernameStatus.available === true
+                                                    ? 'border-green-500 focus:ring-green-500'
+                                                    : 'border-zinc-700 focus:ring-blue-500'
                                                 }`}
                                             placeholder="Auto-generated from email (editable)"
                                             minLength={3}
@@ -550,12 +550,12 @@ export default function AuthPage() {
                                         />
                                         {usernameStatus.message && (
                                             <div className={`mt-1 text-sm flex items-center gap-1 ${usernameStatus.checking
-                                                    ? 'text-zinc-400'
-                                                    : usernameStatus.available === false
-                                                        ? 'text-red-400'
-                                                        : usernameStatus.available === true
-                                                            ? 'text-green-400'
-                                                            : 'text-zinc-400'
+                                                ? 'text-zinc-400'
+                                                : usernameStatus.available === false
+                                                    ? 'text-red-400'
+                                                    : usernameStatus.available === true
+                                                        ? 'text-green-400'
+                                                        : 'text-zinc-400'
                                                 }`}>
                                                 {usernameStatus.checking && (
                                                     <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>

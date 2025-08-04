@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
+import Image from 'next/image';
 
 interface Event {
     _id: string;
@@ -646,7 +647,16 @@ export default function AdminEventsPage() {
                                     Optional: Add a URL for the event banner image. Use a direct image URL (e.g., .jpg, .png).
                                 </p>
 
-                                <img src={eventForm.event.bannerImageURL || ''} alt="Banner Image" className="rounded-xl w-full h-auto" />
+                                {eventForm.event.bannerImageURL && (
+                                    <Image
+                                        src={eventForm.event.bannerImageURL}
+                                        alt="Banner Image"
+                                        className="rounded-xl w-full h-auto"
+                                        width={800}
+                                        height={192}
+                                        unoptimized
+                                    />
+                                )}
                             </div>
 
                             <div>

@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 
+interface UsernameQuery {
+  username: string;
+  _id?: { $ne: string };
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Connect to the database
@@ -35,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if username exists (excluding current user if provided)
-    const query: any = { username: cleanUsername };
+    const query: UsernameQuery = { username: cleanUsername };
     if (excludeUserId) {
       query._id = { $ne: excludeUserId };
     }

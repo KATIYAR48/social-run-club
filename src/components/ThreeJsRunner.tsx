@@ -15,7 +15,7 @@ function RunningFigure({ gender }: RunnerProps) {
     const modelRef = useRef<THREE.Group>(null);
 
     // Load the FBX model - using male.fbx for now, could be extended for female
-    const modelPath = gender === 'male' ? '/models/male.fbx' : '/models/male.fbx';
+    const modelPath = gender === 'male' ? '/models/male.fbx' : '/models/female.fbx';
     const fbx = useLoader(FBXLoader, modelPath);
 
     useEffect(() => {
@@ -43,10 +43,13 @@ function RunningFigure({ gender }: RunnerProps) {
                     child.castShadow = true;
                     child.receiveShadow = true;
                     meshCount++;
-                    console.log('Mesh found:', child.name, 'Has skeleton:', !!child.skeleton);
-                    if (child.skeleton) {
-                        console.log('Skeleton bones:', child.skeleton.bones.length);
-                        boneCount += child.skeleton.bones.length;
+                    console.log('Mesh found:', child.name);
+                    
+                    // Check if mesh has a skeleton (skinned mesh)
+                    const skinnedMesh = child as THREE.SkinnedMesh;
+                    if (skinnedMesh.skeleton) {
+                        console.log('Skeleton bones:', skinnedMesh.skeleton.bones.length);
+                        boneCount += skinnedMesh.skeleton.bones.length;
                     }
                 }
                 if (child instanceof THREE.Bone) {
@@ -120,7 +123,9 @@ function RunningFigure({ gender }: RunnerProps) {
 
 export default function ThreeJsRunner({ gender }: RunnerProps) {
     const [cameraHeight, setCameraHeight] = useState(6); // Much closer to model
-    const [cameraDistance, setCameraDistance] = useState(13); // Much closer distance
+    const [cameraDistance, setCameraDistance] = useState(
+        12
+    ); // Much closer distance
     const [cameraRotationY, setCameraRotationY] = useState(491 * Math.PI / 180); // Yaw (horizontal) - 124°
     const [cameraRotationX, setCameraRotationX] = useState(-23 * Math.PI / 180); // Pitch (vertical) - -23°
     const [cameraFov, setCameraFov] = useState(75); // Slightly narrower FOV for better focus
@@ -135,7 +140,7 @@ export default function ThreeJsRunner({ gender }: RunnerProps) {
     }, [cameraRotationY, cameraRotationX, cameraDistance, cameraHeight]);
 
     return (
-        <div className="h-64 w-64 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
+        <div className="h-64 w-42 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
             <Canvas
                 camera={{ position: initialCameraPosition, fov: cameraFov }}
                 gl={{ antialias: true }}

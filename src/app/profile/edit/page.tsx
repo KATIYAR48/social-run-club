@@ -146,7 +146,7 @@ export default function EditProfilePage() {
 
     // Debounced username availability check
     useEffect(() => {
-        if (!formData.username) {
+        if (!formData.username || formData.username === user?.username) {
             setUsernameStatus({ checking: false, available: null, message: '' });
             return;
         }
@@ -156,7 +156,7 @@ export default function EditProfilePage() {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [formData.username, user]);
+    }, [formData.username, user, checkUsernameAvailability]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
