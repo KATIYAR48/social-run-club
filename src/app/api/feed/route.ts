@@ -4,6 +4,31 @@ import UserEvent from "@/models/UserEvent";
 import Follow from "@/models/Follow";
 import Event from "@/models/Event";
 
+// Define types for the data structures
+interface CheckInWithUser {
+  _id: unknown;
+  userId: {
+    _id: unknown;
+    username: string;
+    name: string;
+  };
+  eventId: unknown;
+  checkedInAt: Date;
+  createdAt: Date;
+}
+
+interface EventData {
+  _id: unknown;
+  title: string;
+  description: string;
+  date: Date;
+  location: string;
+}
+
+interface CheckInWithEventData extends CheckInWithUser {
+  eventId: EventData | null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
@@ -65,18 +90,18 @@ export async function GET(request: NextRequest) {
       .sort({ checkedInAt: -1 })
       .skip(offset)
       .limit(limit + 1) // Get one extra to check if there are more
-      .lean();
+      .lean() as unknown as CheckInWithUser[];
 
     // Get all event IDs
     const eventIds = checkIns.map((checkIn) => checkIn.eventId);
 
     // Fetch the actual events
-    const events = await Event.find({ _id: { $in: eventIds } }).lean();
+    const events = await Event.find({ _id: { $in: eventIds } }).lean() as unknown as EventData[];
 
     // Combine check-ins with event data
-    const checkInsWithEventData = checkIns.map((checkIn) => {
+    const checkInsWithEventData: CheckInWithEventData[] = checkIns.map((checkIn) => {
       const event = events.find(
-        (e) => e._id.toString() === checkIn.eventId.toString()
+        (e) => e._id?.toString() === checkIn.eventId?.toString()
       );
       return {
         ...checkIn,
@@ -94,24 +119,33 @@ export async function GET(request: NextRequest) {
     const totalCount = await UserEvent.countDocuments(userEventQuery);
 
     // Format the activities
-    const activities = checkInsWithEventData.map((checkIn) => ({
-      _id: checkIn._id,
-      type: "check-in",
-      user: {
-        _id: checkIn.userId._id,
-        username: checkIn.userId.username,
-        name: checkIn.userId.name,
-      },
-      event: {
-        _id: checkIn.eventId._id,
-        title: checkIn.eventId.title,
-        description: checkIn.eventId.description,
-        date: checkIn.eventId.date,
-        location: checkIn.eventId.location,
-      },
-      checkedInAt: checkIn.checkedInAt,
-      createdAt: checkIn.checkedInAt, // Use check-in time for sorting
-    }));
+    const activities = checkInsWithEventData
+      .filter((checkIn) => {
+        // Filter out check-ins without proper user or event data
+        return checkIn.userId && checkIn.eventId && checkIn.checkedInAt;
+      })
+      .map((checkIn) => {
+        // At this point, we know eventId is not null due to the filter above
+        const event = checkIn.eventId!;
+        return {
+          _id: checkIn._id,
+          type: "check-in" as const,
+          user: {
+            _id: checkIn.userId._id,
+            username: checkIn.userId.username,
+            name: checkIn.userId.name,
+          },
+          event: {
+            _id: event._id,
+            title: event.title,
+            description: event.description,
+            date: event.date,
+            location: event.location,
+          },
+          checkedInAt: checkIn.checkedInAt,
+          createdAt: checkIn.checkedInAt, // Use check-in time for sorting
+        };
+      });
 
     return NextResponse.json({
       success: true,

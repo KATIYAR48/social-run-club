@@ -44,7 +44,7 @@ function RunningFigure({ gender }: RunnerProps) {
                     child.receiveShadow = true;
                     meshCount++;
                     console.log('Mesh found:', child.name);
-                    
+
                     // Check if mesh has a skeleton (skinned mesh)
                     const skinnedMesh = child as THREE.SkinnedMesh;
                     if (skinnedMesh.skeleton) {
@@ -140,7 +140,7 @@ export default function ThreeJsRunner({ gender }: RunnerProps) {
     }, [cameraRotationY, cameraRotationX, cameraDistance, cameraHeight]);
 
     return (
-        <div className="h-64 w-42 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
+        <div className="h-64 w-64 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
             <Canvas
                 camera={{ position: initialCameraPosition, fov: cameraFov }}
                 gl={{ antialias: true }}
