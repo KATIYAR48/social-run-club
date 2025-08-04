@@ -66,7 +66,7 @@ export default function MerchWaitlistPage() {
         if (isAuthenticated && (user?.role === 'admin' || user?.role === 'super-admin')) {
             fetchEntries();
         }
-    }, [isAuthenticated, user, page, searchTerm, statusFilter, fetchEntries]);
+    }, [isAuthenticated, user, page, searchTerm, statusFilter,]);
 
     // Redirect if not authenticated or not admin
     if (!isLoading && (!isAuthenticated || user?.role !== 'admin' && user?.role !== 'super-admin')) {
