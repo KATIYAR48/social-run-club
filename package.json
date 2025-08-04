@@ -10,15 +10,19 @@
     "lint": "next lint",
     "download-images": "node scripts/download-placeholders.js",
     "seed-db": "node scripts/seed-db.js",
-    "migrate-users": "node scripts/migrate-users.js"
+    "migrate-users": "node scripts/migrate-users.js",
+    "generate-usernames": "node scripts/generate-usernames.js"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.2",
+    "@react-three/drei": "^10.6.1",
+    "@react-three/fiber": "^9.3.0",
     "@sendgrid/mail": "^8.1.4",
     "@tremor/react": "^3.18.7",
     "@types/bcryptjs": "^2.4.6",
+    "@types/three": "^0.178.1",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "critters": "^0.0.23",
@@ -35,6 +39,7 @@
     "react-hook-form": "^7.54.2",
     "react-qr-code": "^2.0.15",
     "tailwind-merge": "^3.0.2",
+    "three": "^0.178.0",
     "web-push": "^3.6.7",
     "zod": "^3.24.2"
   },

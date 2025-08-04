@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import Button from './Button';
+import Image from 'next/image';
 
 export type EventCardProps = {
     id: string;
@@ -52,10 +53,13 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
             </p>
             {event.bannerImageURL && (
                 <div className="mb-4">
-                    <img
+                    <Image
                         src={event.bannerImageURL}
                         alt={`${event.title} banner`}
+                        width={800}
+                        height={192}
                         className="w-full h-48 object-cover"
+                        unoptimized
                     />
                 </div>
             )}

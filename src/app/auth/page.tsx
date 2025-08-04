@@ -17,6 +17,11 @@ export default function AuthPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const [usernameStatus, setUsernameStatus] = useState<{
+        checking: boolean;
+        available: boolean | null;
+        message: string;
+    }>({ checking: false, available: null, message: '' });
     const router = useRouter();
     const redirect = searchParams.get('redirect') || '/';
     const { login, signup, isAuthenticated } = useAuth();
@@ -59,6 +64,7 @@ export default function AuthPage() {
     const [signupData, setSignupData] = useState({
         name: '',
         email: '',
+        username: '',
         password: '',
         phone: '',
         age: '',
@@ -69,6 +75,93 @@ export default function AuthPage() {
         acceptTerms: false,
     });
 
+    // Function to generate username from email
+    const generateUsernameFromEmail = (email: string) => {
+        const emailPrefix = email.split('@')[0];
+        let username = emailPrefix
+            .toLowerCase()
+            .replace(/\./g, '_')
+            .replace(/[^a-z0-9_-]/g, '')
+            .trim();
+
+        if (username.length < 3) {
+            username = username + '_user';
+        }
+
+        if (username.length > 30) {
+            username = username.substring(0, 30);
+        }
+
+        return username;
+    };
+
+    // Function to check username availability
+    const checkUsernameAvailability = async (username: string) => {
+        if (!username || username.length < 3) {
+            setUsernameStatus({ checking: false, available: null, message: '' });
+            return;
+        }
+
+        // Validate username format
+        const usernameRegex = /^[a-z0-9_-]+$/;
+        if (!usernameRegex.test(username)) {
+            setUsernameStatus({
+                checking: false,
+                available: false,
+                message: 'Username can only contain letters, numbers, underscores, and dashes'
+            });
+            return;
+        }
+
+        setUsernameStatus({ checking: true, available: null, message: 'Checking availability...' });
+
+        try {
+            const response = await fetch('/api/profile/check-username', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setUsernameStatus({
+                    checking: false,
+                    available: data.available,
+                    message: data.message
+                });
+            } else {
+                setUsernameStatus({
+                    checking: false,
+                    available: false,
+                    message: data.message || 'Error checking username'
+                });
+            }
+        } catch {
+            setUsernameStatus({
+                checking: false,
+                available: false,
+                message: 'Error checking username availability'
+            });
+        }
+    };
+
+    // Debounced username availability check
+    useEffect(() => {
+        if (!signupData.username) {
+            setUsernameStatus({ checking: false, available: null, message: '' });
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            checkUsernameAvailability(signupData.username);
+        }, 500);
+
+        return () => clearTimeout(timer);
+    }, [signupData.username]);
+
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginData({ ...loginData, [name]: value });
@@ -77,6 +170,23 @@ export default function AuthPage() {
     const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         let newValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+
+        // Special handling for username
+        if (name === 'username' && typeof newValue === 'string') {
+            // Convert to lowercase and remove invalid characters
+            newValue = newValue.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+            // Limit to 30 characters
+            if (newValue.length > 30) {
+                newValue = newValue.substring(0, 30);
+            }
+        }
+
+        // Special handling for email - generate username if username is empty
+        if (name === 'email' && typeof newValue === 'string' && !signupData.username) {
+            const generatedUsername = generateUsernameFromEmail(newValue);
+            setSignupData({ ...signupData, [name]: newValue, username: generatedUsername });
+            return;
+        }
 
         // Special handling for phone number - only allow digits and limit to 10 digits
         if (name === 'phone' && typeof newValue === 'string') {
@@ -129,6 +239,22 @@ export default function AuthPage() {
             return;
         }
 
+        // Validate username if provided
+        if (signupData.username) {
+            if (signupData.username.length < 3) {
+                setError('Username must be at least 3 characters long');
+                return;
+            }
+            if (usernameStatus.available === false) {
+                setError('Please choose an available username');
+                return;
+            }
+            if (usernameStatus.checking) {
+                setError('Please wait for username availability check to complete');
+                return;
+            }
+        }
+
         // Validate phone number (must be exactly 10 digits for Indian numbers)
         if (!/^\d{10}$/.test(signupData.phone)) {
             setError('Please enter a valid 10-digit Indian phone number');
@@ -147,6 +273,7 @@ export default function AuthPage() {
             const result = await signup({
                 name: signupData.name,
                 email: signupData.email,
+                username: signupData.username || undefined,
                 password: signupData.password,
                 phone: signupData.phone,
                 age: signupData.age ? parseInt(signupData.age) : undefined,
@@ -398,6 +525,46 @@ export default function AuthPage() {
                                                 className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                             />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="username" className="block text-sm font-medium mb-1">
+                                            Username (optional)
+                                        </label>
+                                        <input
+                                            id="username"
+                                            name="username"
+                                            type="text"
+                                            value={signupData.username}
+                                            onChange={handleSignupChange}
+                                            className={`w-full p-3 border focus:outline-none focus:ring-2 bg-zinc-900 ${usernameStatus.available === false
+                                                ? 'border-red-500 focus:ring-red-500'
+                                                : usernameStatus.available === true
+                                                    ? 'border-green-500 focus:ring-green-500'
+                                                    : 'border-zinc-700 focus:ring-blue-500'
+                                                }`}
+                                            placeholder="Auto-generated from email (editable)"
+                                            minLength={3}
+                                            maxLength={30}
+                                        />
+                                        {usernameStatus.message && (
+                                            <div className={`mt-1 text-sm flex items-center gap-1 ${usernameStatus.checking
+                                                ? 'text-zinc-400'
+                                                : usernameStatus.available === false
+                                                    ? 'text-red-400'
+                                                    : usernameStatus.available === true
+                                                        ? 'text-green-400'
+                                                        : 'text-zinc-400'
+                                                }`}>
+                                                {usernameStatus.checking && (
+                                                    <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>
+                                                )}
+                                                {usernameStatus.message}
+                                            </div>
+                                        )}
+                                        <div className="mt-1 text-xs text-zinc-500">
+                                            3-30 characters, letters, numbers, underscores, and dashes only
                                         </div>
                                     </div>
 

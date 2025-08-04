@@ -46,7 +46,7 @@ export default function CheckInPage() {
     useEffect(() => {
         if (isAuthenticated && eventId && token) {
             validateToken();
-        } else if (isAuthenticated && eventId && !token) {
+        } else if (isAuthenticated && !token) {
             setCheckInStatus({
                 success: false,
                 message: 'No check-in token provided. Please scan the QR code at the event venue.',
@@ -54,14 +54,14 @@ export default function CheckInPage() {
             });
             setIsEventLoading(false);
         }
-    }, [isAuthenticated, eventId, token]);
+    }, [isAuthenticated, eventId, token, validateToken]);
 
     // Fetch event details
     useEffect(() => {
         if (isAuthenticated && eventId && isTokenValid) {
             fetchEventDetails();
         }
-    }, [isAuthenticated, eventId, isTokenValid]);
+    }, [isAuthenticated, eventId, isTokenValid, fetchEventDetails]);
 
     const validateToken = async () => {
         try {

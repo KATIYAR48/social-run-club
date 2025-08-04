@@ -10,6 +10,7 @@ import Event from '@/models/Event';
 import { checkEventRegistration } from '@/lib/event-utils';
 import { cookies } from 'next/headers';
 import EventLocalDate from '@/components/EventLocalDate';
+import Image from 'next/image';
 
 // Define the params type for this page
 type PageParams = {
@@ -79,7 +80,8 @@ export default async function EventDetailPage({
     const isLoggedIn = !!(authCookie && authCookie.value);
 
     // Check if event is in the past
-    const isPastEvent = new Date(event.date) < new Date();
+    // Consider the event as "past" only if it's more than 2 hours ago
+    const isPastEvent = new Date(event.date).getTime() + 2 * 60 * 60 * 1000 < Date.now();
 
     return (
         <>
@@ -97,10 +99,13 @@ export default async function EventDetailPage({
                         {/* Event Header */}
                         <div className={`relative w-full ${event.bannerImageURL ? 'h-[32rem]' : 'h-96'}`}>
                             {event.bannerImageURL ? (
-                                <img
+                                <Image
                                     src={event.bannerImageURL}
                                     alt={event.title}
                                     className="absolute inset-0 w-full h-full object-cover object-[center_33%]"
+                                    width={1200}
+                                    height={512}
+                                    unoptimized
                                 />
                             ) : (
                                 <video
@@ -202,7 +207,12 @@ export default async function EventDetailPage({
                                                     isRegistered={isRegistered}
                                                     isApproved={isApproved}
                                                     isPastEvent={isPastEvent}
-                                                    additionalInfoField={event.additionalInfoField}
+                                                    additionalInfoField={event.additionalInfoField ? {
+                                                        label: event.additionalInfoField.label,
+                                                        required: event.additionalInfoField.required,
+                                                        fieldType: event.additionalInfoField.fieldType,
+                                                        options: event.additionalInfoField.options
+                                                    } : undefined}
                                                 />
 
                                                 {/* Show payment button if approved and razorpayButtonId exists */}

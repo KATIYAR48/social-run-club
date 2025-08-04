@@ -85,6 +85,9 @@ const Header = () => {
                     <Link href="/events" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Events
                     </Link>
+                    {isAuthenticated && user && (<Link href="/feed" className="luxury-text hover:text-accent transition-colors hover:underline">
+                        Explore
+                    </Link>)}
                     <Link href="/auth?mode=signup" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Join
                     </Link>
@@ -171,6 +174,13 @@ const Header = () => {
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Events
+                        </Link>
+                        <Link
+                            href="/feed"
+                            className="luxury-text hover:text-accent transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Feed
                         </Link>
 
 

@@ -93,13 +93,13 @@ function AdminLayoutContent({
                 <div className="backdrop-blur-md text-white p-4">
                     <div className="container mx-auto flex justify-between items-center relative">
                         <div className="flex items-center space-x-2">
-                            <Link href="/" className="flex items-center space-x-2">
+                            <Link href="/" className="">
                                 <Image
                                     src="/logo.png"
                                     alt="CLOKA Logo"
                                     width={100}
                                     height={100}
-                                    className="h-auto invert -mr-2"
+                                    className="h-auto invert md:-ml-4"
                                 />
                             </Link>
                             <h1 className="text-xl font-bold">Admin</h1>
@@ -132,7 +132,7 @@ function AdminLayoutContent({
                                 {isMenuOpen && (
                                     <div
                                         ref={dropdownRef}
-                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-50"
+                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-100"
                                     >
                                         <div className="p-4 flex flex-col space-y-2">
                                             <nav className="flex flex-col space-y-2">

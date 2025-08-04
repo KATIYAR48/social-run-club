@@ -7,6 +7,7 @@ export interface User {
     _id: string;
     name: string;
     email: string;
+    username: string;
     role: 'user' | 'admin' | 'super-admin';
     phone?: string;
     age?: number;
@@ -32,6 +33,7 @@ interface AuthContextType {
 export interface SignupData {
     name: string;
     email: string;
+    username?: string;
     password: string;
     phone: string;
     age?: number;
@@ -44,6 +46,7 @@ export interface SignupData {
 // Define update profile data type
 export interface UpdateProfileData {
     name: string;
+    username?: string;
     phone: string;
     age?: number;
     gender?: 'male' | 'female' | 'other';

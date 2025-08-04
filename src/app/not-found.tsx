@@ -8,14 +8,14 @@ export default function NotFound() {
                 <h2 className="text-3xl font-bold mb-4">Oops! Lost in the void?</h2>
                 <p className="text-zinc-300 mb-8 text-lg">
                     Looks like you took a wrong turn <br /> like our runners on a Cloka run.<br />
-                    This page is as empty as your coffee cup ifykyk.
+                    This page is as empty as your DMs.
                 </p>
 
                 <div className="mt-8 text-zinc-500 text-sm italic">
                     &quot;Knowledge is to know tomato is a fruit; <br /> Wisdom is to know tomato is to know not to put it in a fruit salad.&quot;
                 </div>
                 <div className="mt-2 text-zinc-500 text-xs">
-                    - sommene on the internet
+                    - someone on the internet
                 </div>
             </div>
         </div>

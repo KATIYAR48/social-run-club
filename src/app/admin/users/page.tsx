@@ -78,7 +78,7 @@ export default function UsersPage() {
         fetchTotalGenderStats().then(() => {
             fetchUsers(pagination.page, search, genderFilter);
         });
-    }, []);
+    }, [isSuperAdmin, fetchTotalGenderStats, fetchUsers, pagination.page, search, genderFilter]);
 
     // Handle search with debounce
     useEffect(() => {
@@ -88,7 +88,7 @@ export default function UsersPage() {
         }, 300);
 
         return () => clearTimeout(debounceTimer);
-    }, [search]);
+    }, [search, isSuperAdmin, fetchUsers, genderFilter]);
 
     if (!isSuperAdmin) {
         return (

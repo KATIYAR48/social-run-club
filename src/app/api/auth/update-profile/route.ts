@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       name,
+      username,
       phone,
       age,
       gender,
@@ -53,6 +54,43 @@ export async function POST(request: NextRequest) {
         { success: false, message: "Current password is incorrect" },
         { status: 401 }
       );
+    }
+
+    // Validate and check username if provided
+    if (username && username !== user.username) {
+      // Validate username format
+      const usernameRegex = /^[a-z0-9_-]+$/;
+      const cleanUsername = username.toLowerCase().trim();
+
+      if (
+        !usernameRegex.test(cleanUsername) ||
+        cleanUsername.length < 3 ||
+        cleanUsername.length > 30
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message:
+              "Username must be 3-30 characters and contain only letters, numbers, underscores, and dashes",
+          },
+          { status: 400 }
+        );
+      }
+
+      // Check if username is already taken by another user
+      const existingUserByUsername = await User.findOne({
+        username: cleanUsername,
+        _id: { $ne: user._id }, // Exclude current user
+      });
+
+      if (existingUserByUsername) {
+        return NextResponse.json(
+          { success: false, message: "Username already taken" },
+          { status: 400 }
+        );
+      }
+
+      user.username = cleanUsername;
     }
 
     // Update user fields
@@ -97,6 +135,7 @@ export async function POST(request: NextRequest) {
         _id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
         role: user.role,
       },
     });

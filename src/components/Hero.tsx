@@ -59,7 +59,8 @@ const Hero = () => {
                             </span>
                         </h1>
                         <p className="luxury-text text-lg mb-8 text-zinc-300">
-                            This isn&apos;t just a run club—it&apos;s your weekend crew. We hit the pavement, then unwind at our favourite café, sharing stories and good vibes. Big things are coming—don&apos;t miss out. See you Saturday?
+                            This is your sign to stop waiting and hit that register button because you’ve just found yourself your crew. Your space to move, lift, sweat and go beyond the line.
+                            We push, we show up for ourselves and each other. You don’t need to be an athlete. You just need to start. This is a community that meets you where you are and moves with you, every step, every rep.  - See you Saturday. 6 AM sharp.
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
@@ -68,7 +69,7 @@ const Hero = () => {
                                 variant="luxury"
                                 className="bg-transparent border border-white inline-block text-center"
                             >
-                                Join Cloka Club
+                                Join Cloka
                             </Button>
                             <p className="luxury-text text-lg text-zinc-300 md:text-start text-center">
                                 {isLoading ? (
