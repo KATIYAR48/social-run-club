@@ -289,7 +289,7 @@ export default function PublicProfilePage() {
                                 <CometCard>
                                     <button
                                         type="button"
-                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#1F2121] saturate-0 p-2 md:p-4`}
+                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#121212] p-2 md:p-4`}
                                         style={{
                                             transformStyle: "preserve-3d",
                                             transform: "none",
@@ -612,7 +612,7 @@ export default function PublicProfilePage() {
                                                             <h3 className="text-lg hover:underline font-semibold mb-2">{userEvent.event.title}</h3>
                                                         </Link>
 
-                                                        <p className="text-zinc-400 mb-3">{userEvent.event.description}</p>
+                                                        <p className="text-zinc-400 mb-3">{userEvent.event.description.slice(0, 150)}...</p>
 
                                                         <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
                                                             <div className="flex items-center gap-1">
@@ -631,15 +631,15 @@ export default function PublicProfilePage() {
                                                     </div>
 
                                                     <div className="flex flex-col items-end gap-2">
-                                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${isUpcoming
-                                                            ? 'bg-blue-600 text-white'
-                                                            : 'bg-green-600 text-white'
+                                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${isUpcoming
+                                                            ? 'border-blue-900 text-white'
+                                                            : 'border-green-900 text-white'
                                                             }`}>
                                                             {isUpcoming ? 'Upcoming' : 'Completed'}
                                                         </div>
 
                                                         {userEvent.checkedIn && (
-                                                            <div className="flex items-center gap-1 text-green-400 text-xs">
+                                                            <div className="flex items-center gap-1 text-zinc-400 text-xs">
                                                                 <CheckCircle size={12} />
                                                                 Checked In
                                                                 {userEvent.checkedInAt && (
@@ -683,7 +683,7 @@ export default function PublicProfilePage() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="px-3 py-1 rounded-full bg-yellow-600 text-black text-xs font-semibold">
+                                                    <div className="px-3 py-1 rounded-full border border-zinc-600  text-xs font-semibold">
                                                         Pending Approval
                                                     </div>
                                                 </div>
@@ -719,8 +719,8 @@ export default function PublicProfilePage() {
                                         Change Password
                                     </Button>
                                     <Button
-                                        variant="danger"
-                                        className="w-full py-2 px-4 bg-red-900 hover:bg-red-800 transition-colors border border-red-800"
+                                        // variant="danger"
+                                        className="w-full py-2 px-4 hover:bg-red-800 transition-colors border border-red-900"
                                         onClick={handleLogout}
                                     >
                                         Logout

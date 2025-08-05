@@ -201,7 +201,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
                 <directionalLight
                     position={[3, 5, 3]}
                     intensity={1.5}
-                    color={`#${Array.from(username)
+                    color={username == 'fabianferno' ? '#ff0000' : `#${Array.from(username)
                         .reduce((acc, char, i) => acc + char.charCodeAt(0) * (i + 1), 0)
                         .toString(16)
                         .padStart(6, '0')
