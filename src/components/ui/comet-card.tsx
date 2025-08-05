@@ -55,7 +55,7 @@ export const CometCard = ({
 
   const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.9) 10%, rgba(255, 255, 255, 0.75) 20%, rgba(255, 255, 255, 0) 80%)`;
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!ref.current) return;
 
     const rect = ref.current.getBoundingClientRect();
@@ -63,17 +63,17 @@ export const CometCard = ({
     const width = rect.width;
     const height = rect.height;
 
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    const pointerX = e.clientX - rect.left;
+    const pointerY = e.clientY - rect.top;
 
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
+    const xPct = pointerX / width - 0.5;
+    const yPct = pointerY / height - 0.5;
 
     x.set(xPct);
     y.set(yPct);
   };
 
-  const handleMouseLeave = () => {
+  const handlePointerLeave = () => {
     x.set(0);
     y.set(0);
   };
@@ -82,8 +82,8 @@ export const CometCard = ({
     <div className={cn("perspective-distant transform-3d", className)}>
       <motion.div
         ref={ref}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
         style={{
           rotateX,
           rotateY,
@@ -102,7 +102,7 @@ export const CometCard = ({
       >
         {children}
         <motion.div
-          className="pointer-events-none absolute inset-0 z-50 h-full w-full rounded-[16px] mix-blend-overlay"
+          className="md:block hidden pointer-events-none absolute inset-0 z-50 h-full w-full rounded-[16px] mix-blend-overlay"
           style={{
             background: glareBackground,
             opacity: 0.6,
