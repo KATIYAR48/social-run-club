@@ -574,7 +574,7 @@ export default function PublicProfilePage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="border border-zinc-800 p-6"
+                            className="mt-10"
                         >
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                                 <h2 className="text-2xl font-bold">Events</h2>
@@ -700,7 +700,7 @@ export default function PublicProfilePage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
-                                className="mt-8 bg-zinc-900/80 border border-zinc-800 p-6"
+                                className="mt-12 bg-zinc-900/80 border border-zinc-800 p-6"
                             >
                                 <h2 className="text-xl font-bold mb-4">Account Settings</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
