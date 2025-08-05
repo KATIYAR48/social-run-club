@@ -88,9 +88,9 @@ const Header = () => {
                     {isAuthenticated && user && (<Link href="/feed" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Explore
                     </Link>)}
-                    <Link href="/auth?mode=signup" className="luxury-text hover:text-accent transition-colors hover:underline">
+                    {!isAuthenticated && !user && (<Link href="/auth?mode=signup" className="luxury-text hover:text-accent transition-colors hover:underline">
                         Join
-                    </Link>
+                    </Link>)}
 
                     {/* Profile Icon */}
                     <div className="relative">

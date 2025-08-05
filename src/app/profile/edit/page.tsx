@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
@@ -85,7 +85,7 @@ export default function EditProfilePage() {
     }, [user]);
 
     // Function to check username availability
-    const checkUsernameAvailability = async (username: string) => {
+    const checkUsernameAvailability = useCallback(async (username: string) => {
         if (!username || username.length < 3) {
             setUsernameStatus({ checking: false, available: null, message: '' });
             return;
@@ -142,7 +142,7 @@ export default function EditProfilePage() {
                 message: 'Error checking username availability'
             });
         }
-    };
+    }, [user]);
 
     // Debounced username availability check
     useEffect(() => {
@@ -156,7 +156,7 @@ export default function EditProfilePage() {
         }, 500);
 
         return () => clearTimeout(timer);
-    }, [formData.username, user, checkUsernameAvailability]);
+    }, [formData.username, user?.username, checkUsernameAvailability]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;

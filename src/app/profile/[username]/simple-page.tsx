@@ -13,27 +13,7 @@ import { Share2, Copy, Calendar, MapPin, Users, Trophy, Clock, CheckCircle } fro
 import NotificationPrompt from '@/components/NotificationPrompt';
 import FollowButton from '@/components/FollowButton';
 import FollowStats from '@/components/FollowStats';
-import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Link from 'next/link';
-
-// Error boundary component for ThreeJsRunner
-function ThreeJsRunnerWithFallback({ gender }: { gender: 'male' | 'female' }) {
-    const [hasError, setHasError] = useState(false);
-
-    if (hasError) {
-        return (
-            <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700 rounded-lg">
-                {gender === 'male' ? '🏃‍♂️' : '🏃‍♀️'}
-            </div>
-        );
-    }
-
-    return (
-        <div onError={() => setHasError(true)}>
-            <ThreeJsRunner gender={gender} />
-        </div>
-    );
-}
 
 interface PublicProfile {
     _id: string;
@@ -82,7 +62,7 @@ interface PublicProfile {
     isOwnProfile: boolean;
 }
 
-export default function PublicProfilePage() {
+export default function SimpleProfilePage() {
     const params = useParams();
     const router = useRouter();
     const { user } = useAuth();
@@ -105,10 +85,9 @@ export default function PublicProfilePage() {
         }
     }, [username]);
 
-    // Prepare chart data when profile is loaded (for all users)
+    // Prepare chart data when profile is loaded
     useEffect(() => {
         if (profile && profile.events.approved.length > 0) {
-            // Prepare monthly timeline data
             const monthlyData: Record<string, { registered: number, approved: number }> = {};
 
             // Initialize last 6 months
@@ -119,26 +98,25 @@ export default function PublicProfilePage() {
                 monthlyData[monthKey] = { registered: 0, approved: 0 };
             }
 
-            // Count events by month - we only have approved events in the public profile API
+            // Count events by month
             profile.events.approved.forEach(userEvent => {
                 const eventDate = new Date(userEvent.event.date);
                 const monthKey = eventDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
 
                 if (monthlyData[monthKey]) {
-                    monthlyData[monthKey].registered += 1; // All events in approved are registered
-                    monthlyData[monthKey].approved += 1;   // All events in approved are approved
+                    monthlyData[monthKey].registered += 1;
+                    monthlyData[monthKey].approved += 1;
                 }
             });
 
-            // Add pending events if available (also count as registered but not approved)
+            // Add pending events if available
             if (profile.events.pending) {
                 profile.events.pending.forEach(userEvent => {
                     const eventDate = new Date(userEvent.event.date);
                     const monthKey = eventDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
 
                     if (monthlyData[monthKey]) {
-                        monthlyData[monthKey].registered += 1; // Pending events are registered
-                        // Don't increment approved for pending events
+                        monthlyData[monthKey].registered += 1;
                     }
                 });
             }
@@ -187,7 +165,6 @@ export default function PublicProfilePage() {
                 console.log('Error sharing:', error);
             }
         } else {
-            // Fallback to clipboard
             copyToClipboard(profileUrl);
         }
     };
@@ -206,7 +183,6 @@ export default function PublicProfilePage() {
         if (user) {
             try {
                 await fetch('/api/auth/logout', { method: 'POST' });
-                // Refresh the page to redirect user to auth
                 window.location.href = '/auth';
             } catch (error) {
                 console.error('Logout error:', error);
@@ -279,18 +255,16 @@ export default function PublicProfilePage() {
                         className="border border-zinc-800 p-8 mb-8"
                     >
                         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-                            {/* Avatar */}
+                            {/* Simple Avatar */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 }}
                             >
-                                <ThreeJsRunnerWithFallback gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
+                                <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700 rounded-lg">
+                                    {profile.gender?.toLowerCase() === 'female' ? '🏃‍♀️' : '🏃‍♂️'}
+                                </div>
                             </motion.div>
-                            {/* <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700">
-                                {profile.name.charAt(0).toUpperCase()}
-                            </div> */}
-
 
                             {/* Profile Info */}
                             <div className="flex-1">
@@ -405,21 +379,6 @@ export default function PublicProfilePage() {
                         </div>
                     </motion.div>
 
-
-                    {/* Strava Stats - Only for own profile */}
-                    {/* {profile.isOwnProfile && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.15 }}
-                            className="mb-8"
-                        >
-                            <div className="border border-zinc-800 p-6">
-                                <StravaStats user={profile} />
-                            </div>
-                        </motion.div>
-                    )} */}
-
                     {/* NotificationPrompt - Only for own profile */}
                     {profile.isOwnProfile && (
                         <motion.div
@@ -432,7 +391,7 @@ export default function PublicProfilePage() {
                         </motion.div>
                     )}
 
-                    {/* Event Participation Timeline Chart - For all users */}
+                    {/* Event Participation Timeline Chart */}
                     {statusChartData.length > 0 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

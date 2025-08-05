@@ -12,6 +12,33 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Configure static file handling
+  async headers() {
+    return [
+      {
+        source: "/models/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
+  // Configure webpack for better handling of large files
+  webpack: (config, { isServer }) => {
+    // Increase the size limit for static files
+    config.module.rules.push({
+      test: /\.(fbx|glb|gltf)$/,
+      type: "asset/resource",
+      generator: {
+        filename: "static/models/[name][ext]",
+      },
+    });
+
+    return config;
+  },
 };
 
 export default nextConfig;
