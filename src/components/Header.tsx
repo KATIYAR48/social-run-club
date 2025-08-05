@@ -180,7 +180,7 @@ const Header = () => {
                             className="luxury-text hover:text-accent transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Feed
+                            Explore
                         </Link>
 
 
