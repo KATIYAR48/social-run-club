@@ -19,7 +19,7 @@ import Link from 'next/link';
 import CityScapeSection from '@/components/CityScapeSection';
 
 // Error boundary component for ThreeJsRunner
-function ThreeJsRunnerWithFallback({ gender }: { gender: 'male' | 'female' }) {
+function ThreeJsRunnerWithFallback({ gender, username }: { gender: 'male' | 'female', username: string }) {
     const [hasError, setHasError] = useState(false);
 
     if (hasError) {
@@ -32,7 +32,7 @@ function ThreeJsRunnerWithFallback({ gender }: { gender: 'male' | 'female' }) {
 
     return (
         <div onError={() => setHasError(true)}>
-            <ThreeJsRunner gender={gender} />
+            <ThreeJsRunner gender={gender} username={username} />
         </div>
     );
 }
@@ -289,7 +289,7 @@ export default function PublicProfilePage() {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5, delay: 0.1 }}
                                 >
-                                    <ThreeJsRunnerWithFallback gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
+                                    <ThreeJsRunnerWithFallback username={profile.username} gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
                                 </motion.div>
                                 {/* <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700">
                                 {profile.name.charAt(0).toUpperCase()}

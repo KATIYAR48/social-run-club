@@ -3,7 +3,6 @@
 import { useAdmin } from '@/lib/admin-context';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 export default function AdminDashboard() {
     const { adminUser, isSuperAdmin, isLoading } = useAdmin();
@@ -33,7 +32,7 @@ export default function AdminDashboard() {
         <div className="min-h-screen flex flex-col items-start justify-center bg-black text-white">
             <div className="mb-8">
                 <div className="flex items-start md:items-center gap-2">
-                    <Image src="/android-chrome-512x512.png" className='mb-3 w-24 h-24' alt="Admin Icon" width={96} height={96} />
+                    <img src="/android-chrome-512x512.png" className='mb-3 w-24 h-24' alt="Admin Icon" width={500} height={500} />
                     <div className="ml-4 flex flex-col items-start justify-start gap-2">
                         <h1 className="text-4xl md:text-6xl font-bold">
                             Hello, {adminUser?.name || 'Admin'}

@@ -7,6 +7,7 @@ import * as THREE from 'three';
 
 interface RunnerProps {
     gender: 'male' | 'female';
+    username: string;
 }
 
 function RunningFigure({ gender }: RunnerProps) {
@@ -148,7 +149,7 @@ function RunningFigure({ gender }: RunnerProps) {
     );
 }
 
-export default function ThreeJsRunner({ gender }: RunnerProps) {
+export default function ThreeJsRunner({ gender, username }: RunnerProps) {
     const [cameraHeight, setCameraHeight] = useState(6);
     const [cameraDistance, setCameraDistance] = useState(12);
     const [cameraRotationY, setCameraRotationY] = useState(491 * Math.PI / 180);
@@ -200,7 +201,19 @@ export default function ThreeJsRunner({ gender }: RunnerProps) {
                 <directionalLight
                     position={[3, 5, 3]}
                     intensity={1.5}
-                    color="#ffffff"
+                    color={`#${Array.from(username)
+                        .reduce((acc, char, i) => acc + char.charCodeAt(0) * (i + 1), 0)
+                        .toString(16)
+                        .padStart(6, '0')
+                        .slice(-6)
+                        .split('')
+                        .map((c) => {
+                            // Ensure each channel is at least 'B' (hex 11/17) for brightness
+                            const val = parseInt(c, 16);
+                            return (val < 11 ? (val + 5).toString(16) : c);
+                        })
+                        .join('')
+                        }`}
                     castShadow
                     shadow-mapSize-width={1024}
                     shadow-mapSize-height={1024}
@@ -220,7 +233,7 @@ export default function ThreeJsRunner({ gender }: RunnerProps) {
 
                 <ambientLight intensity={0.4} color="#404040" />
 
-                <RunningFigure gender={gender} />
+                <RunningFigure gender={gender} username={username} />
             </Canvas>
 
             {/* Camera Control Panel */}

@@ -10,7 +10,6 @@ import Event from '@/models/Event';
 import { checkEventRegistration } from '@/lib/event-utils';
 import { cookies } from 'next/headers';
 import EventLocalDate from '@/components/EventLocalDate';
-import Image from 'next/image';
 
 // Define the params type for this page
 type PageParams = {
@@ -99,13 +98,10 @@ export default async function EventDetailPage({
                         {/* Event Header */}
                         <div className={`relative w-full ${event.bannerImageURL ? 'h-[32rem]' : 'h-96'}`}>
                             {event.bannerImageURL ? (
-                                <Image
+                                <img
                                     src={event.bannerImageURL}
                                     alt={event.title}
                                     className="absolute inset-0 w-full h-full object-cover object-[center_33%]"
-                                    width={1200}
-                                    height={512}
-                                    unoptimized
                                 />
                             ) : (
                                 <video
