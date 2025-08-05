@@ -17,6 +17,8 @@ import FollowStats from '@/components/FollowStats';
 import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Link from 'next/link';
 import CityScapeSection from '@/components/CityScapeSection';
+import { CometCard } from "@/components/ui/comet-card";
+
 
 // Error boundary component for ThreeJsRunner
 function ThreeJsRunnerWithFallback({ gender, username }: { gender: 'male' | 'female', username: string }) {
@@ -283,18 +285,33 @@ export default function PublicProfilePage() {
                             className="border border-zinc-800 p-8 mb-8"
                         >
                             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-                                {/* Avatar */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: 0.1 }}
-                                >
-                                    <ThreeJsRunnerWithFallback username={profile.username} gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
-                                </motion.div>
-                                {/* <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700">
-                                {profile.name.charAt(0).toUpperCase()}
-                            </div> */}
 
+                                <CometCard>
+                                    <button
+                                        type="button"
+                                        className="flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#1F2121] p-2 saturate-0 md:p-4"
+                                        style={{
+                                            transformStyle: "preserve-3d",
+                                            transform: "none",
+                                            opacity: 1,
+                                        }}
+                                    >
+                                        <div className="flex items-center justify-center">
+                                            {/* Avatar */}
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ duration: 0.5, delay: 0.1 }}
+                                            >
+                                                <ThreeJsRunnerWithFallback username={profile.username} gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
+                                            </motion.div>
+                                        </div>
+                                        <div className="flex flex-shrink-0 items-center justify-between p-4 font-mono text-white">
+                                            <div className="text-xs">@{profile.username}</div>
+                                            <div className="text-xs text-gray-300 opacity-50">#{profile._id.slice(-4)}</div>
+                                        </div>
+                                    </button>
+                                </CometCard>
 
                                 {/* Profile Info */}
                                 <div className="flex-1">
