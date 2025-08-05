@@ -14,7 +14,7 @@ export default function ProfileRedirectPage() {
         if (!isLoading) {
             if (!isAuthenticated) {
                 // Redirect to auth page if not authenticated
-            router.push('/auth');
+                router.push('/auth');
             } else if (user?.username) {
                 // Redirect to public profile if user has username
                 router.push(`/profile/${user.username}`);
@@ -32,7 +32,7 @@ export default function ProfileRedirectPage() {
         <>
             <Header />
             <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <div className="text-center">
+                <div className="text-center flex flex-col items-center">
                     <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mb-4"></div>
                     <p className="text-zinc-400">Redirecting to your profile...</p>
                 </div>
