@@ -33,6 +33,10 @@ interface EventRegistration {
     additionalInfo?: string;
     user: User | null;
     event: Event | null;
+    userStats?: {
+        totalEvents: number;
+        checkedInEvents: number;
+    };
 }
 
 interface PaginationData {
@@ -556,7 +560,8 @@ export default function EventRegistrationsPage() {
                 // Define CSV headers
                 const headers = [
                     'Name', 'Email', 'Phone', 'Age', 'Gender', 'Instagram',
-                    'Event', 'Event Date', 'Registration Date', 'Status', 'Checked In'
+                    'Event', 'Event Date', 'Registration Date', 'Status', 'Checked In',
+                    'Total Events Registered', 'Events Checked In', 'Check-In Ratio'
                 ];
 
                 // Map registrations to CSV rows
@@ -565,6 +570,9 @@ export default function EventRegistrationsPage() {
                     const event = reg.event || {} as Event;
                     const status = reg.approved === true ? 'Approved' :
                         reg.approved === false ? 'Rejected' : 'Pending';
+                    const checkInRatio = reg.userStats && reg.userStats.totalEvents > 0
+                        ? `${Math.round((reg.userStats.checkedInEvents / reg.userStats.totalEvents) * 100)}%`
+                        : '0%';
 
                     return [
                         user.name || '',
@@ -577,7 +585,10 @@ export default function EventRegistrationsPage() {
                         event.date ? new Date(event.date).toLocaleDateString() : '',
                         reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : '',
                         status,
-                        reg.checkedIn ? 'Yes' : 'No'
+                        reg.checkedIn ? 'Yes' : 'No',
+                        reg.userStats?.totalEvents || 0,
+                        reg.userStats?.checkedInEvents || 0,
+                        checkInRatio
                     ];
                 });
 
@@ -847,6 +858,7 @@ export default function EventRegistrationsPage() {
                                             <th className="px-4 py-3 text-left">Event</th>
                                             <th className="px-4 py-3 text-left">Registered On</th>
                                             <th className="px-4 py-3 text-left">Status</th>
+                                            <th className="px-4 py-3 text-center">Check-In Score</th>
                                             <th className="px-4 py-3 text-right">Actions</th>
                                             <th className="px-4 py-3 text-left">Check-In</th>
                                         </tr>
@@ -917,6 +929,23 @@ export default function EventRegistrationsPage() {
                                                             <Clock className="h-3 w-3 mr-1" />
                                                             Pending
                                                         </span>
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-3 text-center">
+                                                    {registration.userStats ? (
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="text-sm font-medium">
+                                                                {registration.userStats.totalEvents > 0
+                                                                    ? `${Math.round((registration.userStats.checkedInEvents / registration.userStats.totalEvents) * 100)}%`
+                                                                    : '0%'
+                                                                }
+                                                            </div>
+                                                            <div className="text-xs text-zinc-400">
+                                                                {registration.userStats.checkedInEvents}/{registration.userStats.totalEvents}
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-zinc-500 text-xs">-</span>
                                                     )}
                                                 </td>
                                                 <td className="px-4 py-3 text-right">

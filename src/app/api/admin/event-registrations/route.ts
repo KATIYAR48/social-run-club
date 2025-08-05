@@ -133,6 +133,27 @@ export async function GET(request: NextRequest) {
       });
     }
 
+    // Add user check-in statistics lookup
+    pipeline.push({
+      $lookup: {
+        from: "userevents",
+        let: { userId: "$userId" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$userId", "$$userId"] } } },
+          {
+            $group: {
+              _id: null,
+              totalEvents: { $sum: 1 },
+              checkedInEvents: {
+                $sum: { $cond: ["$checkedIn", 1, 0] },
+              },
+            },
+          },
+        ],
+        as: "userStats",
+      },
+    });
+
     // Create a copy of the pipeline for stats calculation
     const statsPipeline = [...pipeline];
 
@@ -208,6 +229,13 @@ export async function GET(request: NextRequest) {
             date: "$eventDetails.date",
             location: "$eventDetails.location",
           },
+          userStats: {
+            $cond: {
+              if: { $gt: [{ $size: "$userStats" }, 0] },
+              then: { $arrayElemAt: ["$userStats", 0] },
+              else: { totalEvents: 0, checkedInEvents: 0 },
+            },
+          },
         },
       });
 
@@ -245,6 +273,13 @@ export async function GET(request: NextRequest) {
           title: "$eventDetails.title",
           date: "$eventDetails.date",
           location: "$eventDetails.location",
+        },
+        userStats: {
+          $cond: {
+            if: { $gt: [{ $size: "$userStats" }, 0] },
+            then: { $arrayElemAt: ["$userStats", 0] },
+            else: { totalEvents: 0, checkedInEvents: 0 },
+          },
         },
       },
     });
