@@ -6,6 +6,9 @@ import User from "@/models/User";
 
 export async function GET(request: NextRequest) {
   try {
+    // Connect to the database first
+    await dbConnect();
+
     // Authenticate and check admin
     const authCookie = request.cookies.get("cloka_auth");
     if (!authCookie || !authCookie.value) {
@@ -14,7 +17,9 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    const adminUser = await User.findById(authCookie.value);
+
+    // Add timeout to the user query
+    const adminUser = await User.findById(authCookie.value).maxTimeMS(5000);
     if (
       !adminUser ||
       (adminUser.role !== "admin" && adminUser.role !== "super-admin")
@@ -24,9 +29,6 @@ export async function GET(request: NextRequest) {
         { status: 403 }
       );
     }
-
-    // Connect to the database
-    await dbConnect();
 
     // Parse query parameters
     const searchParams = request.nextUrl.searchParams;
@@ -40,6 +42,8 @@ export async function GET(request: NextRequest) {
     const countOnly = searchParams.get("countOnly") === "true";
     const emailsOnly = searchParams.get("emailsOnly") === "true";
     const formatCsv = searchParams.get("format") === "csv";
+    const sortBy = searchParams.get("sortBy") || "createdAt";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
@@ -64,7 +68,6 @@ export async function GET(request: NextRequest) {
     // Build the aggregation pipeline
     const pipeline: PipelineStage[] = [
       { $match: matchStage },
-      { $sort: { createdAt: -1 } },
       // Lookup users
       {
         $lookup: {
@@ -111,15 +114,40 @@ export async function GET(request: NextRequest) {
     if (ageRange) {
       if (ageRange === "56+") {
         pipeline.push({
-          $match: { "userDetails.age": { $gte: 56 } },
+          $match: {
+            $expr: {
+              $gte: [
+                {
+                  $dateDiff: {
+                    startDate: "$userDetails.dateOfBirth",
+                    endDate: new Date(),
+                    unit: "year",
+                  },
+                },
+                56,
+              ],
+            },
+          },
         });
       } else {
         const [minAge, maxAge] = ageRange.split("-").map(Number);
+        const currentDate = new Date();
+        const minBirthDate = new Date(
+          currentDate.getFullYear() - maxAge,
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+        const maxBirthDate = new Date(
+          currentDate.getFullYear() - minAge,
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+
         pipeline.push({
           $match: {
-            "userDetails.age": {
-              $gte: minAge,
-              ...(maxAge && { $lte: maxAge }),
+            "userDetails.dateOfBirth": {
+              $gte: minBirthDate,
+              $lte: maxBirthDate,
             },
           },
         });
@@ -154,6 +182,108 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Add sort stage
+    const sortDirection = sortOrder === "asc" ? 1 : -1;
+    let sortField: string;
+
+    switch (sortBy) {
+      case "checkInScore":
+        // Sort by check-in score (calculated field)
+        pipeline.push({
+          $addFields: {
+            checkInScore: {
+              $cond: {
+                if: { $gt: [{ $size: "$userStats" }, 0] },
+                then: {
+                  $let: {
+                    vars: {
+                      stats: { $arrayElemAt: ["$userStats", 0] },
+                    },
+                    in: {
+                      $cond: {
+                        if: { $eq: ["$$stats.totalEvents", 0] },
+                        then: 0,
+                        else: {
+                          $min: [
+                            100,
+                            {
+                              $add: [
+                                {
+                                  $multiply: [
+                                    {
+                                      $divide: [
+                                        "$$stats.checkedInEvents",
+                                        "$$stats.totalEvents",
+                                      ],
+                                    },
+                                    100,
+                                  ],
+                                },
+                                {
+                                  $multiply: [
+                                    {
+                                      $floor: {
+                                        $divide: ["$$stats.checkedInEvents", 5],
+                                      },
+                                    },
+                                    10,
+                                  ],
+                                },
+                                {
+                                  $cond: {
+                                    if: {
+                                      $and: [
+                                        { $gte: ["$$stats.totalEvents", 10] },
+                                        {
+                                          $gte: [
+                                            {
+                                              $multiply: [
+                                                {
+                                                  $divide: [
+                                                    "$$stats.checkedInEvents",
+                                                    "$$stats.totalEvents",
+                                                  ],
+                                                },
+                                                100,
+                                              ],
+                                            },
+                                            50,
+                                          ],
+                                        },
+                                      ],
+                                    },
+                                    then: 5,
+                                    else: 0,
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+                else: 0,
+              },
+            },
+          },
+        });
+        sortField = "checkInScore";
+        break;
+      case "userName":
+        sortField = "userDetails.name";
+        break;
+      case "createdAt":
+      default:
+        sortField = "createdAt";
+        break;
+    }
+
+    pipeline.push({
+      $sort: { [sortField]: sortDirection },
+    });
+
     // Create a copy of the pipeline for stats calculation
     const statsPipeline = [...pipeline];
 
@@ -186,11 +316,15 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      // Execute the aggregation to get all emails
-      const emailsResult = await UserEvent.aggregate(emailsPipeline);
+      // Execute the aggregation to get all emails with timeout
+      const emailsResult = await UserEvent.aggregate(emailsPipeline, {
+        maxTimeMS: 30000,
+      });
 
       // Extract just the email strings from the result
-      const emails = emailsResult.map((item) => item.email).filter(Boolean);
+      const emails = emailsResult
+        .map((item: { email: string }) => item.email)
+        .filter(Boolean);
 
       return NextResponse.json({
         success: true,
@@ -239,8 +373,10 @@ export async function GET(request: NextRequest) {
         },
       });
 
-      // Execute the aggregation without pagination
-      const allRegistrations = await UserEvent.aggregate(csvPipeline);
+      // Execute the aggregation without pagination with timeout
+      const allRegistrations = await UserEvent.aggregate(csvPipeline, {
+        maxTimeMS: 30000,
+      });
 
       return NextResponse.json({
         success: true,
@@ -264,7 +400,13 @@ export async function GET(request: NextRequest) {
           name: "$userDetails.name",
           email: "$userDetails.email",
           phone: "$userDetails.phone",
-          age: "$userDetails.age",
+          age: {
+            $dateDiff: {
+              startDate: "$userDetails.dateOfBirth",
+              endDate: new Date(),
+              unit: "year",
+            },
+          },
           sex: "$userDetails.gender",
           instagram: "$userDetails.instagramUsername",
         },
@@ -287,8 +429,10 @@ export async function GET(request: NextRequest) {
     // Apply pagination after all filters
     pipeline.push({ $skip: skip }, { $limit: limit });
 
-    // Execute the aggregation
-    const eventRegistrations = await UserEvent.aggregate(pipeline);
+    // Execute the aggregation with timeout
+    const eventRegistrations = await UserEvent.aggregate(pipeline, {
+      maxTimeMS: 30000,
+    });
 
     // Count total documents for pagination
     // We need to build a separate count pipeline without skip, limit, and projection
@@ -327,15 +471,40 @@ export async function GET(request: NextRequest) {
     if (ageRange) {
       if (ageRange === "56+") {
         countPipeline.push({
-          $match: { "userDetails.age": { $gte: 56 } },
+          $match: {
+            $expr: {
+              $gte: [
+                {
+                  $dateDiff: {
+                    startDate: "$userDetails.dateOfBirth",
+                    endDate: new Date(),
+                    unit: "year",
+                  },
+                },
+                56,
+              ],
+            },
+          },
         });
       } else {
         const [minAge, maxAge] = ageRange.split("-").map(Number);
+        const currentDate = new Date();
+        const minBirthDate = new Date(
+          currentDate.getFullYear() - maxAge,
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+        const maxBirthDate = new Date(
+          currentDate.getFullYear() - minAge,
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+
         countPipeline.push({
           $match: {
-            "userDetails.age": {
-              $gte: minAge,
-              ...(maxAge && { $lte: maxAge }),
+            "userDetails.dateOfBirth": {
+              $gte: minBirthDate,
+              $lte: maxBirthDate,
             },
           },
         });
@@ -351,26 +520,28 @@ export async function GET(request: NextRequest) {
     // Add count stage
     countPipeline.push({ $count: "total" });
 
-    const countResult = await UserEvent.aggregate(countPipeline);
+    const countResult = await UserEvent.aggregate(countPipeline, {
+      maxTimeMS: 30000,
+    });
     const totalCount = countResult.length > 0 ? countResult[0].total : 0;
 
-    // Calculate counts for summary
+    // Calculate counts for summary with timeouts
     const approvedCount = await UserEvent.countDocuments({
       ...matchStage,
       approved: true,
-    });
+    }).maxTimeMS(10000);
     const rejectedCount = await UserEvent.countDocuments({
       ...matchStage,
       approved: false,
-    });
+    }).maxTimeMS(10000);
     const pendingCount = await UserEvent.countDocuments({
       ...matchStage,
       approved: null,
-    });
+    }).maxTimeMS(10000);
     const checkedInCount = await UserEvent.countDocuments({
       ...matchStage,
       checkedIn: true,
-    });
+    }).maxTimeMS(10000);
 
     return NextResponse.json({
       registrations: eventRegistrations || [],
@@ -390,6 +561,18 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching event registrations:", error);
+
+    // Check if it's a timeout error
+    if (error instanceof Error && error.message.includes("timed out")) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Database query timed out. Please try again.",
+        },
+        { status: 408 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, message: "Failed to fetch event registrations" },
       { status: 500 }
@@ -411,7 +594,7 @@ async function calculateApprovalCounts(pipeline: PipelineStage[]) {
     },
   });
 
-  const result = await UserEvent.aggregate(facetPipeline);
+  const result = await UserEvent.aggregate(facetPipeline, { maxTimeMS: 30000 });
 
   // Extract counts from the result
   return {

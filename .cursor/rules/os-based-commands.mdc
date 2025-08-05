@@ -1,0 +1,4 @@
+---
+description: Don't give bash commands in a windows powershell terminal and vice versa 
+alwaysApply: false
+---

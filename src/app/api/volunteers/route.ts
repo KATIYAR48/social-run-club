@@ -29,7 +29,10 @@ export async function GET() {
     // Find user's volunteer applications
     const applications = await VolunteerApplication.find({ userId })
       .sort({ createdAt: -1 })
-      .populate("userId", "name email phone age gender instagramUsername");
+      .populate(
+        "userId",
+        "name email phone dateOfBirth gender instagramUsername"
+      );
 
     return NextResponse.json({
       success: true,
@@ -111,6 +114,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Calculate age from dateOfBirth if available
+    const calculateAge = (dateOfBirth: Date) => {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        age--;
+      }
+
+      return age;
+    };
+
     // Create new volunteer application
     const application = await VolunteerApplication.create({
       userId,
@@ -127,6 +147,10 @@ export async function POST(request: NextRequest) {
 
     // Only send email if SendGrid API key is configured
     if (process.env.SENDGRID_API_KEY) {
+      const userAge = user.dateOfBirth
+        ? calculateAge(user.dateOfBirth)
+        : undefined;
+
       const msg = {
         to: "support@cloka.in",
         from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
@@ -135,7 +159,7 @@ export async function POST(request: NextRequest) {
 Name: ${user.name}
 Email: ${user.email}
 Phone: ${user.phone}
-Age: ${user.age || "Not specified"}
+Age: ${userAge || "Not specified"}
 Gender: ${user.gender || "Not specified"}
 Instagram: ${user.instagramUsername || "Not specified"}
 
@@ -155,7 +179,7 @@ ${additionalInfo ? `Additional Info: ${additionalInfo}` : ""}
           <p><strong>Name:</strong> ${user.name}</p>
           <p><strong>Email:</strong> ${user.email}</p>
           <p><strong>Phone:</strong> ${user.phone}</p>
-          <p><strong>Age:</strong> ${user.age || "Not specified"}</p>
+          <p><strong>Age:</strong> ${userAge || "Not specified"}</p>
           <p><strong>Gender:</strong> ${user.gender || "Not specified"}</p>
           <p><strong>Instagram:</strong> ${
             user.instagramUsername || "Not specified"

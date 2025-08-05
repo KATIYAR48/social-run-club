@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       name,
       username,
       phone,
-      age,
+      dateOfBirth,
       gender,
       emergencyContact,
       instagramUsername,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     // Update user fields
     user.name = name || user.name;
     user.phone = phone || user.phone;
-    user.age = age !== undefined ? age : user.age;
+    user.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : user.dateOfBirth;
     user.gender = gender || user.gender;
     user.emergencyContact =
       emergencyContact !== undefined ? emergencyContact : user.emergencyContact;

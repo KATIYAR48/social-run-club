@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard, Mail } from 'lucide-react';
 import Button from '@/components/Button';
+import { calculateAgeFromDateOfBirth } from '@/lib/utils';
 
 interface User {
     _id: string;
@@ -11,6 +12,7 @@ interface User {
     email: string;
     phone: string;
     age?: number;
+    dateOfBirth?: string;
     sex?: string;
     instagram?: string;
 }
@@ -90,6 +92,10 @@ export default function EventRegistrationsPage() {
     const [ageRange, setAgeRange] = useState(searchParams.get('ageRange') || '');
     const [selectedSex, setSelectedSex] = useState(searchParams.get('sex') || '');
 
+    // Sort
+    const [sortBy, setSortBy] = useState(searchParams.get('sortBy') || 'createdAt');
+    const [sortOrder, setSortOrder] = useState(searchParams.get('sortOrder') || 'desc');
+
     // Load event registrations
     const loadEventRegistrations = useCallback(async () => {
         setLoading(true);
@@ -120,6 +126,10 @@ export default function EventRegistrationsPage() {
             if (selectedSex) {
                 params.append('sex', selectedSex);
             }
+
+            // Add sort parameters
+            params.append('sortBy', sortBy);
+            params.append('sortOrder', sortOrder);
 
             // Fetch event registrations
             const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
@@ -214,7 +224,7 @@ export default function EventRegistrationsPage() {
         } finally {
             setLoading(false);
         }
-    }, [pagination.page, pagination.limit, selectedEvent, approvalStatus, searchTerm, ageRange, selectedSex]);
+    }, [pagination.page, pagination.limit, selectedEvent, approvalStatus, searchTerm, ageRange, selectedSex, sortBy, sortOrder]);
 
     // Load events for filter
     const loadEvents = useCallback(async () => {
@@ -391,6 +401,8 @@ export default function EventRegistrationsPage() {
         if (searchTerm) params.append('search', searchTerm);
         if (ageRange) params.append('ageRange', ageRange);
         if (selectedSex) params.append('sex', selectedSex);
+        if (sortBy) params.append('sortBy', sortBy);
+        if (sortOrder) params.append('sortOrder', sortOrder);
 
         router.push(`/admin/event-registrations?${params.toString()}`);
     };
@@ -438,6 +450,10 @@ export default function EventRegistrationsPage() {
             if (selectedSex) {
                 params.append('sex', selectedSex);
             }
+
+            // Add sort parameters
+            params.append('sortBy', sortBy);
+            params.append('sortOrder', sortOrder);
 
             // Fetch all emails matching the current filters
             const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
@@ -496,6 +512,10 @@ export default function EventRegistrationsPage() {
                 params.append('sex', selectedSex);
             }
 
+            // Add sort parameters
+            params.append('sortBy', sortBy);
+            params.append('sortOrder', sortOrder);
+
             // Fetch all emails matching the current filters
             const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
             const data = await response.json();
@@ -549,6 +569,10 @@ export default function EventRegistrationsPage() {
                 params.append('sex', selectedSex);
             }
 
+            // Add sort parameters
+            params.append('sortBy', sortBy);
+            params.append('sortOrder', sortOrder);
+
             // Fetch all registrations matching the current filters
             const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
             const data = await response.json();
@@ -578,7 +602,7 @@ export default function EventRegistrationsPage() {
                         user.name || '',
                         user.email || '',
                         user.phone || '',
-                        user.age || '',
+                        user.age || (user.dateOfBirth ? calculateAgeFromDateOfBirth(user.dateOfBirth) : '') || '',
                         user.sex || '',
                         user.instagram || '',
                         event.title || '',
@@ -789,6 +813,31 @@ export default function EventRegistrationsPage() {
                         </select>
                     </div>
 
+                    <div className="w-full md:w-48">
+                        <label className="block text-sm font-medium mb-1">Sort By</label>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2"
+                        >
+                            <option value="createdAt">Registration Date</option>
+                            <option value="checkInScore">Check-In Score</option>
+                            <option value="userName">Name</option>
+                        </select>
+                    </div>
+
+                    <div className="w-full md:w-32">
+                        <label className="block text-sm font-medium mb-1">Order</label>
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2"
+                        >
+                            <option value="desc">Descending</option>
+                            <option value="asc">Ascending</option>
+                        </select>
+                    </div>
+
                     <div className="flex items-end">
                         <Button
                             onClick={handleFilterChange}
@@ -873,10 +922,12 @@ export default function EventRegistrationsPage() {
                                                             <div className="text-sm text-zinc-400">{registration.user.email}</div>
                                                             <div className="text-sm text-zinc-400">{registration.user.phone}</div>
                                                             <div className="text-sm text-zinc-400 mt-1">
-                                                                {registration.user.age && <span>Age: {registration.user.age}</span>}
-                                                                {registration.user.age && registration.user.sex && <span> | </span>}
+                                                                {(registration.user.age || (registration.user.dateOfBirth ? calculateAgeFromDateOfBirth(registration.user.dateOfBirth) : null)) && (
+                                                                    <span>Age: {registration.user.age || (registration.user.dateOfBirth ? calculateAgeFromDateOfBirth(registration.user.dateOfBirth) : null)}</span>
+                                                                )}
+                                                                {(registration.user.age || (registration.user.dateOfBirth ? calculateAgeFromDateOfBirth(registration.user.dateOfBirth) : null)) && registration.user.sex && <span> | </span>}
                                                                 {registration.user.sex && <span>Sex: {registration.user.sex}</span>}
-                                                                {(registration.user.age || registration.user.sex) && registration.user.instagram && <span> | </span>}
+                                                                {((registration.user.age || (registration.user.dateOfBirth ? calculateAgeFromDateOfBirth(registration.user.dateOfBirth) : null)) || registration.user.sex) && registration.user.instagram && <span> | </span>}
                                                                 {registration.user.instagram && (
                                                                     <a
                                                                         href={`https://instagram.com/${registration.user.instagram.replace('@', '')}`}
@@ -935,14 +986,43 @@ export default function EventRegistrationsPage() {
                                                     {registration.userStats ? (
                                                         <div className="flex flex-col items-center">
                                                             <div className="text-sm font-medium">
-                                                                {registration.userStats.totalEvents > 0
-                                                                    ? `${Math.round((registration.userStats.checkedInEvents / registration.userStats.totalEvents) * 100)}%`
-                                                                    : '0%'
-                                                                }
+                                                                {(() => {
+                                                                    const { totalEvents, checkedInEvents } = registration.userStats;
+                                                                    if (totalEvents === 0) return '0%';
+
+                                                                    // Base percentage score
+                                                                    const basePercentage = (checkedInEvents / totalEvents) * 100;
+
+                                                                    // Volume bonus: +10 points for every 5 events attended
+                                                                    const volumeBonus = Math.floor(checkedInEvents / 5) * 10;
+
+                                                                    // Consistency bonus: +5 points for maintaining 50%+ attendance over 10+ events
+                                                                    const consistencyBonus = (totalEvents >= 10 && basePercentage >= 50) ? 5 : 0;
+
+                                                                    // Calculate smart score (capped at 100%)
+                                                                    const smartScore = Math.min(100, basePercentage + volumeBonus + consistencyBonus);
+
+                                                                    return `${Math.round(smartScore)}%`;
+                                                                })()}
                                                             </div>
                                                             <div className="text-xs text-zinc-400">
                                                                 {registration.userStats.checkedInEvents}/{registration.userStats.totalEvents}
                                                             </div>
+                                                            {registration.userStats.totalEvents > 0 && (
+                                                                <div className="text-xs text-zinc-500 mt-1">
+                                                                    {(() => {
+                                                                        const { totalEvents, checkedInEvents } = registration.userStats;
+                                                                        const basePercentage = (checkedInEvents / totalEvents) * 100;
+                                                                        const volumeBonus = Math.floor(checkedInEvents / 5) * 10;
+                                                                        const consistencyBonus = (totalEvents >= 10 && basePercentage >= 50) ? 5 : 0;
+
+                                                                        if (volumeBonus > 0 || consistencyBonus > 0) {
+                                                                            return `(${Math.round(basePercentage)}% + ${volumeBonus + consistencyBonus} bonus)`;
+                                                                        }
+                                                                        return '';
+                                                                    })()}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <span className="text-zinc-500 text-xs">-</span>

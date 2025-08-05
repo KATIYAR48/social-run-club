@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         username: user.username,
         role: user.role,
         phone: user.phone,
-        age: user.age,
+        dateOfBirth: user.dateOfBirth,
         gender: user.gender,
         emergencyContact: user.emergencyContact,
         instagramUsername: user.instagramUsername,

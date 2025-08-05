@@ -67,7 +67,7 @@ export default function AuthPage() {
         username: '',
         password: '',
         phone: '',
-        age: '',
+        dateOfBirth: '',
         gender: '',
         emergencyContact: '',
         instagramUsername: '',
@@ -234,7 +234,7 @@ export default function AuthPage() {
         setError('');
 
         // Validate required fields
-        if (!signupData.name || !signupData.email || !signupData.password || !signupData.phone || !signupData.age || !signupData.gender || !signupData.instagramUsername) {
+        if (!signupData.name || !signupData.email || !signupData.password || !signupData.phone || !signupData.dateOfBirth || !signupData.gender || !signupData.instagramUsername) {
             setError('Please fill in all required fields');
             return;
         }
@@ -276,7 +276,7 @@ export default function AuthPage() {
                 username: signupData.username || undefined,
                 password: signupData.password,
                 phone: signupData.phone,
-                age: signupData.age ? parseInt(signupData.age) : undefined,
+                dateOfBirth: signupData.dateOfBirth ? new Date(signupData.dateOfBirth).toISOString() : undefined,
                 gender: signupData.gender as 'male' | 'female' | 'other' | undefined,
                 emergencyContact: signupData.emergencyContact || undefined,
                 instagramUsername: signupData.instagramUsername,
@@ -496,19 +496,18 @@ export default function AuthPage() {
 
                                     <div className="grid grid-cols-12 gap-4">
                                         <div className="col-span-3">
-                                            <label htmlFor="age" className="block text-sm font-medium mb-1">
-                                                Age *
+                                            <label htmlFor="dateOfBirth" className="block text-sm font-medium mb-1">
+                                                Date of Birth *
                                             </label>
                                             <input
-                                                id="age"
-                                                name="age"
-                                                type="number"
-                                                value={signupData.age}
+                                                id="dateOfBirth"
+                                                name="dateOfBirth"
+                                                type="date"
+                                                value={signupData.dateOfBirth}
                                                 onChange={handleSignupChange}
                                                 className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
-                                                min="1"
-                                                max="30"
+                                                max={new Date().toISOString().split('T')[0]}
                                             />
                                         </div>
 

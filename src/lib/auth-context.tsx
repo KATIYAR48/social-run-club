@@ -10,7 +10,7 @@ export interface User {
     username: string;
     role: 'user' | 'admin' | 'super-admin';
     phone?: string;
-    age?: number;
+    dateOfBirth?: Date;
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;
@@ -36,7 +36,7 @@ export interface SignupData {
     username?: string;
     password: string;
     phone: string;
-    age?: number;
+    dateOfBirth?: Date;
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;
@@ -48,7 +48,7 @@ export interface UpdateProfileData {
     name: string;
     username?: string;
     phone: string;
-    age?: number;
+    dateOfBirth?: Date;
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;

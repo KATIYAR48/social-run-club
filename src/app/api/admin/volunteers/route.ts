@@ -69,12 +69,19 @@ export async function GET(request: NextRequest) {
     }
     if (ageRange) {
       const [min, max] = ageRange.split("-");
+      const currentDate = new Date();
+      
       if (max === "+") {
-        userQuery.age = { $gte: parseInt(min) };
+        // For age ranges like "56+", calculate the birth date for minimum age
+        const minBirthDate = new Date(currentDate.getFullYear() - parseInt(min), currentDate.getMonth(), currentDate.getDate());
+        userQuery.dateOfBirth = { $lte: minBirthDate };
       } else {
-        userQuery.age = {
-          $gte: parseInt(min),
-          $lte: parseInt(max),
+        // For age ranges like "18-25", calculate birth date range
+        const minBirthDate = new Date(currentDate.getFullYear() - parseInt(max), currentDate.getMonth(), currentDate.getDate());
+        const maxBirthDate = new Date(currentDate.getFullYear() - parseInt(min), currentDate.getMonth(), currentDate.getDate());
+        userQuery.dateOfBirth = {
+          $gte: minBirthDate,
+          $lte: maxBirthDate,
         };
       }
     }
@@ -112,7 +119,7 @@ export async function GET(request: NextRequest) {
       .populate({
         path: "userId",
         model: "User",
-        select: "name email phone age gender instagramUsername",
+        select: "name email phone dateOfBirth gender instagramUsername",
         options: { lean: true },
       })
       .lean()

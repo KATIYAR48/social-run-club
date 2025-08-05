@@ -17,7 +17,7 @@ export default function EditProfilePage() {
         name: '',
         username: '',
         phone: '',
-        age: '',
+        dateOfBirth: '',
         gender: '',
         emergencyContact: '',
         instagramUsername: '',
@@ -62,6 +62,81 @@ export default function EditProfilePage() {
         return username;
     };
 
+    // Format dateOfBirth for input field (YYYY-MM-DD format)
+    const formatDateForInput = (date: Date | string | undefined) => {
+        if (!date) return '';
+
+        let d: Date;
+
+        // Handle different date formats
+        if (typeof date === 'string') {
+            d = new Date(date);
+        } else if (date instanceof Date) {
+            d = date;
+        } else {
+            return '';
+        }
+
+        if (isNaN(d.getTime())) return '';
+
+        // Format as YYYY-MM-DD for HTML date input
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    };
+
+    // Format date for display (dd/mm/yyyy format)
+    const formatDateForDisplay = (dateString: string) => {
+        if (!dateString) return '';
+
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '';
+
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+
+    // Handle date input changes
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+
+        // Allow empty value
+        if (!value) {
+            setFormData({ ...formData, dateOfBirth: '' });
+            return;
+        }
+
+        // Parse dd/mm/yyyy format
+        const parts = value.split('/');
+        if (parts.length === 3) {
+            const day = parseInt(parts[0]);
+            const month = parseInt(parts[1]);
+            const year = parseInt(parts[2]);
+
+            if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                const date = new Date(year, month - 1, day);
+                if (!isNaN(date.getTime())) {
+                    const formattedDate = formatDateForInput(date);
+                    setFormData({ ...formData, dateOfBirth: formattedDate });
+                    return;
+                }
+            }
+        }
+
+        // If parsing fails, just update the display value
+        setFormData({ ...formData, dateOfBirth: value });
+    };
+
+    // Handle hidden date input changes
+    const handleHiddenDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, dateOfBirth: e.target.value });
+    };
+
     // Populate form with user data when available
     useEffect(() => {
         if (user) {
@@ -73,7 +148,7 @@ export default function EditProfilePage() {
                 name: user.name || '',
                 username: defaultUsername,
                 phone: user.phone || '',
-                age: user.age ? String(user.age) : '',
+                dateOfBirth: formatDateForInput(user.dateOfBirth),
                 gender: user.gender || '',
                 emergencyContact: user.emergencyContact || '',
                 instagramUsername: user.instagramUsername || '',
@@ -230,11 +305,14 @@ export default function EditProfilePage() {
         setIsSubmitting(true);
 
         try {
+            // Convert dateOfBirth string to Date object if provided
+            const dateOfBirth = formData.dateOfBirth ? new Date(formData.dateOfBirth) : undefined;
+
             const updateData = {
                 name: formData.name,
                 username: formData.username,
                 phone: formData.phone,
-                age: formData.age ? parseInt(formData.age) : undefined,
+                dateOfBirth,
                 gender: formData.gender as 'male' | 'female' | 'other' | undefined,
                 emergencyContact: formData.emergencyContact,
                 instagramUsername: formData.instagramUsername,
@@ -358,56 +436,26 @@ export default function EditProfilePage() {
                                         value={formData.username}
                                         onChange={handleChange}
                                         required
-                                        className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white pr-10"
+                                        className={`w-full p-3 bg-zinc-800 border rounded-md focus:outline-none focus:ring-2 pr-10 ${usernameStatus.available === false
+                                            ? 'border-red-500 focus:ring-red-500'
+                                            : usernameStatus.available === true
+                                                ? 'border-green-500 focus:ring-green-500'
+                                                : 'border-zinc-700 focus:ring-white'
+                                            }`}
+                                        minLength={3}
+                                        maxLength={30}
                                     />
                                     {usernameStatus.checking && (
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                                             <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
                                         </div>
                                     )}
-                                    {usernameStatus.available !== null && (
+                                    {usernameStatus.available !== null && !usernameStatus.checking && (
                                         <div className={`absolute inset-y-0 right-0 pr-3 flex items-center ${usernameStatus.available ? 'text-green-500' : 'text-red-500'}`}>
                                             {usernameStatus.message}
                                         </div>
                                     )}
                                 </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="phone" className="block mb-2 font-medium">
-                                    Phone <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="username" className="block mb-2 font-medium">
-                                    Username <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleChange}
-                                    required
-                                    className={`w-full p-3 bg-zinc-800 border rounded-md focus:outline-none focus:ring-2 ${usernameStatus.available === false
-                                        ? 'border-red-500 focus:ring-red-500'
-                                        : usernameStatus.available === true
-                                            ? 'border-green-500 focus:ring-green-500'
-                                            : 'border-zinc-700 focus:ring-white'
-                                        }`}
-                                    minLength={3}
-                                    maxLength={30}
-                                />
                                 {usernameStatus.message && (
                                     <div className={`mt-1 text-sm flex items-center gap-1 ${usernameStatus.checking
                                         ? 'text-zinc-400'
@@ -429,17 +477,48 @@ export default function EditProfilePage() {
                             </div>
 
                             <div>
-                                <label htmlFor="age" className="block mb-2 font-medium">
-                                    Age
+                                <label htmlFor="phone" className="block mb-2 font-medium">
+                                    Phone <span className="text-red-500">*</span>
                                 </label>
                                 <input
-                                    type="number"
-                                    id="age"
-                                    name="age"
-                                    value={formData.age}
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    value={formData.phone}
                                     onChange={handleChange}
+                                    required
                                     className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white"
                                 />
+                            </div>
+
+                            <div>
+                                <label htmlFor="dateOfBirth" className="block mb-2 font-medium">
+                                    Date of Birth
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="dateOfBirth"
+                                        name="dateOfBirth"
+                                        value={formData.dateOfBirth ? formatDateForDisplay(formData.dateOfBirth) : ''}
+                                        onChange={handleDateChange}
+                                        placeholder="dd/mm/yyyy"
+                                        className="w-full p-3 bg-zinc-800 border border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-white pr-10"
+                                    />
+                                    <input
+                                        type="date"
+                                        id="dateOfBirthHidden"
+                                        value={formData.dateOfBirth}
+                                        onChange={handleHiddenDateChange}
+                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <svg className="h-5 w-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
 
                             <div>

@@ -80,6 +80,23 @@ export async function GET(
       return eventDate < new Date();
     }).length;
 
+    // Calculate age from dateOfBirth if available
+    const calculateAge = (dateOfBirth: Date) => {
+      const today = new Date();
+      const birthDate = new Date(dateOfBirth);
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        age--;
+      }
+
+      return age;
+    };
+
     // Public profile data
     const profileData = {
       _id: user._id,
@@ -94,7 +111,8 @@ export async function GET(
         emergencyContact: user.emergencyContact,
       }),
       // Always public fields
-      age: user.age,
+      dateOfBirth: user.dateOfBirth,
+      age: user.dateOfBirth ? calculateAge(user.dateOfBirth) : undefined,
       gender: user.gender,
       instagramUsername: user.instagramUsername,
       joinCrew: user.joinCrew,

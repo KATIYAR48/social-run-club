@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard } from 'lucide-react';
 import Button from '@/components/Button';
+import { calculateAgeFromDateOfBirth } from '@/lib/utils';
 
 interface User {
     _id: string;
@@ -11,6 +12,7 @@ interface User {
     email: string;
     phone: string;
     age?: number;
+    dateOfBirth?: string;
     gender?: string;
     instagramUsername?: string;
 }
@@ -277,7 +279,7 @@ export default function VolunteersAdminPage() {
                         user.name || '',
                         user.email || '',
                         user.phone || '',
-                        user.age || '',
+                        user.age || (user.dateOfBirth ? calculateAgeFromDateOfBirth(user.dateOfBirth) : '') || '',
                         user.gender || '',
                         user.instagramUsername || '',
                         app.availability || '',
@@ -514,10 +516,12 @@ export default function VolunteersAdminPage() {
                                                             <div className="text-sm text-zinc-400">{application.user.email}</div>
                                                             <div className="text-sm text-zinc-400">{application.user.phone}</div>
                                                             <div className="text-sm text-zinc-400 mt-1">
-                                                                {application.user.age && <span>Age: {application.user.age}</span>}
-                                                                {application.user.age && application.user.gender && <span> | </span>}
-                                                                {application.user.gender && <span>Gender: {application.user.gender}</span>}
-                                                                {(application.user.age || application.user.gender) && application.user.instagramUsername && <span> | </span>}
+                                                                                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && (
+                                    <span>Age: {application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)}</span>
+                                )}
+                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && application.user.gender && <span> | </span>}
+                                {application.user.gender && <span>Gender: {application.user.gender}</span>}
+                                {((application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) || application.user.gender) && application.user.instagramUsername && <span> | </span>}
                                                                 {application.user.instagramUsername && (
                                                                     <a
                                                                         href={`https://instagram.com/${application.user.instagramUsername.replace('@', '')}`}

@@ -9,7 +9,7 @@ function Building({ position, size, height }: { position: [number, number, numbe
     return (
         <mesh position={position}>
             <boxGeometry args={[size, height, size]} />
-            <meshStandardMaterial color="#353535" />
+            <meshStandardMaterial color="#383838" />
         </mesh>
     )
 }
@@ -115,7 +115,7 @@ export default function CityScapeSection() {
         <section className="bg-black text-white py-12 h-[500px] relative overflow-hidden">
             <div className="absolute inset-0">
                 <Canvas
-                    camera={{ position: [0, 12, 20], fov: 60 }}
+                    camera={{ position: [0, 12, 20], fov: 70 }}
                     gl={{
                         antialias: true,
                         alpha: false,
@@ -126,12 +126,12 @@ export default function CityScapeSection() {
 
                     {/* Simple lighting */}
                     <ambientLight intensity={0.8} />
-                    <directionalLight position={[10, 10, 5]} intensity={1} color="#ffffff" />
+                    <directionalLight position={[10, 10, 5]} intensity={5} color="#ffffff" />
 
                     {/* Ground plane */}
                     <mesh position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]}>
                         <planeGeometry args={[1000, 1000]} />
-                        <meshStandardMaterial color="#121212" />
+                        <meshStandardMaterial color="#010101" />
                     </mesh>
 
                     {/* Cityscape */}
@@ -141,6 +141,14 @@ export default function CityScapeSection() {
                     <CameraController />
                 </Canvas>
             </div>
+
+            {/* Vignette overlay - linear gradient from bottom to middle */}
+            <div
+                className="absolute inset-0 pointer-events-none z-5"
+                style={{
+                    background: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 5%, transparent 100%)'
+                }}
+            />
 
             {/* Overlay text */}
             <div className="relative z-10 flex items-center justify-center h-full">

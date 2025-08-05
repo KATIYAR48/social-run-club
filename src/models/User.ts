@@ -46,7 +46,7 @@ export interface IUser extends Document {
   username: string;
   password: string;
   phone: string;
-  age?: number;
+  dateOfBirth?: Date;
   gender?: "male" | "female" | "other";
   emergencyContact?: string;
   instagramUsername?: string;
@@ -75,8 +75,8 @@ export interface IUser extends Document {
 }
 
 const UserSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true, index: true },
+  email: { type: String, required: true, unique: true, index: true },
   username: {
     type: String,
     required: true,
@@ -90,13 +90,14 @@ const UserSchema: Schema = new Schema({
   },
   password: { type: String, required: true },
   phone: { type: String, required: true, unique: true },
-  age: { type: Number },
+  dateOfBirth: { type: Date, index: true },
   gender: {
     type: String,
     enum: ["male", "female", "other"],
+    index: true,
   },
   emergencyContact: { type: String },
-  instagramUsername: { type: String, sparse: true, unique: true },
+  instagramUsername: { type: String, sparse: true, unique: true, index: true },
   joinCrew: {
     type: Boolean,
     default: false,
@@ -105,6 +106,7 @@ const UserSchema: Schema = new Schema({
     type: String,
     enum: ["user", "admin", "super-admin"],
     default: "user",
+    index: true,
   },
   // Strava integration
   strava: {

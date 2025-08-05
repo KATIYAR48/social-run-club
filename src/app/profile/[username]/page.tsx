@@ -10,6 +10,7 @@ import { Card, Title, Legend, AreaChart } from '@tremor/react';
 import tremorTheme from '@/lib/tremor-theme';
 import { motion } from 'framer-motion';
 import { Share2, Copy, Calendar, MapPin, Users, Trophy, Clock, CheckCircle } from 'lucide-react';
+import { calculateAgeFromDateOfBirth } from '@/lib/utils';
 import NotificationPrompt from '@/components/NotificationPrompt';
 import FollowButton from '@/components/FollowButton';
 import FollowStats from '@/components/FollowStats';
@@ -41,6 +42,7 @@ interface PublicProfile {
     username: string;
     joinDate: string;
     role: string;
+    dateOfBirth?: string;
     age?: number;
     gender?: string;
     instagramUsername?: string;
@@ -349,10 +351,10 @@ export default function PublicProfilePage() {
                                         <Calendar size={14} />
                                         Joined {formatDate(profile.joinDate)}
                                     </div>
-                                    {profile.age && (
+                                    {(profile.age || profile.dateOfBirth) && (
                                         <div className="flex items-center gap-1">
                                             <Users size={14} />
-                                            {profile.age} years old
+                                            {profile.age || (profile.dateOfBirth ? calculateAgeFromDateOfBirth(profile.dateOfBirth) : null)} years old
                                         </div>
                                     )}
                                     {profile.instagramUsername && (
