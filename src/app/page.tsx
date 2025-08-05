@@ -26,9 +26,9 @@ export default function Home() {
       <JsonLd data={websiteSchema} />
       <Header />
       <Hero />
+      <CityScapeSection />
       <UpcomingEvents />
       <MerchPageClient />
-      <CityScapeSection />
       <Footer />
     </main>
   );
