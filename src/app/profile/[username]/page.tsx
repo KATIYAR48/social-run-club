@@ -289,7 +289,7 @@ export default function PublicProfilePage() {
                                 <CometCard>
                                     <button
                                         type="button"
-                                        className="flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#1F2121] p-2 saturate-0 md:p-4"
+                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#1F2121] saturate-0 p-2 md:p-4`}
                                         style={{
                                             transformStyle: "preserve-3d",
                                             transform: "none",
