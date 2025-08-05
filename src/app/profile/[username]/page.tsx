@@ -368,12 +368,7 @@ export default function PublicProfilePage() {
                                             </a>
                                         </div>
                                     )}
-                                    {profile.joinCrew && (
-                                        <div className="flex items-center gap-1">
-                                            <Trophy size={14} />
-                                            Crew Member
-                                        </div>
-                                    )}
+
                                 </div>
 
                                 {/* Private Info (Only for profile owner) */}

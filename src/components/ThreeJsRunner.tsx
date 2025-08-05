@@ -87,7 +87,7 @@ function RunningFigure({ gender }: RunnerProps) {
                         action.setLoop(THREE.LoopRepeat, Infinity);
                         action.clampWhenFinished = false;
                         action.enabled = true;
-                        action.timeScale = 0.6;
+                        action.timeScale = gender === 'male' ? 0.6 : 0.8;
                         action.weight = 1;
                         action.play();
                     });
