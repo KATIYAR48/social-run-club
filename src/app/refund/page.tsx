@@ -49,6 +49,7 @@ export default function RefundPolicy() {
                     <ul className="list-disc pl-6">
                         <li>Products marked as &quot;Final Sale&quot; or purchased during special promotions (unless defective).</li>
                         <li>Undergarments, socks, or other items deemed non-returnable for hygiene reasons.</li>
+                        <li>Event tickets and registrations are non-refundable and non-transferable.</li>
                     </ul>
                 </section>
 

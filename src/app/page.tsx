@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import JsonLd, { organizationSchema } from '@/components/JsonLd';
 import MerchPageClient from '@/components/MerchPageClient';
 import CityScapeSection from '@/components/CityScapeSection';
+import FAQ from '@/components/FAQ';
 
 export default function Home() {
   // Website schema
@@ -29,6 +30,7 @@ export default function Home() {
       <CityScapeSection />
       <UpcomingEvents />
       <MerchPageClient />
+      <FAQ />
       <Footer />
     </main>
   );
