@@ -201,19 +201,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
                 <directionalLight
                     position={[3, 5, 3]}
                     intensity={1.5}
-                    color={username == 'fabianferno' ? '#ff0000' : `#${Array.from(username)
-                        .reduce((acc, char, i) => acc + char.charCodeAt(0) * (i + 1), 0)
-                        .toString(16)
-                        .padStart(6, '0')
-                        .slice(-6)
-                        .split('')
-                        .map((c) => {
-                            // Ensure each channel is at least 'B' (hex 11/17) for brightness
-                            const val = parseInt(c, 16);
-                            return (val < 11 ? (val + 5).toString(16) : c);
-                        })
-                        .join('')
-                        }`}
+                    color={'#ff0000'}
                     castShadow
                     shadow-mapSize-width={1024}
                     shadow-mapSize-height={1024}

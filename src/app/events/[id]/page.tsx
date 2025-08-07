@@ -136,8 +136,7 @@ export default async function EventDetailPage({
                                                 <p className="text-zinc-300">{event.location}</p>
                                                 {isLoggedIn && event.exactLocation && (
                                                     <div className="mt-4 p-4 bg-zinc-900 luxury-border">
-                                                        <h3 className="text-lg font-semibold mb-2">Exact Location</h3>
-                                                        <p className="text-zinc-300 break-words">{event.exactLocation}</p>
+
                                                         {event.exactLocation.includes("maps.google.com") ||
                                                             event.exactLocation.includes("goo.gl/maps") ||
                                                             event.exactLocation.includes("maps.app.goo.gl") ? (
