@@ -1,5 +1,9 @@
-const CACHE_NAME = "cloka-cache-v1";
-const urlsToCache = [
+const CACHE_NAME = "cloka-cache-v2";
+const STATIC_CACHE_NAME = "cloka-static-v2";
+const DYNAMIC_CACHE_NAME = "cloka-dynamic-v2";
+
+// Static assets that can be cached aggressively
+const STATIC_ASSETS = [
   "/",
   "/site.webmanifest",
   "/favicon.ico",
@@ -7,6 +11,17 @@ const urlsToCache = [
   "/android-chrome-192x192.png",
   "/android-chrome-512x512.png",
   "/apple-touch-icon.png",
+  "/favicon-32x32.png",
+  "/favicon-16x16.png",
+];
+
+// API routes that should use network-first strategy
+const API_ROUTES = [
+  "/api/events",
+  "/api/feed",
+  "/api/user",
+  "/api/notifications",
+  "/api/products",
 ];
 
 // Install a service worker
@@ -16,59 +31,113 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Opened cache");
-      // Cache each URL individually to handle failures gracefully
-      return Promise.allSettled(
-        urlsToCache.map((url) =>
-          cache.add(url).catch((err) => {
-            console.warn(`Failed to cache ${url}:`, err);
-            return null;
-          })
-        )
-      ).then(() => {
-        console.log("Cache setup completed");
-      });
+    Promise.all([
+      // Cache static assets
+      caches.open(STATIC_CACHE_NAME).then((cache) => {
+        console.log("Caching static assets");
+        return Promise.allSettled(
+          STATIC_ASSETS.map((url) =>
+            cache.add(url).catch((err) => {
+              console.warn(`Failed to cache static asset ${url}:`, err);
+              return null;
+            })
+          )
+        );
+      }),
+      // Create dynamic cache
+      caches.open(DYNAMIC_CACHE_NAME),
+    ]).then(() => {
+      console.log("Cache setup completed");
     })
   );
 });
 
 // Cache and return requests
 self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
   // Only handle GET requests for caching
-  if (event.request.method !== "GET") {
+  if (request.method !== "GET") {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Cache hit - return response
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).then((response) => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== "basic") {
+  // Check if this is an API route that needs network-first strategy
+  const isApiRoute = API_ROUTES.some((route) => url.pathname.startsWith(route));
+
+  if (isApiRoute) {
+    // Network-first strategy for API routes
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Clone the response before using it
+          const responseClone = response.clone();
+
+          // Cache the fresh response
+          caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
+
+          return response;
+        })
+        .catch(() => {
+          // If network fails, try to get from cache
+          return caches.match(request).then((cachedResponse) => {
+            if (cachedResponse) {
+              console.log("Serving API response from cache:", url.pathname);
+              return cachedResponse;
+            }
+            // If no cache, return a fallback response
+            return new Response(
+              JSON.stringify({ error: "Network unavailable" }),
+              {
+                status: 503,
+                headers: { "Content-Type": "application/json" },
+              }
+            );
+          });
+        })
+    );
+  } else {
+    // Cache-first strategy for static assets
+    event.respondWith(
+      caches.match(request).then((response) => {
+        // Cache hit - return response
+        if (response) {
           return response;
         }
 
-        // Clone the response
-        const responseToCache = response.clone();
+        // Not in cache, fetch from network
+        return fetch(request).then((response) => {
+          // Check if we received a valid response
+          if (
+            !response ||
+            response.status !== 200 ||
+            response.type !== "basic"
+          ) {
+            return response;
+          }
 
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
+          // Clone the response
+          const responseToCache = response.clone();
+
+          // Cache the response
+          caches.open(STATIC_CACHE_NAME).then((cache) => {
+            cache.put(request, responseToCache);
+          });
+
+          return response;
         });
-
-        return response;
-      });
-    })
-  );
+      })
+    );
+  }
 });
 
 // Update a service worker
 self.addEventListener("activate", (event) => {
   console.log("Service worker activating...");
-  const cacheWhitelist = [CACHE_NAME];
+  const cacheWhitelist = [STATIC_CACHE_NAME, DYNAMIC_CACHE_NAME];
+
   event.waitUntil(
     Promise.all([
       // Clean up old caches
@@ -86,8 +155,38 @@ self.addEventListener("activate", (event) => {
       self.clients.claim(),
     ]).then(() => {
       console.log("Service worker activated and claimed control");
+
+      // Notify all clients about the update
+      self.clients.matchAll().then((clients) => {
+        clients.forEach((client) => {
+          client.postMessage({
+            type: "SW_UPDATED",
+            message: "Service worker updated successfully",
+          });
+        });
+      });
     })
   );
+});
+
+// Handle messages from the main thread
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+
+  if (event.data && event.data.type === "CLEAR_CACHE") {
+    event.waitUntil(
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            console.log("Clearing cache:", cacheName);
+            return caches.delete(cacheName);
+          })
+        );
+      })
+    );
+  }
 });
 
 // Handle push events

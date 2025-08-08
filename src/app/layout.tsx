@@ -8,6 +8,7 @@ import Script from "next/script";
 import { AuthProvider } from "@/lib/auth-context";
 import PageTransition from "@/components/PageTransition";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import PWADebugPanel from "@/components/PWADebugPanel";
 
 const urbanist = Urbanist({
   subsets: ["latin"],
@@ -88,13 +89,16 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="CLOKA" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="CLOKA" />
         <meta name="msapplication-TileColor" content="#000000" />
         <meta name="msapplication-tap-highlight" content="no" />
         <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <meta name="apple-mobile-web-app-orientations" content="portrait" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       </head>
       <body className={`${urbanist.variable} antialiased`}>
         <ErrorBoundary>
@@ -105,6 +109,7 @@ export default function RootLayout({
                 {children}
               </PageTransition>
               <PWAInstallPrompt />
+              <PWADebugPanel />
             </AuthProvider>
           </LoadingProvider>
         </ErrorBoundary>

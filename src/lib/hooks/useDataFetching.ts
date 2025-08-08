@@ -1,105 +1,121 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { defaultFetchOptions, fetchApi } from "@/lib/apiUtils";
 
-interface FetchOptions extends RequestInit {
-  skipLoading?: boolean;
+interface UseDataFetchingOptions {
+  url: string;
+  dependencies?: unknown[];
+  refreshInterval?: number;
+  forceRefresh?: boolean;
 }
 
-interface MutationOptions<T> extends RequestInit {
-  onSuccess?: (data: T) => void;
-  onError?: (error: Error) => void;
-}
-
-interface UseFetchResult<T> {
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-  refetch: () => Promise<void>;
-}
-
-interface UseMutationResult<T, P> {
-  mutate: (payload: P) => Promise<void>;
-  data: T | null;
-  isLoading: boolean;
-  error: Error | null;
-}
-
-export function useDataFetching<T>(
-  url: string,
-  options?: FetchOptions
-): UseFetchResult<T> {
+export function useDataFetching<T>({
+  url,
+  dependencies = [],
+  refreshInterval = 30000, // 30 seconds default
+  forceRefresh = false,
+}: UseDataFetchingOptions) {
   const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(!options?.skipLoading);
-  const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const fetchData = useCallback(async () => {
-    if (!options?.skipLoading) {
-      setIsLoading(true);
-    }
-    setError(null);
+  const fetchData = useCallback(
+    async (force = false) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-    try {
-      const fetchOptions = {
-        ...defaultFetchOptions,
-        ...options,
-      };
-      const result = await fetchApi<T>(url, fetchOptions);
-      setData(result);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err : new Error("An unknown error occurred")
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, [url, options]);
+        // Add cache-busting parameter if force refresh is requested
+        const fetchUrl = force ? `${url}?t=${Date.now()}` : url;
 
+        const response = await fetch(fetchUrl, {
+          headers: {
+            "Cache-Control": force ? "no-cache" : "default",
+            Pragma: force ? "no-cache" : "default",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setData(result);
+        setLastUpdated(new Date());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [url]
+  );
+
+  // Initial fetch
   useEffect(() => {
-    fetchData();
+    fetchData(forceRefresh);
+  }, [fetchData, forceRefresh, ...dependencies]);
+
+  // Set up refresh interval
+  useEffect(() => {
+    if (refreshInterval <= 0) return;
+
+    const interval = setInterval(() => {
+      // Only refresh if the app is online
+      if (navigator.onLine) {
+        fetchData();
+      }
+    }, refreshInterval);
+
+    return () => clearInterval(interval);
+  }, [fetchData, refreshInterval]);
+
+  // Listen for online/offline events
+  useEffect(() => {
+    const handleOnline = () => {
+      console.log("App is online, refreshing data...");
+      fetchData(true); // Force refresh when coming back online
+    };
+
+    const handleOffline = () => {
+      console.log("App is offline");
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
   }, [fetchData]);
 
-  const refetch = async () => {
-    await fetchData();
+  // Listen for service worker updates
+  useEffect(() => {
+    const handleSWMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === "SW_UPDATED") {
+        console.log("Service worker updated, refreshing data...");
+        fetchData(true); // Force refresh after SW update
+      }
+    };
+
+    navigator.serviceWorker?.addEventListener("message", handleSWMessage);
+
+    return () => {
+      navigator.serviceWorker?.removeEventListener("message", handleSWMessage);
+    };
+  }, [fetchData]);
+
+  const refresh = useCallback(() => {
+    fetchData(true);
+  }, [fetchData]);
+
+  return {
+    data,
+    loading,
+    error,
+    lastUpdated,
+    refresh,
   };
-
-  return { data, isLoading, error, refetch };
-}
-
-export function useMutation<T, P = unknown>(
-  url: string,
-  method: "POST" | "PUT" | "DELETE" | "PATCH" = "POST",
-  options?: MutationOptions<T>
-): UseMutationResult<T, P> {
-  const [data, setData] = useState<T | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const mutate = async (payload: P) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const fetchOptions = {
-        ...defaultFetchOptions,
-        ...options,
-        method,
-        body: JSON.stringify(payload),
-      };
-
-      const result = await fetchApi<T>(url, fetchOptions);
-      setData(result);
-      options?.onSuccess?.(result);
-    } catch (err) {
-      const errorObj =
-        err instanceof Error ? err : new Error("An unknown error occurred");
-      setError(errorObj);
-      options?.onError?.(errorObj);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return { mutate, data, isLoading, error };
 }
