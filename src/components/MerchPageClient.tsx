@@ -111,7 +111,7 @@ export default function MerchPageClient() {
                         >
                             <motion.img
                                 src="/images/join-waitlist-text.png"
-                                alt="Join Waitlist Text"
+                                alt="Join Waitlist Image"
                                 width={400}
                                 height={100}
                                 className="w-full max-w-xs md:max-w-md select-none pointer-events-none"
@@ -141,32 +141,9 @@ export default function MerchPageClient() {
                             <motion.button
                                 className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                                 onClick={() => setShowForm(true)}
-                                initial={{ boxShadow: '0 0 0 0 #fff' }}
-                                animate={{
-                                    boxShadow: [
-                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
-                                        '0 0 15px 4px rgba(255, 255, 255, 0.9)',
-                                        '0 0 5px 2px rgba(255, 255, 255, 0.8)',
-                                    ]
-                                }}
-                                transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
+
                             >
-                                <span className="absolute inset-0 z-0 rounded-2xl pointer-events-none">
-                                    <motion.span
-                                        className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
-                                        style={{ borderImage: 'linear-gradient(90deg, #ffffff, #ffffff, #ffffff) 1' }}
-                                        initial={{ opacity: 0.7 }}
-                                        animate={{
-                                            opacity: [0.7, 1, 0.7],
-                                            filter: [
-                                                'blur(2px) brightness(1)',
-                                                'blur(5px) brightness(1.2)',
-                                                'blur(3px) brightness(1)'
-                                            ]
-                                        }}
-                                        transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
-                                    />
-                                </span>
+
                                 <span className="relative z-10">Join Waitlist</span>
                             </motion.button> : <motion.button
                                 className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
@@ -254,34 +231,9 @@ export default function MerchPageClient() {
                 <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
                     {!showForm ? (
                         <motion.button
-                            className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                            className="relative px-12 cursor-pointer bg-white shadow-lg text-black backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                             onClick={() => setShowForm(true)}
-                            initial={{ boxShadow: '0 0 0 0 #fff' }}
-                            animate={{
-                                boxShadow: [
-                                    '0 0 5px 2px rgba(255, 255, 255, 0.8)',
-                                    '0 0 15px 4px rgba(255, 255, 255, 0.9)',
-                                    '0 0 5px 2px rgba(255, 255, 255, 0.8)',
-                                ]
-                            }}
-                            transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
                         >
-                            <span className="absolute inset-0 z-0 rounded-2xl pointer-events-none">
-                                <motion.span
-                                    className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
-                                    style={{ borderImage: 'linear-gradient(90deg, #ffffff, #ffffff, #ffffff) 1' }}
-                                    initial={{ opacity: 0.7 }}
-                                    animate={{
-                                        opacity: [0.7, 1, 0.7],
-                                        filter: [
-                                            'blur(2px) brightness(1)',
-                                            'blur(5px) brightness(1.2)',
-                                            'blur(3px) brightness(1)'
-                                        ]
-                                    }}
-                                    transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
-                                />
-                            </span>
                             <span className="relative z-10 uppercase font-bold">Join Waitlist</span>
                         </motion.button>
                     ) : (
@@ -290,7 +242,7 @@ export default function MerchPageClient() {
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="flex-1 w-full border border-zinc-800 rounded-2xl shadow p-4 md:p-6 space-y-4 bg-black/30 backdrop-blur-xs relative z-10 max-w-md mx-auto"
+                            className="flex-1 w-full border border-zinc-800 shadow p-4 md:p-6 space-y-4 bg-black/30 backdrop-blur-xs relative z-10 max-w-md mx-auto"
                         >
                             {formError && <div className="text-red-600 font-medium">{formError}</div>}
                             <div>
@@ -323,7 +275,7 @@ export default function MerchPageClient() {
                             </div>
                             {message && <div className="text-green-600 font-medium">{message}</div>}
                             {error && <div className="text-red-600 font-medium">{error}</div>}
-                            <Button variant="secondary" type="submit" className="w-full font-bold bg-white/60 text-black py-2 rounded disabled:opacity-60" disabled={loading || !!formError}>
+                            <Button variant="secondary" type="submit" className="w-full font-bold bg-white/60 text-black py-2 disabled:opacity-60" disabled={loading || !!formError}>
                                 <strong> {loading ? "Joining..." : "Join Waitlist"}</strong>
                             </Button>
                         </motion.form>

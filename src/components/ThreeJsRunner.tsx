@@ -200,7 +200,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
                 {/* Enhanced lighting setup */}
                 <directionalLight
                     position={[3, 5, 3]}
-                    intensity={1.5}
+                    intensity={2}
                     color={'#ff0000'}
                     castShadow
                     shadow-mapSize-width={1024}
@@ -209,13 +209,13 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
 
                 <directionalLight
                     position={[-3, 3, -2]}
-                    intensity={0.8}
+                    intensity={1.5}
                     color="#8b9dc3"
                 />
 
                 <pointLight
                     position={[2, 1.5, 2]}
-                    intensity={0.7}
+                    intensity={2.5}
                     color="#ffffff"
                 />
 

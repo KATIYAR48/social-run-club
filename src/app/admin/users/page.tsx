@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TrashIcon, KeyIcon } from '@heroicons/react/24/solid';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import Button from "@/components/Button"
@@ -71,35 +71,8 @@ export default function UsersPage() {
         }
     }, [isSuperAdmin, router]);
 
-    // Initial fetch
-    useEffect(() => {
-        if (!isSuperAdmin) return;
-        // Fetch total stats first, then users
-        fetchTotalGenderStats().then(() => {
-            fetchUsers(pagination.page, search, genderFilter);
-        });
-    }, [isSuperAdmin, fetchTotalGenderStats, fetchUsers, pagination.page, search, genderFilter]);
-
-    // Handle search with debounce
-    useEffect(() => {
-        if (!isSuperAdmin) return;
-        const debounceTimer = setTimeout(() => {
-            fetchUsers(1, search, genderFilter);
-        }, 300);
-
-        return () => clearTimeout(debounceTimer);
-    }, [search, isSuperAdmin, fetchUsers, genderFilter]);
-
-    if (!isSuperAdmin) {
-        return (
-            <div className="text-center text-white mt-20">
-                You do not have permission to view this page.
-            </div>
-        );
-    }
-
     // Fetch total gender stats
-    const fetchTotalGenderStats = async () => {
+    const fetchTotalGenderStats = useCallback(async () => {
         try {
             setLoadingStats(true);
 
@@ -165,10 +138,10 @@ export default function UsersPage() {
         } finally {
             setLoadingStats(false);
         }
-    };
+    }, [pagination.total]);
 
     // Fetch users
-    const fetchUsers = async (page = 1, searchTerm = '', gender = 'all') => {
+    const fetchUsers = useCallback(async (page = 1, searchTerm = '', gender = 'all') => {
         try {
             setLoading(true);
             setError(null);
@@ -215,20 +188,47 @@ export default function UsersPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [pagination.limit, genderStats.total]);
+
+    // Get the gender query parameter for the API
+    const getGenderQueryParam = useCallback((gender: string): string | null => {
+        if (gender === 'all') return null;
+        if (gender === 'unknown') return 'null'; // Backend expects "null" string for unknown gender
+        return gender;
+    }, []);
+
+    // Initial fetch
+    useEffect(() => {
+        if (!isSuperAdmin) return;
+        // Fetch total stats first, then users
+        fetchTotalGenderStats().then(() => {
+            fetchUsers(pagination.page, search, genderFilter);
+        });
+    }, [isSuperAdmin, fetchTotalGenderStats, fetchUsers, pagination.page, search, genderFilter]);
+
+    // Handle search with debounce
+    useEffect(() => {
+        if (!isSuperAdmin) return;
+        const debounceTimer = setTimeout(() => {
+            fetchUsers(1, search, genderFilter);
+        }, 300);
+
+        return () => clearTimeout(debounceTimer);
+    }, [search, isSuperAdmin, fetchUsers, genderFilter]);
+
+    if (!isSuperAdmin) {
+        return (
+            <div className="text-center text-white mt-20">
+                You do not have permission to view this page.
+            </div>
+        );
+    }
 
     // Handle gender filter change
     const handleGenderFilterChange = (gender: string) => {
         setGenderFilter(gender);
         // Reset to page 1 when changing filters, but don't recalculate total stats
         fetchUsers(1, search, gender);
-    };
-
-    // Get the gender query parameter for the API
-    const getGenderQueryParam = (gender: string): string | null => {
-        if (gender === 'all') return null;
-        if (gender === 'unknown') return 'null'; // Backend expects "null" string for unknown gender
-        return gender;
     };
 
     // Handle page change

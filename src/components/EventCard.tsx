@@ -41,14 +41,14 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="bg-white text-black p-6 luxury-border"
+            className="bg-zinc-900 text-white p-6"
         >
             <div className="mb-4">
-                <span className="text-sm uppercase tracking-wider text-accent">{formatDate(event.date)}</span>
+                <span className="text-sm text-zinc-300 uppercase tracking-wider text-accent">{formatDate(event.date)}</span>
             </div>
-            <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+            <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
             <p className="text-sm mb-4">
-                <span className="font-medium">Location:</span> {event.location}
+                at <span className="font-medium">{event.location}</span>
             </p>
             {event.bannerImageURL && (
                 <div className="mb-4">
@@ -59,7 +59,7 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                     />
                 </div>
             )}
-            <p className="luxury-text mb-6">{event.description}</p>
+            <p className="luxury-text text-zinc-400 mb-6">{event.description.slice(0, 100)}...</p>
             <div className="flex flex-wrap gap-3">
                 <Button
                     href={`/events/${event.id}`}
@@ -67,7 +67,7 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                     size="large"
                     className="inline-block bg-black text-white text-3xl"
                 >
-                    View Details
+                    View
                 </Button>
             </div>
         </motion.div>
