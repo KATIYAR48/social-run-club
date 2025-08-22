@@ -1,36 +1,10 @@
-import { Metadata } from 'next';
+'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import dbConnect from '@/lib/mongodb';
-import Event from '@/models/Event';
-import EventsToggle from '@/components/EventsToggle';
+import EventsPageClient from '@/components/EventsPageClient';
 
-export const metadata: Metadata = {
-    title: 'Events - CLOKA',
-    description: 'Browse and register for upcoming CLOKA events.',
-};
-
-export default async function EventsPage() {
-    // Connect to the database
-    await dbConnect();
-
-    // Fetch all events
-    const allEvents = await Event.find({}).sort({ date: -1 });
-
-    // Separate upcoming events
-    const upcomingEvents = allEvents.filter(event => new Date(event.date) >= new Date());
-
-    // Pass raw dates to client component for proper timezone handling
-    const formattedAllEvents = allEvents.map(event => ({
-        ...event.toObject(),
-        date: event.date.toISOString() // Keep raw date as ISO string
-    }));
-
-    const formattedUpcomingEvents = upcomingEvents.map(event => ({
-        ...event.toObject(),
-        date: event.date.toISOString() // Keep raw date as ISO string
-    }));
-
+export default function EventsPage() {
     return (
         <>
             <Header />
@@ -43,10 +17,7 @@ export default async function EventsPage() {
                         </p>
                     </div>
 
-                    <EventsToggle
-                        allEvents={JSON.parse(JSON.stringify(formattedAllEvents))}
-                        upcomingEvents={JSON.parse(JSON.stringify(formattedUpcomingEvents))}
-                    />
+                    <EventsPageClient />
                 </div>
             </main>
             <Footer />

@@ -69,8 +69,8 @@ export default function PWADebugPanel() {
 
             {/* Debug panel */}
             {isOpen && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+                <div className="fixed inset-0 z-50 bg-opacity-50 border border-zinc-500 flex items-center justify-center p-4">
+                    <div className="rounded-lg bg-black/10 backdrop-blur-2xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto">
                         <div className="p-6">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-lg font-semibold">PWA Debug Panel</h3>
@@ -153,9 +153,9 @@ export default function PWADebugPanel() {
                             </div>
 
                             {/* Instructions */}
-                            <div className="mt-6 p-3 bg-gray-50 rounded text-sm">
+                            <div className="mt-6 p-3 bg-zinc-900 rounded text-sm">
                                 <p className="font-medium mb-2">iOS PWA Troubleshooting:</p>
-                                <ul className="space-y-1 text-gray-600">
+                                <ul className="space-y-1 text-zinc-300">
                                     <li>• Pull down to refresh for fresh data</li>
                                     <li>• Use &quot;Clear All Caches&quot; if data seems stale</li>
                                     <li>• &quot;Force Refresh App&quot; updates the service worker</li>

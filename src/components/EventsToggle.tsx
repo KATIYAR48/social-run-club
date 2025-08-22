@@ -10,7 +10,7 @@ type ApiEventProps = {
     date: string; // ISO date string from server
     location: string;
     description: string;
-    bannerImageURL: string | null;
+    bannerImageURL?: string | null;
 };
 
 interface EventsToggleProps {
@@ -21,16 +21,6 @@ interface EventsToggleProps {
 const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
     const [showUpcomingOnly, setShowUpcomingOnly] = useState(true);
     const [events, setEvents] = useState<ApiEventProps[]>(upcomingEvents);
-
-    // Transform API event to EventCard props
-    const transformEvent = (event: ApiEventProps): EventCardProps => ({
-        id: event._id,
-        title: event.title,
-        date: event.date, // Pass raw ISO date string for client-side formatting
-        location: event.location,
-        description: event.description,
-        bannerImageURL: event.bannerImageURL,
-    });
 
     // Toggle between all events and upcoming events
     const toggleEvents = (showUpcoming: boolean) => {
@@ -70,7 +60,17 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
             {events.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {events.map((event) => (
-                        <EventCard key={event._id} event={transformEvent(event)} />
+                        <EventCard
+                            key={event._id}
+                            event={{
+                                id: event._id,
+                                title: event.title,
+                                date: event.date,
+                                location: event.location,
+                                description: event.description,
+                                bannerImageURL: event.bannerImageURL,
+                            }}
+                        />
                     ))}
                 </div>
             ) : (

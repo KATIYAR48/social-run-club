@@ -39,11 +39,10 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
 
                 // Transform API data to component format
                 const formattedEvents = data.events.map((event: ApiEventData) => {
-                    const eventDate = new Date(event.date);
                     return {
                         id: event._id,
                         title: event.title,
-                        date: eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                        date: event.date, // Pass raw ISO date string for client-side formatting
                         location: event.location,
                         description: event.description,
                         bannerImageURL: event.bannerImageURL,
