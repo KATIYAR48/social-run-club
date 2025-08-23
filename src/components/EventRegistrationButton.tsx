@@ -10,6 +10,7 @@ interface EventRegistrationButtonProps {
     isRegistered?: boolean;
     isApproved?: boolean | null;
     isPastEvent?: boolean;
+    autoApprove?: boolean;
     additionalInfoField?: {
         label: string;
         required: boolean;
@@ -23,6 +24,7 @@ export default function EventRegistrationButton({
     isRegistered = false,
     isApproved = null,
     isPastEvent = false,
+    autoApprove = false,
     additionalInfoField,
 }: EventRegistrationButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +61,7 @@ export default function EventRegistrationButton({
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     eventId,
                     additionalInfo: additionalInfoData || ''
                 }),
@@ -90,7 +92,7 @@ export default function EventRegistrationButton({
 
     const handleAdditionalInfoSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         // Validate required field
         if (additionalInfoField?.required && !additionalInfo.trim()) {
             setError(`${additionalInfoField.label} is required.`);
@@ -152,6 +154,14 @@ export default function EventRegistrationButton({
                     >
                         {isLoading ? 'Registering...' : 'Register for Event'}
                     </button>
+
+                    {/* Show auto-approval message if enabled */}
+                    {autoApprove && (
+                        <div className="mt-3 p-3 bg-green-900/30 border border-green-800 text-green-300 text-sm rounded">
+                            ✓ This event has automatic approval enabled. Your registration will be approved immediately.
+                        </div>
+                    )}
+
                     {error && <p className="mt-2 text-red-400 text-sm">{error}</p>}
                 </div>
 
@@ -162,14 +172,14 @@ export default function EventRegistrationButton({
                             <h3 className="text-xl font-bold mb-4">
                                 Additional Information Required
                             </h3>
-                            
+
                             <form onSubmit={handleAdditionalInfoSubmit}>
                                 <div className="mb-4">
                                     <label className="block text-sm font-medium mb-2">
                                         {additionalInfoField.label}
                                         {additionalInfoField.required && <span className="text-red-500 ml-1">*</span>}
                                     </label>
-                                    
+
                                     {additionalInfoField.fieldType === 'select' ? (
                                         <select
                                             value={additionalInfo}

@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
       postRejectionMessage,
       razorpayButtonId,
       bannerImageURL,
+      autoApprove,
     } = await request.json();
 
     // Validate required fields
@@ -68,6 +69,7 @@ export async function POST(request: NextRequest) {
       postRejectionMessage: postRejectionMessage || null,
       razorpayButtonId: razorpayButtonId || null,
       bannerImageURL: bannerImageURL || null,
+      autoApprove: autoApprove || false,
       createdAt: new Date(),
     });
 

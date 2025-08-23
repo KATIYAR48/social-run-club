@@ -17,6 +17,7 @@ interface Event {
     postRejectionMessage?: string;
     razorpayButtonId?: string;
     bannerImageURL?: string;
+    autoApprove?: boolean;
     additionalInfoField?: {
         label: string;
         required: boolean;
@@ -59,6 +60,7 @@ export default function AdminEventsPage() {
             postRejectionMessage: '',
             razorpayButtonId: '',
             bannerImageURL: '',
+            autoApprove: false,
             additionalInfoField: {
                 label: '',
                 required: false,
@@ -184,6 +186,7 @@ export default function AdminEventsPage() {
             event: isEdit && event ? {
                 ...event,
                 date: toDatetimeLocal(event.date),
+                autoApprove: event.autoApprove || false,
                 additionalInfoField: event.additionalInfoField || {
                     label: '',
                     required: false,
@@ -200,6 +203,7 @@ export default function AdminEventsPage() {
                 postRejectionMessage: '',
                 razorpayButtonId: '',
                 bannerImageURL: '',
+                autoApprove: false,
                 additionalInfoField: {
                     label: '',
                     required: false,
@@ -225,6 +229,7 @@ export default function AdminEventsPage() {
                 postRejectionMessage: '',
                 razorpayButtonId: '',
                 bannerImageURL: '',
+                autoApprove: false,
                 additionalInfoField: {
                     label: '',
                     required: false,
@@ -414,7 +419,14 @@ export default function AdminEventsPage() {
                             {events.map((event) => (
                                 <div key={event._id} className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-800">
                                     <div className="p-4">
-                                        <h3 className="text-xl font-bold mb-2 text-black dark:text-white">{event.title}</h3>
+                                        <div className="flex items-start justify-between mb-2">
+                                            <h3 className="text-xl font-bold text-black dark:text-white">{event.title}</h3>
+                                            {event.autoApprove && (
+                                                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-zinc-800 dark:bg-zinc-900 dark:text-green-200">
+                                                    OpenForAll
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-black dark:text-white mb-2">
                                             <span className="font-semibold">Date:</span> {formatDate(event.date)}
                                         </p>
@@ -437,7 +449,7 @@ export default function AdminEventsPage() {
                                                 className="border border-zinc-700 bg-zinc-800 text-white px-3 py-1 rounded hover:bg-black hover:text-white hover:border-zinc-700 transition-colors"
 
                                             >
-                                                {isDeleting === event._id ? 'Deleting...' : 'Delete'}
+                                                {isDeleting === confirmDialog.eventId ? 'Deleting...' : 'Delete'}
                                             </Button>
                                         </div>
                                     </div>
@@ -664,6 +676,29 @@ export default function AdminEventsPage() {
                                 />
                                 <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                     Optional: Add a Razorpay payment button ID for this event.
+                                </p>
+                            </div>
+
+                            {/* Auto-Approval Configuration */}
+                            <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4 mt-6">
+                                <h4 className="text-lg font-semibold mb-4 text-black dark:text-white">
+                                    Registration Approval Settings
+                                </h4>
+                                <div className="flex items-center space-x-2">
+                                    <input
+                                        id="autoApprove"
+                                        name="autoApprove"
+                                        type="checkbox"
+                                        checked={eventForm.event.autoApprove || false}
+                                        onChange={handleFormChange}
+                                        className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                                    />
+                                    <label htmlFor="autoApprove" className="text-sm text-black dark:text-white">
+                                        Auto-approve all registrations
+                                    </label>
+                                </div>
+                                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                                    When enabled, all user registrations for this event will be automatically approved without requiring admin review.
                                 </p>
                             </div>
 

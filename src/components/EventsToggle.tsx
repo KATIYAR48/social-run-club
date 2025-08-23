@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Button from './Button';
-import EventCard, { EventCardProps } from './EventCard';
+import EventCard from './EventCard';
 
 type ApiEventProps = {
     _id: string;

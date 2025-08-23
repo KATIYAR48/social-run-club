@@ -13,6 +13,7 @@ interface Event {
     description: string;
     date: string;
     location: string;
+    autoApprove?: boolean;
 }
 
 export default function EventCheckInPage() {
@@ -118,9 +119,18 @@ export default function EventCheckInPage() {
                                                 }`}
                                             onClick={() => setSelectedEvent(event)}
                                         >
-                                            <h3 className="font-medium">{event.title}</h3>
-                                            <p className="text-sm text-zinc-400">{formatDate(event.date)}</p>
-                                            <p className="text-sm text-zinc-400">{event.location}</p>
+                                            <div className="flex items-start justify-between">
+                                                <div>
+                                                    <h3 className="font-medium">{event.title}</h3>
+                                                    <p className="text-sm text-zinc-400">{formatDate(event.date)}</p>
+                                                    <p className="text-sm text-zinc-400">{event.location}</p>
+                                                </div>
+                                                {event.autoApprove && (
+                                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-300">
+                                                        Auto-Approved
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

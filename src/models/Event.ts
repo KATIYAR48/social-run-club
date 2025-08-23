@@ -11,10 +11,11 @@ export interface IEvent extends Document {
   postRejectionMessage?: string;
   razorpayButtonId?: string;
   bannerImageURL?: string;
+  autoApprove?: boolean;
   additionalInfoField?: {
     label: string;
     required: boolean;
-    fieldType: 'text' | 'number' | 'select';
+    fieldType: "text" | "number" | "select";
     options?: string[];
   };
 }
@@ -30,15 +31,16 @@ const EventSchema: Schema = new Schema({
   postRejectionMessage: { type: String },
   razorpayButtonId: { type: String },
   bannerImageURL: { type: String },
+  autoApprove: { type: Boolean, default: false },
   additionalInfoField: {
     label: { type: String },
     required: { type: Boolean, default: false },
-    fieldType: { 
-      type: String, 
-      enum: ['text', 'number', 'select'], 
-      default: 'text' 
+    fieldType: {
+      type: String,
+      enum: ["text", "number", "select"],
+      default: "text",
     },
-    options: [String]
+    options: [String],
   },
 });
 

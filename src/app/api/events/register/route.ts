@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     const userEvent = await UserEvent.create({
       userId,
       eventId,
-      approved: null, // Pending approval
+      approved: event.autoApprove ? true : null, // Auto-approve if enabled, otherwise pending
       createdAt: new Date(),
       additionalInfo: additionalInfo || undefined,
     });
