@@ -9,8 +9,8 @@ const StravaClubPromotion = () => {
     return (
         <section className="bg-black text-white py-20">
             <div className="luxury-container">
-                <div className="flex gap-12 items-center justify-start">
-                    <div className='flex justify-center items-center filter saturate-20 contrast-150'>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
+                    <div className="md:col-span-1 filter saturate-20 contrast-150 flex justify-center">
                         <ThreeJsRunner
                             username={"fabianferno"}
                             gender={"male"}
@@ -23,6 +23,7 @@ const StravaClubPromotion = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
+                        className="md:col-span-2"
                     >
                         <div className="flex items-center mb-6">
                             <h2 className="text-3xl md:text-4xl font-light text-white">
@@ -49,7 +50,6 @@ const StravaClubPromotion = () => {
                             </div>
                         </div>
                     </motion.div>
-
                 </div>
             </div>
         </section>
