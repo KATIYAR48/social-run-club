@@ -19,7 +19,7 @@ export default function BannerAdminPage() {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
-    const [currentBanner, setCurrentBanner] = useState<any>(null);
+    const [currentBanner, setCurrentBanner] = useState<BannerData | null>(null);
 
     const [formData, setFormData] = useState<BannerFormData>({
         content: '',
@@ -57,8 +57,8 @@ export default function BannerAdminPage() {
                     });
                 }
             }
-        } catch (error) {
-            console.error('Error fetching current banner:', error);
+        } catch {
+            console.error('Error fetching current banner');
         }
     };
 
@@ -83,7 +83,7 @@ export default function BannerAdminPage() {
                 const errorData = await response.json();
                 setMessage(`Error: ${errorData.error || 'Failed to update banner'}`);
             }
-        } catch (error) {
+        } catch {
             setMessage('Error: Failed to update banner');
         } finally {
             setIsSubmitting(false);

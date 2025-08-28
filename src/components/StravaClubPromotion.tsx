@@ -10,11 +10,11 @@ const StravaClubPromotion = () => {
         <section className="bg-black text-white py-20">
             <div className="luxury-container">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
-                    <div className="md:col-span-1 filter saturate-20 contrast-150 flex justify-center">
+                    <div className="md:col-span-1 filter saturate-20 contrast-200 flex justify-center opacity-80">
                         <ThreeJsRunner
                             username={"fabianferno"}
                             gender={"male"}
-                            chosenThemeColor={"#ff8800"}
+                            chosenThemeColor={"#ffffff"}
                             className={'md:h-120 md:w-120 h-80 w-80'}
                         />
                     </div>

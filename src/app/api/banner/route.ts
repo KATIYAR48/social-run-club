@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Banner from "@/models/Banner";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await dbConnect();
 
