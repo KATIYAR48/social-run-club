@@ -82,6 +82,7 @@ function AdminLayoutContent({
         { name: 'Events', href: '/admin/events' },
         { name: 'Registrations', href: '/admin/event-registrations' },
         ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users' }] : []),
+        ...(isSuperAdmin ? [{ name: 'Banner', href: '/admin/banner' }] : []),
         { name: 'Volunteers', href: '/admin/volunteers' },
         { name: 'Notifications', href: '/admin/notifications' },
     ];

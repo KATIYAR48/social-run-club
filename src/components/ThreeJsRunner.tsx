@@ -8,6 +8,8 @@ import * as THREE from 'three';
 interface RunnerProps {
     gender: 'male' | 'female';
     username: string;
+    chosenThemeColor?: string | null;
+    className?: string | null;
 }
 
 function RunningFigure({ gender }: RunnerProps) {
@@ -88,7 +90,7 @@ function RunningFigure({ gender }: RunnerProps) {
                         action.setLoop(THREE.LoopRepeat, Infinity);
                         action.clampWhenFinished = false;
                         action.enabled = true;
-                        action.timeScale = gender === 'male' ? 0.6 : 0.8;
+                        action.timeScale = gender === 'male' ? 0.6 : 0.9;
                         action.weight = 1;
                         action.play();
                     });
@@ -149,7 +151,7 @@ function RunningFigure({ gender }: RunnerProps) {
     );
 }
 
-export default function ThreeJsRunner({ gender, username }: RunnerProps) {
+export default function ThreeJsRunner({ gender, username, chosenThemeColor, className }: RunnerProps) {
     const [cameraHeight, setCameraHeight] = useState(6);
     const [cameraDistance, setCameraDistance] = useState(12);
     const [cameraRotationY, setCameraRotationY] = useState(491 * Math.PI / 180);
@@ -159,6 +161,8 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
     const [useCustomCamera, setUseCustomCamera] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [useSimpleFallback, setUseSimpleFallback] = useState(false);
+
+    chosenThemeColor = chosenThemeColor || '#ff0000';
 
     // Check if we're in a server-side rendering environment
     useEffect(() => {
@@ -177,7 +181,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
     // Simple fallback for SSR or when Three.js fails
     if (useSimpleFallback || hasError) {
         return (
-            <div className="h-64 w-64 bg-black rounded-lg overflow-hidden border border-zinc-800 relative flex items-center justify-center">
+            <div className={`h-64 w-64 ${className} bg-black rounded-lg overflow-hidden border border-zinc-800 relative flex items-center justify-center`}>
                 <div className="text-center text-white">
                     <div className="text-6xl mb-2">{gender === 'male' ? '🏃‍♂️' : '🏃‍♀️'}</div>
                     <p className="text-sm text-zinc-400">Runner Model</p>
@@ -187,7 +191,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
     }
 
     return (
-        <div className="h-64 w-64 bg-black rounded-lg overflow-hidden border border-zinc-800 relative">
+        <div className={`h-64 w-64 ${className} bg-black overflow-hidden relative`}>
             <Canvas
                 camera={{ position: initialCameraPosition, fov: cameraFov }}
                 gl={{ antialias: true }}
@@ -201,7 +205,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
                 <directionalLight
                     position={[3, 5, 3]}
                     intensity={2}
-                    color={'#ff0000'}
+                    color={chosenThemeColor}
                     castShadow
                     shadow-mapSize-width={1024}
                     shadow-mapSize-height={1024}
@@ -221,7 +225,7 @@ export default function ThreeJsRunner({ gender, username }: RunnerProps) {
 
                 <ambientLight intensity={0.4} color="#404040" />
 
-                <RunningFigure gender={gender} username={username} />
+                <RunningFigure gender={gender} username={username} chosenThemeColor={chosenThemeColor} />
             </Canvas>
 
             {/* Camera Control Panel */}
