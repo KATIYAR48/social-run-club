@@ -3,12 +3,8 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import PasswordResetToken from "@/models/PasswordResetToken";
 import crypto from "crypto";
-import sgMail from "@sendgrid/mail";
-
-// Initialize SendGrid
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+import { emailService } from "@/lib/email-service";
+import { EmailTemplates } from "@/lib/email-templates";
 
 export async function POST(request: NextRequest) {
   try {
@@ -44,31 +40,27 @@ export async function POST(request: NextRequest) {
       token: token,
     });
 
-    // Only send email if SendGrid API key is configured
-    if (process.env.SENDGRID_API_KEY) {
+    // Only send email if email service is configured
+    if (emailService.isEmailConfigured()) {
       const resetUrl = `${
         process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
       }/auth/reset-password/${token}`;
 
+      const emailTemplate = EmailTemplates.passwordReset({
+        email,
+        resetUrl,
+      });
+
       const msg = {
         to: email,
-        from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
-        subject: "Reset Your Password",
-        text: `To reset your password, click on this link: ${resetUrl}`,
-        html: `
-          <p>Hello,</p>
-          <p>You requested to reset your password.</p>
-          <p>Please click the link below to reset your password:</p>
-          <p><a href="${resetUrl}">Reset Password</a></p>
-          <p>This link will expire in 1 hour.</p>
-          <p>If you did not request this, please ignore this email.</p>
-        `,
+        from: process.env.SES_FROM_EMAIL || "admin@cloka.in",
+        ...emailTemplate,
       };
 
-      await sgMail.send(msg);
+      await emailService.sendEmail(msg);
     } else {
       console.warn(
-        "SendGrid API key not configured. Password reset email not sent."
+        "Email service not configured. Password reset email not sent."
       );
     }
 

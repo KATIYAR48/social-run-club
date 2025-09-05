@@ -15,12 +15,12 @@
     "generate-usernames": "node scripts/generate-usernames.js"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.879.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.2",
     "@react-three/drei": "^10.6.1",
     "@react-three/fiber": "^9.3.0",
-    "@sendgrid/mail": "^8.1.4",
     "@tremor/react": "^3.18.7",
     "@types/bcryptjs": "^2.4.6",
     "@types/three": "^0.178.1",

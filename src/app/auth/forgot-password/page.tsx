@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
                     <h1 className="text-2xl font-bold mb-6">Forgot Password</h1>
 
                     {success ? (
-                        <div className="text-green-400 mb-4">
+                        <div className="text-zinc-300 mb-4">
                             {success}
                         </div>
                     ) : (
@@ -81,7 +81,7 @@ export default function ForgotPasswordPage() {
                             <div className="flex flex-col space-y-4">
                                 <Button
                                     type="submit"
-                                    variant="primary"
+                                    variant="secondary"
                                     isLoading={isLoading}
                                     loadingText="Sending..."
                                 >
@@ -90,7 +90,8 @@ export default function ForgotPasswordPage() {
 
                                 <Button
                                     type="button"
-                                    variant="secondary"
+                                    variant="primary"
+
                                     onClick={() => router.push('/auth')}
                                 >
                                     Back to Login

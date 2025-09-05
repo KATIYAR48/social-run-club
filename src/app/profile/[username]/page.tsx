@@ -34,7 +34,8 @@ function ThreeJsRunnerWithFallback({ gender, username }: { gender: 'male' | 'fem
 
     return (
         <div onError={() => setHasError(true)}>
-            <ThreeJsRunner gender={gender} username={username} />
+            <ThreeJsRunner gender={gender} username={username} chosenThemeColor={"#ffffff"}
+                className={'md:h-120 md:w-120 h-80 w-80 filter saturate-20 contrast-200  opacity-80'} />
         </div>
     );
 }

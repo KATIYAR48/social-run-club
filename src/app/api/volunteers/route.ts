@@ -3,12 +3,8 @@ import { cookies } from "next/headers";
 import dbConnect from "@/lib/mongodb";
 import VolunteerApplication from "@/models/Volunteer";
 import User from "@/models/User";
-import sgMail from "@sendgrid/mail";
-
-// Initialize SendGrid
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+import { emailService } from "@/lib/email-service";
+import { EmailTemplates } from "@/lib/email-templates";
 
 export async function GET() {
   try {
@@ -145,66 +141,41 @@ export async function POST(request: NextRequest) {
       status: "pending",
     });
 
-    // Only send email if SendGrid API key is configured
-    if (process.env.SENDGRID_API_KEY) {
+    // Only send email if email service is configured
+    if (emailService.isEmailConfigured()) {
       const userAge = user.dateOfBirth
         ? calculateAge(user.dateOfBirth)
         : undefined;
 
+      const emailTemplate = EmailTemplates.volunteerApplication({
+        user: {
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          age: userAge,
+          gender: user.gender,
+          instagramUsername: user.instagramUsername,
+        },
+        location,
+        availability,
+        interests,
+        experience,
+        motivation,
+        skills,
+        languages,
+        additionalInfo,
+      });
+
       const msg = {
         to: "support@cloka.in",
-        from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
-        subject: `New Volunteer Application - ${user.name}`,
-        text: `
-Name: ${user.name}
-Email: ${user.email}
-Phone: ${user.phone}
-Age: ${userAge || "Not specified"}
-Gender: ${user.gender || "Not specified"}
-Instagram: ${user.instagramUsername || "Not specified"}
-
-Application Details:
-Location: ${location}
-Availability: ${availability}
-Interests: ${interests}
-Experience: ${experience}
-Motivation: ${motivation}
-${skills ? `Skills: ${skills}` : ""}
-${languages ? `Languages: ${languages}` : ""}
-${additionalInfo ? `Additional Info: ${additionalInfo}` : ""}
-        `,
-        html: `
-          <h3>New Volunteer Application</h3>
-          <h4>User Details:</h4>
-          <p><strong>Name:</strong> ${user.name}</p>
-          <p><strong>Email:</strong> ${user.email}</p>
-          <p><strong>Phone:</strong> ${user.phone}</p>
-          <p><strong>Age:</strong> ${userAge || "Not specified"}</p>
-          <p><strong>Gender:</strong> ${user.gender || "Not specified"}</p>
-          <p><strong>Instagram:</strong> ${
-            user.instagramUsername || "Not specified"
-          }</p>
-
-          <h4>Application Details:</h4>
-          <p><strong>Location:</strong> ${location}</p>
-          <p><strong>Availability:</strong> ${availability}</p>
-          <p><strong>Interests:</strong> ${interests}</p>
-          <p><strong>Experience:</strong> ${experience}</p>
-          <p><strong>Motivation:</strong> ${motivation}</p>
-          ${skills ? `<p><strong>Skills:</strong> ${skills}</p>` : ""}
-          ${languages ? `<p><strong>Languages:</strong> ${languages}</p>` : ""}
-          ${
-            additionalInfo
-              ? `<p><strong>Additional Info:</strong> ${additionalInfo}</p>`
-              : ""
-          }
-        `,
+        from: process.env.SES_FROM_EMAIL || "admin@cloka.in",
+        ...emailTemplate,
       };
 
-      await sgMail.send(msg);
+      await emailService.sendEmail(msg);
     } else {
       console.warn(
-        "SendGrid API key not configured. Volunteer application email not sent."
+        "Email service not configured. Volunteer application email not sent."
       );
     }
 

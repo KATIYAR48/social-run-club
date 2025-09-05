@@ -2,12 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import WaitlistEntry from "@/models/WaitlistEntry";
 import User from "@/models/User";
-import sgMail from "@sendgrid/mail";
+import { emailService } from "@/lib/email-service";
+import { EmailTemplates } from "@/lib/email-templates";
 import { PipelineStage } from "mongoose";
-
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,15 +53,17 @@ export async function POST(request: NextRequest) {
     });
 
     // Send confirmation email to user
-    if (process.env.SENDGRID_API_KEY) {
+    if (emailService.isEmailConfigured()) {
+      const emailTemplate = EmailTemplates.merchWaitlistConfirmation({
+        name: user.name,
+      });
+
       const userMsg = {
         to: user.email,
-        from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
-        subject: "Cloka Merch Waitlist Confirmation",
-        text: `Hi ${user.name},\n\nThank you for joining the Cloka merch waitlist! We'll notify you as soon as our merch is available.\n\n- Team Cloka`,
-        html: `<p>Hi ${user.name},</p><p>Thank you for joining the <b>Cloka merch waitlist</b>!<br/>We'll notify you as soon as our merch is available.</p><p>- Team Cloka</p>`,
+        from: process.env.SES_FROM_EMAIL || "admin@cloka.in",
+        ...emailTemplate,
       };
-      await sgMail.send(userMsg);
+      await emailService.sendEmail(userMsg);
 
       // // Send notification to support
       // const supportMsg = {

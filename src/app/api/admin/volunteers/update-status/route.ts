@@ -3,16 +3,12 @@ import { cookies } from "next/headers";
 import dbConnect from "@/lib/mongodb";
 import VolunteerApplication from "@/models/Volunteer";
 import User from "@/models/User";
-import sgMail from "@sendgrid/mail";
+import { emailService } from "@/lib/email-service";
+import { EmailTemplates } from "@/lib/email-templates";
 
 interface PopulatedUser {
   name: string;
   email: string;
-}
-
-// Initialize SendGrid
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 }
 
 export async function POST(req: NextRequest) {
@@ -68,53 +64,21 @@ export async function POST(req: NextRequest) {
     application.status = status;
     await application.save();
 
-    // Send email notification if SendGrid is configured
-    if (process.env.SENDGRID_API_KEY) {
+    // Send email notification if email service is configured
+    if (emailService.isEmailConfigured()) {
       const applicant = application.userId as PopulatedUser;
+      const emailTemplate = EmailTemplates.volunteerStatusUpdate({
+        name: applicant.name,
+        status: status as "approved" | "rejected",
+      });
+
       const msg = {
         to: applicant.email,
-        from: process.env.SENDGRID_FROM_EMAIL || "noreply@cloka.app",
-        subject: `Volunteer Application ${
-          status === "approved" ? "Approved" : "Not Approved"
-        } - Cloka`,
-        text: `
-Dear ${applicant.name},
-
-Your volunteer application with Cloka has been ${
-          status === "approved"
-            ? "approved! Welcome to the Cloka volunteer team."
-            : "not approved at this time."
-        }
-
-${
-  status === "approved"
-    ? "We will contact you soon with more details about getting started."
-    : "Thank you for your interest in volunteering with us. We encourage you to apply again in the future."
-}
-
-Best regards,
-The Cloka Team
-        `,
-        html: `
-          <p>Dear ${applicant.name},</p>
-          
-          <p>Your volunteer application with Cloka has been ${
-            status === "approved"
-              ? "approved! Welcome to the Cloka volunteer team."
-              : "not approved at this time."
-          }</p>
-          
-          <p>${
-            status === "approved"
-              ? "We will contact you soon with more details about getting started."
-              : "Thank you for your interest in volunteering with us. We encourage you to apply again in the future."
-          }</p>
-          
-          <p>Best regards,<br>The Cloka Team</p>
-        `,
+        from: process.env.SES_FROM_EMAIL || "admin@cloka.in",
+        ...emailTemplate,
       };
 
-      await sgMail.send(msg);
+      await emailService.sendEmail(msg);
     }
 
     return NextResponse.json({
