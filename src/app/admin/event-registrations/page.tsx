@@ -81,10 +81,12 @@ export default function EventRegistrationsPage() {
     });
     const [copyingEmails, setCopyingEmails] = useState(false);
     const [emailsCopied, setEmailsCopied] = useState(false);
-    const [sendingEmails, setSendingEmails] = useState(false);
+    const [sendingApprovalEmails, setSendingApprovalEmails] = useState(false);
     const [downloadingCSV, setDownloadingCSV] = useState(false);
     const [checkingInId, setCheckingInId] = useState<string | null>(null);
     const [revokingCheckInId, setRevokingCheckInId] = useState<string | null>(null);
+    const [customMessage, setCustomMessage] = useState('');
+    const [showCustomMessage, setShowCustomMessage] = useState(false);
 
     // Filters
     const [selectedEvent, setSelectedEvent] = useState(searchParams.get('eventId') || '');
@@ -483,59 +485,51 @@ export default function EventRegistrationsPage() {
         }
     };
 
-    // Function to send mail with all emails in BCC
-    const sendMailWithEmails = async () => {
-        setSendingEmails(true);
+
+    // Function to send automated approval emails
+    const sendApprovalEmails = async () => {
+        if (!selectedEvent) {
+            setError('Please select an event first');
+            return;
+        }
+
+        setSendingApprovalEmails(true);
         setError('');
 
         try {
-            // Build query parameters (same as copyEmailsToClipboard)
-            const params = new URLSearchParams();
-            params.append('emailsOnly', 'true');
+            const response = await fetch('/api/admin/event-registrations/send-approval-emails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    eventId: selectedEvent,
+                    customMessage: customMessage || undefined,
+                }),
+            });
 
-            if (selectedEvent) {
-                params.append('eventId', selectedEvent);
-            }
-
-            if (approvalStatus) {
-                params.append('approved', approvalStatus);
-            }
-
-            if (searchTerm) {
-                params.append('search', searchTerm);
-            }
-
-            if (ageRange) {
-                params.append('ageRange', ageRange);
-            }
-
-            if (selectedSex) {
-                params.append('sex', selectedSex);
-            }
-
-            // Add sort parameters
-            params.append('sortBy', sortBy);
-            params.append('sortOrder', sortOrder);
-
-            // Fetch all emails matching the current filters
-            const response = await fetch(`/api/admin/event-registrations?${params.toString()}`);
             const data = await response.json();
 
-            if (response.ok && data.emails) {
-                // Create mailto link with emails in BCC
-                const bccEmails = data.emails.join(',');
-                const mailtoLink = `mailto:?bcc=${encodeURIComponent(bccEmails)}`;
+            if (response.ok) {
+                // Show success message with results
+                const successMessage = `Approval emails sent successfully! 
+                Sent: ${data.results.sent}
+                Failed: ${data.results.failed}
+                Total: ${data.results.total}`;
 
-                // Open mailto link
-                window.location.href = mailtoLink;
+                alert(successMessage);
+
+                // Reset custom message
+                setCustomMessage('');
+                setShowCustomMessage(false);
             } else {
-                setError(data.message || 'Failed to fetch email addresses');
+                setError(data.message || 'Failed to send approval emails');
             }
         } catch (error) {
-            console.error('Error sending mail:', error);
-            setError('An error occurred while preparing email addresses');
+            console.error('Error sending approval emails:', error);
+            setError('An error occurred while sending approval emails');
         } finally {
-            setSendingEmails(false);
+            setSendingApprovalEmails(false);
         }
     };
 
@@ -694,19 +688,19 @@ export default function EventRegistrationsPage() {
                         )}
                     </Button>
                     <Button
-                        onClick={sendMailWithEmails}
-                        disabled={sendingEmails}
-                        className="flex text-sm items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
+                        onClick={() => setShowCustomMessage(!showCustomMessage)}
+                        disabled={!selectedEvent || sendingApprovalEmails}
+                        className="flex text-sm items-center bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded"
                     >
-                        {sendingEmails ? (
+                        {sendingApprovalEmails ? (
                             <>
                                 <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Opening...
+                                Sending...
                             </>
                         ) : (
                             <>
                                 <Mail className="h-4 w-4 mr-2" />
-                                Send mail
+                                Send Approval mails
                             </>
                         )}
                     </Button>
@@ -850,6 +844,56 @@ export default function EventRegistrationsPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Custom Message Input */}
+            {showCustomMessage && (
+                <div className="bg-zinc-900 p-4 rounded-lg mb-6">
+                    <h3 className="text-lg font-semibold mb-3">Custom Approval Message</h3>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium mb-2">
+                            Custom Message (Optional)
+                        </label>
+                        <textarea
+                            value={customMessage}
+                            onChange={(e) => setCustomMessage(e.target.value)}
+                            placeholder="Enter a custom message for the approval emails. If left empty, the event's post-approval message will be used, or a default message will be sent."
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2 h-24 resize-none"
+                            rows={3}
+                        />
+                        <p className="text-xs text-zinc-400 mt-1">
+                            This message will be sent to all approved participants for the selected event.
+                        </p>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={sendApprovalEmails}
+                            disabled={sendingApprovalEmails}
+                            className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded"
+                        >
+                            {sendingApprovalEmails ? (
+                                <>
+                                    <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
+                                    Sending Emails...
+                                </>
+                            ) : (
+                                <>
+                                    <Mail className="h-4 w-4 mr-2" />
+                                    Send Approval Emails
+                                </>
+                            )}
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setShowCustomMessage(false);
+                                setCustomMessage('');
+                            }}
+                            className="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded"
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </div>
+            )}
 
             {/* Error message */}
             {error && (

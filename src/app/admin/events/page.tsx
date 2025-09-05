@@ -658,7 +658,7 @@ export default function AdminEventsPage() {
                                     Optional: Add a URL for the event banner image. Use a direct image URL (e.g., .jpg, .png).
                                 </p>
 
-                                <img src={eventForm.event.bannerImageURL || ''} alt="Banner Image" className="rounded-xl w-full h-auto" />
+                                {eventForm.event.bannerImageURL && <img src={eventForm.event.bannerImageURL} alt="Banner Image" className="rounded-xl w-full h-auto" />}
                             </div>
 
                             <div>

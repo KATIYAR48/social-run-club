@@ -30,11 +30,11 @@ export class EmailTemplates {
         }
         .header {
             background: black;
-            padding: 30px 20px;
+             
             text-align: center;
         }
         .logo {
-            max-width: 200px;
+            max-width: 400px;
             height: auto; 
             margin-bottom: 10px;
         }
@@ -140,7 +140,7 @@ export class EmailTemplates {
 <body>
     <div class="email-container">
         <div class="header">
-            <img src="https://cloka.in/cloka-white-text-mark.png" style="filter: invert(1) !important;" alt="Cloka" class="logo">
+            <img src="https://cloka.in/mail-header.jpg" alt="Cloka" class="logo">
         </div>
         <div class="content">
             ${content}
@@ -521,6 +521,97 @@ ${
 Best regards,
 The Cloka Team`,
       html: this.getBaseTemplate(content, "Volunteer Application Update"),
+    };
+  }
+
+  static eventApproval(data: {
+    userName: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    eventLocation: string;
+    eventDescription: string;
+    approvalMessage: string;
+    eventId: string;
+  }): { subject: string; text: string; html: string } {
+    const content = `
+      <h1>🎉 Event Registration Approved!</h1>
+      <p>Dear ${data.userName},</p>
+      
+      <div class="highlight">
+        <h2>Great news!</h2>
+        <p>${data.approvalMessage}</p>
+      </div>
+      
+      <h2>Event Details</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Event</strong>
+          <span>${data.eventTitle}</span>
+        </div>
+        <div class="info-item">
+          <strong>Date</strong>
+          <span>${data.eventDate}</span>
+        </div>
+        <div class="info-item">
+          <strong>Time</strong>
+          <span>${data.eventTime}</span>
+        </div>
+        <div class="info-item">
+          <strong>Location</strong>
+          <span>${data.eventLocation}</span>
+        </div>
+      </div>
+      
+      ${
+        data.eventDescription
+          ? `
+        <h2>About This Event</h2>
+        <p>${data.eventDescription}</p>
+      `
+          : ""
+      }
+      
+      <div class="highlight">
+        <h3>What's Next?</h3>
+        <ul>
+          <li>📅 Mark your calendar for the event date</li>
+          <li>📍 Save the event location</li>
+          <li>🏃‍♂️ Get ready for an amazing experience!</li>
+          <li>📱 Follow us on Instagram for updates</li>
+        </ul>
+      </div>
+      
+      <p>We can't wait to see you there! If you have any questions, feel free to reach out to us.</p>
+      
+      <p>Best regards,<br><strong>The Cloka Team</strong></p>
+    `;
+
+    return {
+      subject: `Registration Approved: ${data.eventTitle} - Cloka`,
+      text: `Dear ${data.userName},
+
+${data.approvalMessage}
+
+Event Details:
+- Event: ${data.eventTitle}
+- Date: ${data.eventDate}
+- Time: ${data.eventTime}
+- Location: ${data.eventLocation}
+
+${data.eventDescription ? `About This Event:\n${data.eventDescription}\n` : ""}
+
+What's Next?
+- Mark your calendar for the event date
+- Save the event location
+- Get ready for an amazing experience!
+- Follow us on Instagram for updates
+
+We can't wait to see you there! If you have any questions, feel free to reach out to us.
+
+Best regards,
+The Cloka Team`,
+      html: this.getBaseTemplate(content, "Event Registration Approved"),
     };
   }
 }
