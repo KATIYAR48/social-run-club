@@ -30,13 +30,11 @@ export class EmailTemplates {
         }
         .header {
             background: black;
-             
             text-align: center;
         }
         .logo {
             max-width: 400px;
-            height: auto; 
-            margin-bottom: 10px;
+            height: auto;  
         }
         .content {
             padding: 40px 30px;
