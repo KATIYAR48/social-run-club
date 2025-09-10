@@ -18,6 +18,7 @@ import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Link from 'next/link';
 import CityScapeSection from '@/components/CityScapeSection';
 import { CometCard } from "@/components/ui/comet-card";
+// import StravaStats from '@/components/StravaStats';
 
 
 // Error boundary component for ThreeJsRunner
@@ -286,10 +287,9 @@ export default function PublicProfilePage() {
                             className="border md:p-0 pb-3 border-zinc-800 mb-8 rounded-xl"
                         >
                             <div className="flex flex-col lg:flex-row items-center lg:items-center gap-6">
-                                <CometCard>
-                                    <button
-                                        type="button"
-                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 bg-[#121212] p-2 md:p-4`}
+                                <CometCard className='w-sm'>
+                                    <div
+                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 p-2 md:p-4`}
                                         style={{
                                             transformStyle: "preserve-3d",
                                             transform: "none",
@@ -310,11 +310,11 @@ export default function PublicProfilePage() {
                                             <div className="text-xs">{profile.role == 'super-admin' ? 'Founder' : profile.role}</div>
                                             <div className="text-xs text-gray-300 opacity-50">#{profile._id.slice(-4)}</div>
                                         </div>
-                                    </button>
+                                    </div>
                                 </CometCard>
 
                                 {/* Profile Info */}
-                                <div className="flex-1 pl-9 pb-3 pr-0 md:pl-3 md:pr-10">
+                                <div className="flex-1 ml-10 pl-9 pb-3 pr-0 md:pl-3 md:pr-10">
                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                         <div>
                                             <h1 className="text-3xl font-bold">{profile.name}</h1>
@@ -422,19 +422,19 @@ export default function PublicProfilePage() {
                         </motion.div>
 
 
-                        {/* Strava Stats - Only for own profile */}
-                        {/* {profile.isOwnProfile && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.15 }}
-                            className="mb-8"
-                        >
-                            <div className="border border-zinc-800 p-6">
-                                <StravaStats user={profile} />
-                            </div>
-                        </motion.div>
-                    )} */}
+                        {/* Strava Stats - Only for own profile
+                        {profile.isOwnProfile && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.15 }}
+                                className="mb-8"
+                            >
+                                <div className="border border-zinc-800 p-6">
+                                    <StravaStats user={profile} />
+                                </div>
+                            </motion.div>
+                        )} */}
 
                         {/* NotificationPrompt - Only for own profile */}
                         {profile.isOwnProfile && (

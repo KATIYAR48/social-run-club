@@ -580,7 +580,7 @@ export default function EventRegistrationsPage() {
                 const headers = [
                     'Name', 'Email', 'Phone', 'Age', 'Gender', 'Instagram',
                     'Event', 'Event Date', 'Registration Date', 'Status', 'Checked In',
-                    'Total Events Registered', 'Events Checked In', 'Check-In Ratio'
+                    'Total Events Registered', 'Events Checked In', 'Check-In Ratio', 'Additional Info'
                 ];
 
                 // Map registrations to CSV rows
@@ -607,7 +607,8 @@ export default function EventRegistrationsPage() {
                         reg.checkedIn ? 'Yes' : 'No',
                         reg.userStats?.totalEvents || 0,
                         reg.userStats?.checkedInEvents || 0,
-                        checkInRatio
+                        checkInRatio,
+                        reg.additionalInfo || ''
                     ];
                 });
 

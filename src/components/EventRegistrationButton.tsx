@@ -167,8 +167,8 @@ export default function EventRegistrationButton({
 
                 {/* Additional Info Modal */}
                 {showAdditionalInfoForm && additionalInfoField && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white text-black rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-zinc-900 text-white p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
                             <h3 className="text-xl font-bold mb-4">
                                 Additional Information Required
                             </h3>
@@ -199,7 +199,7 @@ export default function EventRegistrationButton({
                                             type={additionalInfoField.fieldType}
                                             value={additionalInfo}
                                             onChange={(e) => setAdditionalInfo(e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black"
+                                            className="w-full p-3  bg-black/40 rounded-md focus:ring-2 focus:ring-black focus:border-black"
                                             required={additionalInfoField.required}
                                             placeholder={`Enter ${additionalInfoField.label.toLowerCase()}`}
                                         />
@@ -216,14 +216,14 @@ export default function EventRegistrationButton({
                                             setAdditionalInfo('');
                                             setError('');
                                         }}
-                                        className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors"
+                                        className="flex-1 px-4 py-2  text-zinc-300 border border-zinc-400  cursor-pointer transition-colors"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className={`flex-1 px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        className={`flex-1 cursor-pointer px-4 border border-white py-2 bg-black text-white hover:bg-white hover:text-black transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     >
                                         {isLoading ? 'Registering...' : 'Register'}
                                     </button>

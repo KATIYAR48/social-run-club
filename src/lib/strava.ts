@@ -1,5 +1,57 @@
 import User from "../models/User";
 
+// Rate limiting for Strava API calls
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const MAX_REQUESTS_PER_WINDOW = 100; // Conservative limit
+
+async function checkRateLimit(): Promise<void> {
+  const now = Date.now();
+  const key = "strava_api";
+
+  const current = rateLimitMap.get(key);
+
+  if (!current || now > current.resetTime) {
+    rateLimitMap.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return;
+  }
+
+  if (current.count >= MAX_REQUESTS_PER_WINDOW) {
+    const waitTime = current.resetTime - now;
+    throw new Error(
+      `Rate limit exceeded. Please try again in ${Math.ceil(
+        waitTime / 1000
+      )} seconds.`
+    );
+  }
+
+  current.count++;
+}
+
+async function makeStravaRequest(
+  url: string,
+  options: RequestInit
+): Promise<Response> {
+  await checkRateLimit();
+
+  const response = await fetch(url, options);
+
+  // Handle specific Strava errors
+  if (response.status === 403) {
+    const errorData = await response.json().catch(() => ({}));
+    if (errorData.message?.includes("Limit of connected athletes exceeded")) {
+      throw new Error("STRAVA_QUOTA_EXCEEDED");
+    }
+    throw new Error(`Strava API error: ${errorData.message || "Forbidden"}`);
+  }
+
+  if (response.status === 429) {
+    throw new Error("STRAVA_RATE_LIMIT");
+  }
+
+  return response;
+}
+
 export async function refreshStravaToken(userId: string) {
   const user = await User.findById(userId);
 
@@ -7,18 +59,21 @@ export async function refreshStravaToken(userId: string) {
     throw new Error("No refresh token available");
   }
 
-  const response = await fetch("https://www.strava.com/oauth/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      client_id: process.env.STRAVA_CLIENT_ID,
-      client_secret: process.env.STRAVA_CLIENT_SECRET,
-      refresh_token: user.strava.refreshToken,
-      grant_type: "refresh_token",
-    }),
-  });
+  const response = await makeStravaRequest(
+    "https://www.strava.com/oauth/token",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: process.env.STRAVA_CLIENT_ID,
+        client_secret: process.env.STRAVA_CLIENT_SECRET,
+        refresh_token: user.strava.refreshToken,
+        grant_type: "refresh_token",
+      }),
+    }
+  );
 
   const tokenData = await response.json();
 
@@ -273,8 +328,21 @@ export async function fetchAndUpdateStravaStats(userId: string) {
   try {
     const accessToken = await getValidStravaToken(userId);
 
+    // Check if we have recent cached data (within last hour)
+    const user = await User.findById(userId);
+    const now = new Date();
+    const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+
+    if (
+      user?.strava?.stats?.lastUpdated &&
+      new Date(user.strava.stats.lastUpdated) > oneHourAgo
+    ) {
+      console.log("Using cached Strava stats for user:", userId);
+      return; // Use cached data
+    }
+
     // Get athlete stats
-    const statsResponse = await fetch(
+    const statsResponse = await makeStravaRequest(
       "https://www.strava.com/api/v3/athletes/stats",
       {
         headers: {
@@ -285,9 +353,9 @@ export async function fetchAndUpdateStravaStats(userId: string) {
 
     const stats = await statsResponse.json();
 
-    // Get recent activities for PBs and achievements
-    const activitiesResponse = await fetch(
-      "https://www.strava.com/api/v3/athlete/activities?per_page=200",
+    // Get recent activities for PBs and achievements (reduced from 200 to 50 to save quota)
+    const activitiesResponse = await makeStravaRequest(
+      "https://www.strava.com/api/v3/athlete/activities?per_page=50",
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -339,6 +407,19 @@ export async function fetchAndUpdateStravaStats(userId: string) {
     return { success: true };
   } catch (error) {
     console.error("Error updating Strava stats:", error);
+
+    // Handle specific Strava errors
+    if (error instanceof Error) {
+      if (error.message === "STRAVA_QUOTA_EXCEEDED") {
+        throw new Error(
+          "Strava quota exceeded. Please contact support for quota increase."
+        );
+      }
+      if (error.message === "STRAVA_RATE_LIMIT") {
+        throw new Error("Strava rate limit exceeded. Please try again later.");
+      }
+    }
+
     throw error;
   }
 }

@@ -348,6 +348,7 @@ export async function GET(request: NextRequest) {
           checkedIn: 1,
           checkedInAt: 1,
           createdAt: 1,
+          additionalInfo: 1,
           user: {
             _id: "$userDetails._id",
             name: "$userDetails.name",
@@ -395,6 +396,7 @@ export async function GET(request: NextRequest) {
         checkedIn: 1,
         checkedInAt: 1,
         createdAt: 1,
+        additionalInfo: 1,
         user: {
           _id: "$userDetails._id",
           name: "$userDetails.name",

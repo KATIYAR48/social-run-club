@@ -67,6 +67,7 @@ export async function PUT(
       razorpayButtonId,
       bannerImageURL,
       autoApprove,
+      additionalInfoField,
     } = body;
 
     // Validate required fields
@@ -91,6 +92,7 @@ export async function PUT(
         razorpayButtonId: razorpayButtonId || null,
         bannerImageURL: bannerImageURL || null,
         autoApprove: autoApprove || false,
+        additionalInfoField: additionalInfoField || null,
       },
       { new: true } // Return the updated document
     );

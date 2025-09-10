@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import StravaQuotaExceeded from './StravaQuotaExceeded';
 
 interface StravaStatsProps {
     user: {
@@ -39,19 +40,38 @@ interface StravaStatsProps {
 
 export default function StravaStats({ user }: StravaStatsProps) {
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [quotaExceeded, setQuotaExceeded] = useState(false);
 
     const refreshStats = async () => {
         setIsRefreshing(true);
+        setError(null);
         try {
-            await fetch('/api/strava/refresh-stats', {
+            const response = await fetch('/api/strava/refresh-stats', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user._id })
             });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to refresh stats');
+            }
+
             // Refresh the page or update state
             window.location.reload();
         } catch (error) {
             console.error('Error refreshing stats:', error);
+            if (error instanceof Error) {
+                if (error.message.includes('quota exceeded')) {
+                    setQuotaExceeded(true);
+                    setError('Strava quota exceeded. Please contact support for quota increase.');
+                } else if (error.message.includes('rate limit')) {
+                    setError('Rate limit exceeded. Please try again later.');
+                } else {
+                    setError('Failed to refresh stats. Please try again.');
+                }
+            }
         } finally {
             setIsRefreshing(false);
         }
@@ -70,7 +90,7 @@ export default function StravaStats({ user }: StravaStatsProps) {
 
     if (!user.strava?.connected) {
         return (
-            <div className="bg-orange-500 text-white p-4 rounded-lg">
+            <div className="bg-orange-500 text-white p-4">
                 <h3 className="font-bold mb-2">Connect with Strava</h3>
                 <p className="mb-4">Unlock achievements and track your progress!</p>
                 <a
@@ -84,6 +104,18 @@ export default function StravaStats({ user }: StravaStatsProps) {
     }
 
     const stats = user.strava.stats;
+
+    // Show quota exceeded fallback if needed
+    if (quotaExceeded) {
+        return (
+            <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold">Your Running Stats</h2>
+                </div>
+                <StravaQuotaExceeded onRetry={() => setQuotaExceeded(false)} />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -99,38 +131,73 @@ export default function StravaStats({ user }: StravaStatsProps) {
                 </button>
             </div>
 
+            {/* Error Display */}
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                    <div className="flex">
+                        <div className="flex-shrink-0">
+                            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm">{error}</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Personal Records */}
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="p-6 rounded-lg shadow">
                 <h3 className="text-xl font-bold mb-4">Personal Records 🏆</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {stats?.fastest5k && (
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">
-                                {formatTime(stats.fastest5k.time)}
-                            </div>
-                            <div className="text-sm text-gray-600">5K PR</div>
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-orange-600">
+                            {stats?.fastest5k ? formatTime(stats.fastest5k.time) : 'N/A'}
                         </div>
-                    )}
-                    {stats?.fastest10k && (
+                        <div className="text-sm text-gray-600">5K PR</div>
+                    </div>
+                    {stats?.fastest10k ? (
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">
-                                {formatTime(stats.fastest10k.time)}
+                            <div className="text-2xl font-bold text-orange-600">
+                                {stats.fastest10k ? formatTime(stats.fastest10k.time) : 'N/A'}
+                            </div>
+                            <div className="text-sm text-gray-600">10K PR</div>
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-orange-600">
+                                N/A
                             </div>
                             <div className="text-sm text-gray-600">10K PR</div>
                         </div>
                     )}
-                    {stats?.fastestHalfMarathon && (
+                    {stats?.fastestHalfMarathon ? (
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">
-                                {formatTime(stats.fastestHalfMarathon.time)}
+                            <div className="text-2xl font-bold text-orange-600">
+                                {stats.fastestHalfMarathon ? formatTime(stats.fastestHalfMarathon.time) : 'N/A'}
+                            </div>
+                            <div className="text-sm text-gray-600">Half Marathon PR</div>
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-orange-600">
+                                N/A
                             </div>
                             <div className="text-sm text-gray-600">Half Marathon PR</div>
                         </div>
                     )}
-                    {stats?.longestRun && (
+                    {stats?.longestRun ? (
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">
-                                {formatDistance(stats.longestRun.distance)}
+                            <div className="text-2xl font-bold text-orange-500">
+                                {stats.longestRun ? formatDistance(stats.longestRun.distance) : 'N/A'}
+                            </div>
+                            <div className="text-sm text-gray-600">Longest Run</div>
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-orange-600">
+                                N/A
                             </div>
                             <div className="text-sm text-gray-600">Longest Run</div>
                         </div>
@@ -139,29 +206,29 @@ export default function StravaStats({ user }: StravaStatsProps) {
             </div>
 
             {/* Current Stats */}
-            <div className="bg-white p-6 rounded-lg shadow">
-                <h3 className="text-xl font-bold mb-4">Current Stats 📊</h3>
+            <div className="p-6 rounded-lg shadow">
+                <h3 className="text-xl font-bold mb-4">Current Stats</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-2xl font-bold text-orange-500">
                             {stats?.currentStreak || 0}
                         </div>
                         <div className="text-sm text-gray-600">Current Streak</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-2xl font-bold text-orange-500">
                             {formatDistance(stats?.weeklyDistance || 0)}
                         </div>
                         <div className="text-sm text-gray-600">This Week</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-2xl font-bold text-orange-500">
                             {formatDistance(stats?.monthlyDistance || 0)}
                         </div>
                         <div className="text-sm text-gray-600">This Month</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-2xl font-bold text-orange-500">
                             {stats?.totalRuns || 0}
                         </div>
                         <div className="text-sm text-gray-600">Total Runs</div>

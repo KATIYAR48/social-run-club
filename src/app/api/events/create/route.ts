@@ -57,6 +57,7 @@ export async function POST(request: NextRequest) {
       exactLocation: body.exactLocation || null,
       postApprovalMessage: body.postApprovalMessage || null,
       autoApprove: body.autoApprove || false,
+      additionalInfoField: body.additionalInfoField || null,
       createdBy: userId,
     });
 

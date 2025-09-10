@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Button from './Button';
 import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Image from 'next/image';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordian';
 
 const StravaClubPromotion = () => {
     return (
@@ -31,11 +32,34 @@ const StravaClubPromotion = () => {
                             </h2>
                         </div>
 
+
+
                         <p className="luxury-text text-lg mb-6 text-zinc-300 leading-relaxed">
                             Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava community. Share your runs, celebrate achievements, and find your next running buddy.
                         </p>
 
-                        <div className="space-y-4 mb-8">
+
+                        {/* Accordion from shadcn/ui for "See stats" */}
+                        <div className="">
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value="strava-stats">
+                                    <AccordionTrigger className="underline text-md font-medium text-zinc-200 hover:text-white">
+                                        See club stats
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                        <iframe
+                                            className='bg-black h-[160px] w-full'
+                                            src='https://www.strava.com/clubs/1335275/latest-rides/2172b381d58307c4b3305514887dee45f97d39d0?show_rides=false'
+                                            width='300'
+                                        />
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                        </div>
+
+
+
+                        <div className="flex items-center gap-4 mb-8">
                             <div className='flex justify-center md:justify-start'>
                                 <Button
                                     href="https://strava.app.link/bASEQLdAaWb"
@@ -48,6 +72,7 @@ const StravaClubPromotion = () => {
                                     <span>Join on Strava</span>
                                 </Button>
                             </div>
+
                         </div>
                     </motion.div>
                 </div>

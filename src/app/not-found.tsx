@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 export default function NotFound() {
     return (
@@ -12,11 +13,16 @@ export default function NotFound() {
                 </p>
 
                 <div className="mt-8 text-zinc-500 text-sm italic">
-                    &quot;Knowledge is to know tomato is a fruit; <br /> Wisdom is to know tomato is to know not to put it in a fruit salad.&quot;
+                    &quot;Knowledge is to know tomato is a fruit; <br /> Wisdom is to know not to put it in a fruit salad.&quot;
                 </div>
                 <div className="mt-2 text-zinc-500 text-xs">
                     - someone on the internet
                 </div>
+
+
+                <Link href="/" className="underline mt-10 hover:cursor-pointer px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                    Go Home
+                </Link>
             </div>
         </div>
     );
