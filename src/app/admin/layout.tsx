@@ -133,7 +133,7 @@ function AdminLayoutContent({
                                 {isMenuOpen && (
                                     <div
                                         ref={dropdownRef}
-                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-100"
+                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg !z-100"
                                     >
                                         <div className="p-4 flex flex-col space-y-2">
                                             <nav className="flex flex-col space-y-2">

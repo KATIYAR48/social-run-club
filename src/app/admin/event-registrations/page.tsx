@@ -742,7 +742,7 @@ export default function EventRegistrationsPage() {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Search by name, email, or Instagram"
-                            className="z-0 w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2 pl-10"
+                            className="z-10 w-full bg-zinc-800 border border-zinc-700 rounded px-4 py-2 pl-10"
                         />
                         <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-500" />
                     </div>

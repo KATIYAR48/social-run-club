@@ -19,10 +19,10 @@ export default function StravaQuotaExceeded({ onRetry }: StravaQuotaExceededProp
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
                         <p>
-                            We've reached our current limit for Strava connections. Our team is working to increase our quota with Strava.
+                            We&apos;ve reached our current limit for Strava connections. Our team is working to increase our quota with Strava.
                         </p>
                         <p className="mt-2">
-                            In the meantime, you can still use all other features of the app. We'll notify you once Strava integration is available again.
+                            In the meantime, you can still use all other features of the app. We&apos;ll notify you once Strava integration is available again.
                         </p>
                     </div>
                     <div className="mt-4">
