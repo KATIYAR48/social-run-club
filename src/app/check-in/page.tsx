@@ -112,6 +112,20 @@ export default function CheckInPage() {
         }
     }, [eventId]);
 
+    // Check if opened in PWA context
+    const [isPWA, setIsPWA] = useState(false);
+
+    useEffect(() => {
+        // Check if running as PWA
+        const checkPWA = () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const isIOSStandalone = (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
+            setIsPWA(isStandalone || isIOSStandalone);
+        };
+
+        checkPWA();
+    }, []);
+
     // Redirect if not authenticated
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -201,6 +215,25 @@ export default function CheckInPage() {
                 className="max-w-md w-full bg-black border border-zinc-800 rounded-none shadow-md p-6"
             >
                 <h1 className="text-2xl font-bold text-center text-white mb-6">Event Check-In</h1>
+
+                {!isPWA && (
+                    <div className="mb-6 p-4 bg-blue-900/30 border border-blue-800 rounded-lg">
+                        <div className="flex items-start">
+                            <svg className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <h3 className="text-blue-300 font-semibold mb-1">For Better Experience</h3>
+                                <p className="text-blue-200 text-sm">
+                                    Install the CLOKA app for a native experience. You can also use the in-app QR scanner instead of your camera app.
+                                </p>
+                                <Link href="/qr-scanner" className="text-blue-300 hover:text-blue-200 text-sm underline mt-1 inline-block">
+                                    Open In-App QR Scanner →
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {!eventId ? (
                     <div className="text-center">

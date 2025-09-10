@@ -45,6 +45,18 @@
             ]
         },
         {
+            "name": "QR Scanner",
+            "short_name": "QR Scanner",
+            "description": "Scan QR codes to check in to events",
+            "url": "/qr-scanner",
+            "icons": [
+                {
+                    "src": "/android-chrome-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
             "name": "Profile",
             "short_name": "Profile",
             "description": "View your profile",

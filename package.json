@@ -25,6 +25,8 @@
     "@tremor/react": "^3.18.7",
     "@types/bcryptjs": "^2.4.6",
     "@types/three": "^0.178.1",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "critters": "^0.0.23",
