@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
@@ -35,35 +35,7 @@ export default function CheckInPage() {
         isLoading: false,
     });
 
-    // Redirect if not authenticated
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            router.push(`/auth?redirect=/check-in?eventId=${eventId}&token=${token}`);
-        }
-    }, [isLoading, isAuthenticated, router, eventId, token]);
-
-    // Validate token
-    useEffect(() => {
-        if (isAuthenticated && eventId && token) {
-            validateToken();
-        } else if (isAuthenticated && !token) {
-            setCheckInStatus({
-                success: false,
-                message: 'No check-in token provided. Please scan the QR code at the event venue.',
-                isLoading: false,
-            });
-            setIsEventLoading(false);
-        }
-    }, [isAuthenticated, eventId, token, validateToken]);
-
-    // Fetch event details
-    useEffect(() => {
-        if (isAuthenticated && eventId && isTokenValid) {
-            fetchEventDetails();
-        }
-    }, [isAuthenticated, eventId, isTokenValid, fetchEventDetails]);
-
-    const validateToken = async () => {
+    const validateToken = useCallback(async () => {
         try {
             setTokenValidationLoading(true);
             const response = await fetch('/api/events/validate-token', {
@@ -98,9 +70,9 @@ export default function CheckInPage() {
         } finally {
             setTokenValidationLoading(false);
         }
-    };
+    }, [eventId, token]);
 
-    const fetchEventDetails = async () => {
+    const fetchEventDetails = useCallback(async () => {
         try {
             setIsEventLoading(true);
             const response = await fetch(`/api/events?id=${eventId}`);
@@ -138,7 +110,35 @@ export default function CheckInPage() {
         } finally {
             setIsEventLoading(false);
         }
-    };
+    }, [eventId]);
+
+    // Redirect if not authenticated
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            router.push(`/auth?redirect=/check-in?eventId=${eventId}&token=${token}`);
+        }
+    }, [isLoading, isAuthenticated, router, eventId, token]);
+
+    // Validate token
+    useEffect(() => {
+        if (isAuthenticated && eventId && token) {
+            validateToken();
+        } else if (isAuthenticated && !token) {
+            setCheckInStatus({
+                success: false,
+                message: 'No check-in token provided. Please scan the QR code at the event venue.',
+                isLoading: false,
+            });
+            setIsEventLoading(false);
+        }
+    }, [isAuthenticated, eventId, token, validateToken]);
+
+    // Fetch event details
+    useEffect(() => {
+        if (isAuthenticated && eventId && isTokenValid) {
+            fetchEventDetails();
+        }
+    }, [isAuthenticated, eventId, isTokenValid, fetchEventDetails]);
 
     const handleCheckIn = async () => {
         if (!eventId || !isTokenValid || !token) return;

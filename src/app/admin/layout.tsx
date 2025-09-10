@@ -90,7 +90,7 @@ function AdminLayoutContent({
     return (
         <div className="min-h-screen bg-black">
             {/* Header Navigation */}
-            <header className="relative">
+            <header className="relative z-50">
                 <div className="backdrop-blur-md text-white p-4">
                     <div className="container mx-auto flex justify-between items-center relative">
                         <div className="flex items-center space-x-2">
@@ -133,7 +133,7 @@ function AdminLayoutContent({
                                 {isMenuOpen && (
                                     <div
                                         ref={dropdownRef}
-                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg !z-100"
+                                        className="absolute right-0 top-full mt-2 w-56 bg-zinc-900 border border-zinc-800 rounded-lg shadow-lg z-[9999]"
                                     >
                                         <div className="p-4 flex flex-col space-y-2">
                                             <nav className="flex flex-col space-y-2">
