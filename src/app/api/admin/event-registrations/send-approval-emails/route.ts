@@ -99,18 +99,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Prepare email content
+    // Prepare email content - Convert to IST timezone
     const eventDate = new Date(event.date).toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
+      timeZone: "Asia/Kolkata", // IST timezone
     });
 
-    const eventTime = new Date(event.date).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const eventTime =
+      new Date(event.date).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Kolkata", // IST timezone
+      }) + " IST";
 
     const approvalMessage =
       customMessage ||

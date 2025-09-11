@@ -87,6 +87,12 @@ export default function EventRegistrationsPage() {
     const [revokingCheckInId, setRevokingCheckInId] = useState<string | null>(null);
     const [customMessage, setCustomMessage] = useState('');
     const [showCustomMessage, setShowCustomMessage] = useState(false);
+    const [showResultsModal, setShowResultsModal] = useState(false);
+    const [approvalResults, setApprovalResults] = useState<{
+        sent: number;
+        failed: number;
+        total: number;
+    } | null>(null);
 
     // Filters
     const [selectedEvent, setSelectedEvent] = useState(searchParams.get('eventId') || '');
@@ -511,13 +517,9 @@ export default function EventRegistrationsPage() {
             const data = await response.json();
 
             if (response.ok) {
-                // Show success message with results
-                const successMessage = `Approval emails sent successfully! 
-                Sent: ${data.results.sent}
-                Failed: ${data.results.failed}
-                Total: ${data.results.total}`;
-
-                alert(successMessage);
+                // Show results in modal
+                setApprovalResults(data.results);
+                setShowResultsModal(true);
 
                 // Reset custom message
                 setCustomMessage('');
@@ -1234,6 +1236,60 @@ export default function EventRegistrationsPage() {
                         </div>
                     )}
                 </>
+            )}
+
+            {/* Results Modal */}
+            {showResultsModal && approvalResults && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-zinc-900 rounded-lg p-6 max-w-md w-full mx-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-white">Approval Emails Sent</h3>
+                            <button
+                                onClick={() => setShowResultsModal(false)}
+                                className="text-zinc-400 hover:text-white transition-colors"
+                            >
+                                <XCircle className="h-6 w-6" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="bg-green-900/30 border border-green-800 rounded-lg p-4">
+                                <div className="flex items-center mb-2">
+                                    <CheckCircle className="h-5 w-5 text-green-400 mr-2" />
+                                    <span className="text-green-300 font-medium">Successfully Sent</span>
+                                </div>
+                                <div className="text-2xl font-bold text-green-200">{approvalResults.sent}</div>
+                            </div>
+
+                            {approvalResults.failed > 0 && (
+                                <div className="bg-red-900/30 border border-red-800 rounded-lg p-4">
+                                    <div className="flex items-center mb-2">
+                                        <XCircle className="h-5 w-5 text-red-400 mr-2" />
+                                        <span className="text-red-300 font-medium">Failed</span>
+                                    </div>
+                                    <div className="text-2xl font-bold text-red-200">{approvalResults.failed}</div>
+                                </div>
+                            )}
+
+                            <div className="bg-zinc-800 rounded-lg p-4">
+                                <div className="flex items-center mb-2">
+                                    <Mail className="h-5 w-5 text-zinc-400 mr-2" />
+                                    <span className="text-zinc-300 font-medium">Total Processed</span>
+                                </div>
+                                <div className="text-2xl font-bold text-white">{approvalResults.total}</div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 flex justify-end">
+                            <Button
+                                onClick={() => setShowResultsModal(false)}
+                                className="bg-zinc-700 hover:bg-zinc-600 text-white px-4 py-2 rounded"
+                            >
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
