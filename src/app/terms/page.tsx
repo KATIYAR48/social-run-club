@@ -100,7 +100,24 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">7. Governing Law</h2>
+                        <h2 className="text-2xl font-semibold mb-4">7. Play Nice & Stay Safe</h2>
+                        <p>
+                            Please follow all instructions given by the experience/event team. Respect the organisers,
+                            other participants, and the space. Unsafe or disruptive behaviour can lead to removal from
+                            the experience/event.
+                        </p>
+                    </section>
+
+                    <section className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4">8. Photo & Media Consent</h2>
+                        <p>
+                            Photos and videos may be taken at the experience/event for promotional purposes. If you
+                            prefer not to be photographed, please inform the organisers beforehand.
+                        </p>
+                    </section>
+
+                    <section className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4">9. Governing Law</h2>
                         <p>
                             These terms and conditions are governed by and construed in accordance with the laws and
                             you irrevocably submit to the exclusive jurisdiction of the courts in that location.
@@ -108,7 +125,7 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">8. Changes to Terms</h2>
+                        <h2 className="text-2xl font-semibold mb-4">10. Changes to Terms</h2>
                         <p>
                             Cloka reserves the right to revise these terms of service at any time without notice. By
                             using this website, you are agreeing to be bound by the current version of these terms
@@ -117,7 +134,7 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">9. Contact Information</h2>
+                        <h2 className="text-2xl font-semibold mb-4">11. Contact Information</h2>
                         <p>
                             If you have any questions about these Terms of Service, please contact us through our
                             <a href="https://forms.gle/2enLCA1zNw3QSJYs9" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline"> support form</a> or other support channels.
