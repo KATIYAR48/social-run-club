@@ -52,7 +52,46 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">5. Limitation of Liability</h2>
+                        <h2 className="text-2xl font-semibold mb-4">5. Event Participation and Liability</h2>
+                        <p className="mb-4">
+                            By participating in any Cloka events, including but not limited to running events, trekking,
+                            trail runs, fitness activities, and any outdoor adventures, you acknowledge and agree to the following:
+                        </p>
+                        <ul className="list-disc pl-6 mb-4 space-y-2">
+                            <li>
+                                <strong>Personal Injury:</strong> You participate at your own risk. Cloka shall not be liable for any
+                                injuries, accidents, or health issues that may occur during the course of any event, including
+                                but not limited to falls, collisions, overexertion, or any other physical harm.
+                            </li>
+                            <li>
+                                <strong>Travel and Transportation:</strong> Cloka is not responsible for any accidents, damages,
+                                or incidents that occur during travel to and from event locations, including car crashes,
+                                vehicle damage, or transportation-related injuries, regardless of the route taken.
+                            </li>
+                            <li>
+                                <strong>Property Loss or Theft:</strong> Participants are solely responsible for their personal
+                                belongings, including but not limited to clothing, equipment, valuables, and electronic devices.
+                                Cloka shall not be liable for any loss, theft, or damage to personal property during events.
+                            </li>
+                            <li>
+                                <strong>Environmental Risks:</strong> Outdoor activities carry inherent risks including but not
+                                limited to weather conditions, terrain hazards, wildlife encounters, and natural disasters.
+                                Participants assume all such risks.
+                            </li>
+                            <li>
+                                <strong>Medical Fitness:</strong> It is your responsibility to ensure you are medically fit
+                                to participate in the event. Cloka recommends consulting with a healthcare provider before
+                                participating in any physically demanding activities.
+                            </li>
+                        </ul>
+                        <p className="font-semibold">
+                            By registering for any Cloka event, you expressly waive any claims against Cloka, its organizers,
+                            volunteers, and partners for any injuries, damages, or losses that may occur during the event.
+                        </p>
+                    </section>
+
+                    <section className="mb-8">
+                        <h2 className="text-2xl font-semibold mb-4">6. Limitation of Liability</h2>
                         <p>
                             In no event shall Cloka or its suppliers be liable for any damages arising out of the use
                             or inability to use the materials on Cloka&apos;s website, even if Cloka or an authorized
@@ -61,7 +100,7 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">6. Governing Law</h2>
+                        <h2 className="text-2xl font-semibold mb-4">7. Governing Law</h2>
                         <p>
                             These terms and conditions are governed by and construed in accordance with the laws and
                             you irrevocably submit to the exclusive jurisdiction of the courts in that location.
@@ -69,7 +108,7 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">7. Changes to Terms</h2>
+                        <h2 className="text-2xl font-semibold mb-4">8. Changes to Terms</h2>
                         <p>
                             Cloka reserves the right to revise these terms of service at any time without notice. By
                             using this website, you are agreeing to be bound by the current version of these terms
@@ -78,7 +117,7 @@ export default function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-semibold mb-4">8. Contact Information</h2>
+                        <h2 className="text-2xl font-semibold mb-4">9. Contact Information</h2>
                         <p>
                             If you have any questions about these Terms of Service, please contact us through our
                             <a href="https://forms.gle/2enLCA1zNw3QSJYs9" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline"> support form</a> or other support channels.
