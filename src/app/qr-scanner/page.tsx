@@ -87,11 +87,11 @@ export default function QRScannerPage() {
                             <div className="mt-8 p-4 bg-zinc-900 rounded-lg">
                                 <h3 className="font-semibold mb-2">How to use:</h3>
                                 <ol className="text-sm text-zinc-400 space-y-1 text-left">
-                                    <li>1. Tap "Open Camera Scanner"</li>
+                                    <li>1. Tap &quot;Open Camera Scanner&quot;</li>
                                     <li>2. Allow camera permission when prompted</li>
                                     <li>3. Point your camera at the QR code</li>
                                     <li>4. Wait for the code to be recognized automatically</li>
-                                    <li>5. You'll be redirected to the check-in page</li>
+                                    <li>5. You&apos;ll be redirected to the check-in page</li>
                                 </ol>
                             </div>
                         </div>
