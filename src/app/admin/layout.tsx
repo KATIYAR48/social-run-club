@@ -94,7 +94,7 @@ function AdminLayoutContent({
             <header className="relative z-50">
                 <div className="backdrop-blur-md text-white p-4">
                     <div className="container mx-auto flex justify-between items-center relative">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center">
                             <Link href="/" className="">
                                 <Image
                                     src="/logo.png"
@@ -104,7 +104,7 @@ function AdminLayoutContent({
                                     className="h-auto invert md:-ml-4"
                                 />
                             </Link>
-                            <h1 className="text-xl font-bold">Admin</h1>
+                            <h1 className="text-xl font-bold -ml-2">Admin</h1>
                         </div>
 
                         <div className="flex items-center space-x-4">
