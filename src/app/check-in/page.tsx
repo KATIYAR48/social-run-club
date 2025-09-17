@@ -14,6 +14,12 @@ interface Event {
     location: string;
 }
 
+interface UserEvent {
+    _id: string;
+    checkedIn: boolean;
+    checkedInAt: string | null;
+}
+
 export default function CheckInPage() {
     const { user, isLoading, isAuthenticated } = useAuth();
     const router = useRouter();
@@ -34,6 +40,7 @@ export default function CheckInPage() {
         message: '',
         isLoading: false,
     });
+    const [isAlreadyCheckedIn, setIsAlreadyCheckedIn] = useState(false);
 
     const validateToken = useCallback(async () => {
         try {
@@ -71,6 +78,31 @@ export default function CheckInPage() {
             setTokenValidationLoading(false);
         }
     }, [eventId, token]);
+
+    const checkIfAlreadyCheckedIn = useCallback(async () => {
+        try {
+            const response = await fetch('/api/user/events');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.events) {
+                    const currentEvent = data.events.find((e: UserEvent) => e._id === eventId);
+                    if (currentEvent && currentEvent.checkedIn) {
+                        setIsAlreadyCheckedIn(true);
+                        setCheckInStatus({
+                            success: true,
+                            message: 'You have already checked in for this event',
+                            isLoading: false,
+                        });
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('Error checking check-in status:', error);
+            return false;
+        }
+    }, [eventId]);
 
     const fetchEventDetails = useCallback(async () => {
         try {
@@ -147,12 +179,18 @@ export default function CheckInPage() {
         }
     }, [isAuthenticated, eventId, token, validateToken]);
 
-    // Fetch event details
+    // Check if already checked in and fetch event details
     useEffect(() => {
         if (isAuthenticated && eventId && isTokenValid) {
-            fetchEventDetails();
+            const checkStatus = async () => {
+                const alreadyCheckedIn = await checkIfAlreadyCheckedIn();
+                if (!alreadyCheckedIn) {
+                    fetchEventDetails();
+                }
+            };
+            checkStatus();
         }
-    }, [isAuthenticated, eventId, isTokenValid, fetchEventDetails]);
+    }, [isAuthenticated, eventId, isTokenValid, checkIfAlreadyCheckedIn, fetchEventDetails]);
 
     const handleCheckIn = async () => {
         if (!eventId || !isTokenValid || !token) return;
@@ -238,16 +276,22 @@ export default function CheckInPage() {
                 {!eventId ? (
                     <div className="text-center">
                         <p className="text-red-500 mb-4">No event ID provided</p>
-                        <Link href="/my-events" className="text-white hover:text-zinc-300 hover:underline">
+                        <button
+                            onClick={() => router.push('/my-events')}
+                            className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                        >
                             View My Events
-                        </Link>
+                        </button>
                     </div>
                 ) : !token ? (
                     <div className="text-center">
                         <p className="text-red-500 mb-4">No check-in token provided. Please scan the QR code at the event venue.</p>
-                        <Link href="/my-events" className="text-white hover:text-zinc-300 hover:underline">
+                        <button
+                            onClick={() => router.push('/my-events')}
+                            className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                        >
                             View My Events
-                        </Link>
+                        </button>
                     </div>
                 ) : checkInStatus.message ? (
                     <div className="text-center">
@@ -268,12 +312,23 @@ export default function CheckInPage() {
                                         <p className="text-zinc-400 mb-4">{event.location}</p>
                                     </>
                                 )}
-                                <p className="text-green-400 font-medium">You&apos;re all set! Enjoy the event.</p>
+                                <p className="text-green-400 font-medium mb-6">
+                                    {isAlreadyCheckedIn ? 'You have already checked in for this event.' : 'You\'re all set! Enjoy the event.'}
+                                </p>
+                                <button
+                                    onClick={() => router.push('/my-events')}
+                                    className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                                >
+                                    View My Events
+                                </button>
                             </div>
                         ) : (
-                            <Link href="/my-events" className="text-white hover:text-zinc-300 hover:underline">
+                            <button
+                                onClick={() => router.push('/my-events')}
+                                className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                            >
                                 View My Events
-                            </Link>
+                            </button>
                         )}
                     </div>
                 ) : isEventLoading ? (
@@ -283,9 +338,12 @@ export default function CheckInPage() {
                 ) : !event ? (
                     <div className="text-center">
                         <p className="text-red-500 mb-4">Event not found</p>
-                        <Link href="/my-events" className="text-white hover:text-zinc-300 hover:underline">
+                        <button
+                            onClick={() => router.push('/my-events')}
+                            className="px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                        >
                             View My Events
-                        </Link>
+                        </button>
                     </div>
                 ) : (
                     <div>
@@ -295,30 +353,32 @@ export default function CheckInPage() {
                             <p className="text-zinc-400">{event.location}</p>
                         </div>
 
-                        <div className="border-t border-zinc-800 pt-6">
-                            <p className="text-center text-zinc-300 mb-6">
-                                Ready to check in for this event?
-                            </p>
+                        {!isAlreadyCheckedIn && (
+                            <div className="border-t border-zinc-800 pt-6">
+                                <p className="text-center text-zinc-300 mb-6">
+                                    Ready to check in for this event?
+                                </p>
 
-                            <Button
-                                onClick={handleCheckIn}
-                                variant="secondary"
-                                disabled={checkInStatus.isLoading}
-                                className="w-full py-3  disabled:text-zinc-400 disabled:cursor-not-allowed"
-                            >
-                                {checkInStatus.isLoading ? (
-                                    <span className="flex items-center justify-center">
-                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        Checking in...
-                                    </span>
-                                ) : (
-                                    'Check In Now'
-                                )}
-                            </Button>
-                        </div>
+                                <Button
+                                    onClick={handleCheckIn}
+                                    variant="secondary"
+                                    disabled={checkInStatus.isLoading}
+                                    className="w-full py-3  disabled:text-zinc-400 disabled:cursor-not-allowed"
+                                >
+                                    {checkInStatus.isLoading ? (
+                                        <span className="flex items-center justify-center">
+                                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Checking in...
+                                        </span>
+                                    ) : (
+                                        'Check In Now'
+                                    )}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 )}
             </motion.div>

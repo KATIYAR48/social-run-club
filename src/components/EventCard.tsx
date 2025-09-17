@@ -80,9 +80,9 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                         <Button
                             variant="primary"
                             size="medium"
-                            className="flex items-center gap-2 !text-xl !text-zinc-300 border border-zinc-600"
+                            className="flex items-center gap-2 !text-lg !text-zinc-300 border border-zinc-600"
                         >
-                            View <ArrowTopRightOnSquareIcon className='!text-zinc-400 h-5 w-5 mb-1' />
+                            Go <ArrowTopRightOnSquareIcon className='!text-zinc-400 h-5 w-5 mb-1' />
                         </Button>
                     </div>
 

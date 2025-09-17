@@ -80,6 +80,7 @@ function AdminLayoutContent({
     const navItems = [
         { name: 'Dashboard', href: '/admin' },
         { name: 'Events', href: '/admin/events' },
+        { name: 'Check In', href: '/admin/event-check-in' },
         { name: 'Registrations', href: '/admin/event-registrations' },
         ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users' }] : []),
         ...(isSuperAdmin ? [{ name: 'Banner', href: '/admin/banner' }] : []),

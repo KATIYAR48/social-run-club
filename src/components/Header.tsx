@@ -170,18 +170,29 @@ const Header = () => {
                     <div className="luxury-container py-4 flex flex-col space-y-4">
                         <Link
                             href="/events"
-                            className="text-3xl hover:text-accent transition-colors"
+                            className="luxury-text hover:text-accent transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Events
                         </Link>
-                        <Link
-                            href="/feed"
-                            className="luxury-text hover:text-accent transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            Explore
-                        </Link>
+                        {isAuthenticated && user && (
+                            <Link
+                                href="/feed"
+                                className="luxury-text hover:text-accent transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Explore
+                            </Link>
+                        )}
+                        {isAuthenticated && user && (
+                            <Link
+                                href="/qr-scanner"
+                                className="luxury-text hover:text-accent transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Event Check-In
+                            </Link>
+                        )}
 
 
                         {/* Mobile Auth Links */}
