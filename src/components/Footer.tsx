@@ -20,7 +20,7 @@ const Footer = () => {
                             This isn't just a run club—it's your weekend crew. We hit the pavement, then unwind at our favorite café, sharing stories and good vibes. Big things are coming—don't miss out. See you Saturday?
                         </p> */}
                         <p className="luxury-text">
-                            &copy; {new Date().getFullYear()} CLOKA. All rights reserved.
+                            &copy; {new Date().getFullYear()} CLOKA India. All rights reserved.
                         </p>
                         <p className="luxury-text mt-2 text-sm">
                             Built by <a href="https://crevn.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors font-bold">crevn.xyz</a>
@@ -28,7 +28,7 @@ const Footer = () => {
                     </div>
 
                     <div className="flex flex-col items-center justify-end text-center h-full">
-                        <h3 className="text-xl font-bold mb-4 tracking-wider">Quick Links</h3>
+                        <h3 className="text-xl font-bold mb-4 tracking-wider underline">Quick Links</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/partnerships" className="luxury-text hover:text-accent transition-colors">

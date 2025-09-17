@@ -58,33 +58,37 @@ const Hero = () => {
                                 />
                             </span>
                         </h1>
-                        <p className="luxury-text text-lg mb-8 text-zinc-300">
-                            This is your sign to stop waiting and hit that register button because you’ve just found yourself your crew. Your space to move, lift, sweat and go beyond the line.
-                            We push, we show up for ourselves and each other. You don’t need to be an athlete. You just need to start. This is a community that meets you where you are and moves with you, every step, every rep.  - See you Saturday. 6 AM sharp.
+                        <p className="luxury-text text-xl mb-8 text-zinc-300 !leading-6">
+                            You’ve just found your crew. Your space to move, lift, sweat, and push past limits.
+                            You don’t need to be an athlete—just willing to start.
+                            This community meets you where you are and moves with you, every step and every rep.
+                            <br /> <br /> Cloka Sees You.
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
                             <Button
                                 href="/auth?mode=signup"
                                 variant="luxury"
-                                className="bg-transparent border border-white inline-block text-center"
+                                className="bg-transparent text-3xl border border-white inline-block text-center"
                             >
                                 Join Cloka
                             </Button>
-                            <p className="luxury-text text-lg text-zinc-300 md:text-start text-center">
+                            <div className="luxury-text text-lg text-zinc-300 md:text-start text-center">
                                 {isLoading ? (
                                     <span className="text-white font-bold">1500+</span>
                                 ) : (
                                     <motion.span
-                                        className="text-white font-bold"
+                                        className="text-white text-3xl font-sans font-bold"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 0.5 }}
                                     >
                                         {registrationCount}+
                                     </motion.span>
-                                )} runners already locked in, <br /> what about you?
-                            </p>
+                                )} runners already locked in,<div className='text-2xl'>
+                                    what about you?
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
 

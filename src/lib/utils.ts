@@ -53,6 +53,34 @@ export const pwaUtils = {
     }
   },
 
+  // Clear events-related caches
+  clearEventsCache: async () => {
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: "CLEAR_EVENTS_CACHE",
+      });
+      console.log("Events cache cleared");
+    }
+  },
+
+  // Invalidate cache for specific URL pattern
+  invalidateCache: async (urlPattern: string) => {
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: "INVALIDATE_CACHE",
+        urlPattern,
+      });
+      console.log(`Cache invalidated for pattern: ${urlPattern}`);
+    }
+  },
+
+  // Force refresh events data
+  refreshEventsData: async () => {
+    await pwaUtils.clearEventsCache();
+    // Trigger a page refresh to fetch fresh data
+    window.location.reload();
+  },
+
   // Get cache size information
   getCacheInfo: async () => {
     if ("caches" in window) {

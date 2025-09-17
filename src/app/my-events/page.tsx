@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { pwaUtils } from '@/lib/utils';
 
 // Define the event type
 interface Event {
@@ -40,10 +41,20 @@ export default function MyEventsPage() {
         }
     }, [isAuthenticated, user]);
 
-    const fetchUserEvents = async () => {
+    const fetchUserEvents = async (forceRefresh = false) => {
         try {
             setIsEventsLoading(true);
-            const response = await fetch('/api/user/events');
+
+            // Add cache-busting parameter if force refresh is requested
+            const baseUrl = '/api/user/events';
+            const url = forceRefresh ? `${baseUrl}?t=${Date.now()}` : baseUrl;
+
+            const response = await fetch(url, {
+                headers: {
+                    'Cache-Control': forceRefresh ? 'no-cache' : 'default',
+                    'Pragma': forceRefresh ? 'no-cache' : 'default',
+                },
+            });
 
             if (response.ok) {
                 const data = await response.json();
@@ -56,6 +67,12 @@ export default function MyEventsPage() {
         } finally {
             setIsEventsLoading(false);
         }
+    };
+
+    // Handle manual refresh
+    const handleRefresh = async () => {
+        await pwaUtils.clearEventsCache();
+        fetchUserEvents(true);
     };
 
     // Format date
@@ -117,15 +134,27 @@ export default function MyEventsPage() {
                         className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4"
                     >
                         <h1 className="text-3xl font-bold">My Events</h1>
-                        <Link
-                            href="/qr-scanner"
-                            className="inline-flex items-center px-4 py-2 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
-                        >
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                            </svg>
-                            Scan QR Code
-                        </Link>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={handleRefresh}
+                                disabled={isEventsLoading}
+                                className="inline-flex items-center px-4 py-2 bg-zinc-800 text-white font-semibold rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
+                            >
+                                <svg className={`w-5 h-5 mr-2 ${isEventsLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                {isEventsLoading ? 'Refreshing...' : 'Refresh'}
+                            </button>
+                            <Link
+                                href="/qr-scanner"
+                                className="inline-flex items-center px-4 py-2 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                                </svg>
+                                Scan QR Code
+                            </Link>
+                        </div>
                     </motion.div>
 
                     {isEventsLoading ? (

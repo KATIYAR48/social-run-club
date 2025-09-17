@@ -66,17 +66,38 @@ self.addEventListener("fetch", (event) => {
   const isApiRoute = API_ROUTES.some((route) => url.pathname.startsWith(route));
 
   if (isApiRoute) {
-    // Network-first strategy for API routes
+    // Network-first strategy for API routes with better cache management
     event.respondWith(
-      fetch(request)
+      fetch(request, {
+        // Add cache-busting headers for critical API routes
+        headers: {
+          ...request.headers,
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      })
         .then((response) => {
-          // Clone the response before using it
-          const responseClone = response.clone();
+          // Only cache successful responses
+          if (response.ok) {
+            // Clone the response before using it
+            const responseClone = response.clone();
 
-          // Cache the fresh response
-          caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
+            // Cache the fresh response with timestamp
+            caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+              // Add timestamp to cache key for better invalidation
+              const cacheKey = new Request(
+                request.url + "?sw_timestamp=" + Date.now(),
+                {
+                  method: request.method,
+                  headers: request.headers,
+                }
+              );
+              cache.put(cacheKey, responseClone);
+
+              // Also store the original request for fallback
+              cache.put(request, responseClone);
+            });
+          }
 
           return response;
         })
@@ -85,7 +106,16 @@ self.addEventListener("fetch", (event) => {
           return caches.match(request).then((cachedResponse) => {
             if (cachedResponse) {
               console.log("Serving API response from cache:", url.pathname);
-              return cachedResponse;
+              // Add a header to indicate this is cached data
+              const headers = new Headers(cachedResponse.headers);
+              headers.set("X-Served-From-Cache", "true");
+              headers.set("X-Cache-Timestamp", new Date().toISOString());
+
+              return new Response(cachedResponse.body, {
+                status: cachedResponse.status,
+                statusText: cachedResponse.statusText,
+                headers: headers,
+              });
             }
             // If no cache, return a fallback response
             return new Response(
@@ -184,6 +214,51 @@ self.addEventListener("message", (event) => {
             return caches.delete(cacheName);
           })
         );
+      })
+    );
+  }
+
+  if (event.data && event.data.type === "INVALIDATE_CACHE") {
+    const { urlPattern } = event.data;
+    event.waitUntil(
+      caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+        return cache.keys().then((requests) => {
+          const requestsToDelete = requests.filter((request) => {
+            const url = new URL(request.url);
+            return url.pathname.includes(urlPattern);
+          });
+
+          return Promise.all(
+            requestsToDelete.map((request) => {
+              console.log("Invalidating cache for:", request.url);
+              return cache.delete(request);
+            })
+          );
+        });
+      })
+    );
+  }
+
+  if (event.data && event.data.type === "CLEAR_EVENTS_CACHE") {
+    event.waitUntil(
+      caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+        return cache.keys().then((requests) => {
+          const eventRequests = requests.filter((request) => {
+            const url = new URL(request.url);
+            return (
+              url.pathname.includes("/api/events") ||
+              url.pathname.includes("/api/user/events") ||
+              url.pathname.includes("/api/feed")
+            );
+          });
+
+          return Promise.all(
+            eventRequests.map((request) => {
+              console.log("Clearing events cache for:", request.url);
+              return cache.delete(request);
+            })
+          );
+        });
       })
     );
   }

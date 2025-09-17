@@ -1,5 +1,10 @@
 import { motion } from 'framer-motion';
 import Button from './Button';
+import {
+    ArrowTopRightOnSquareIcon
+} from '@heroicons/react/24/solid';
+import Link from 'next/link'
+
 
 export type EventCardProps = {
     id: string;
@@ -36,41 +41,58 @@ function formatDate(dateString: string) {
 
 const EventCard = ({ event }: { event: EventCardProps }) => {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="bg-zinc-900 text-white p-6"
-        >
-            <div className="mb-4">
-                <span className="text-sm text-zinc-300 uppercase tracking-wider text-accent">{formatDate(event.date)}</span>
-            </div>
-            <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
-            <p className="text-sm mb-4">
-                at <span className="font-medium">{event.location}</span>
-            </p>
-            {event.bannerImageURL && (
-                <div className="mb-4">
-                    <img
-                        src={event.bannerImageURL}
-                        alt={`${event.title} banner`}
-                        className="w-full h-48 object-cover"
-                    />
+        <Link href={`/events/${event.id}`}>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                className="bg-zinc-900 filter hover:invert-100 transition-all duration-400 flex flex-col md:flex-row gap-5 text-white p-6"
+            >
+                {event.bannerImageURL ? (
+                    <div className="mb-4 w-full max-w-[12rem] order-2 md:order-1">
+                        <img
+                            src={event.bannerImageURL}
+                            alt={`${event.title} banner`}
+                            className="w-full h-64 object-cover filter saturate-0 hover:saturate-100 transition-all duration-300"
+                        />
+                    </div>
+                ) : (
+                    <div className="mb-4 w-full max-w-[12rem] order-2 md:order-1 filter hover:invert-100 transition-all duration-400">
+                        <img
+                            src='logo.png'
+                            alt={`${event.title} banner`}
+                            className="bg-white w-full h-64 object-cover"
+                        />
+                    </div>
+                )}
+                <div className="flex-1 order-1 md:order-2">
+                    <div className="mb-4 flex justify-between items-start gap-3">
+                        <div>
+                            <div className="text-md text-zinc-400 uppercase tracking-wider text-accent">
+                                {formatDate(event.date)}
+                            </div>
+                            <h3 className="text-4xl font-bold mb-2">{event.title}</h3>
+                            <p className="text-xl text-zinc-400 mb-4">
+                                at <span className="font-medium">{event.location}</span>
+                            </p>
+                        </div>
+                        <Button
+                            variant="primary"
+                            size="medium"
+                            className="flex items-center gap-2 !text-xl !text-zinc-300 border border-zinc-600"
+                        >
+                            View <ArrowTopRightOnSquareIcon className='!text-zinc-400 h-5 w-5 mb-1' />
+                        </Button>
+                    </div>
+
+
+                    <div className="luxury-text text-xl text-zinc-400 mb-6 !leading-6">
+                        {event.description.slice(0, 240)}<span className='text-zinc-300'>... read more</span>
+                    </div>
                 </div>
-            )}
-            <p className="luxury-text text-zinc-400 mb-6">{event.description.slice(0, 100)}...</p>
-            <div className="flex flex-wrap gap-3">
-                <Button
-                    href={`/events/${event.id}`}
-                    variant="primary"
-                    size="large"
-                    className="inline-block bg-black text-white text-3xl"
-                >
-                    View
-                </Button>
-            </div>
-        </motion.div>
+            </motion.div>
+        </Link>
     );
 };
 

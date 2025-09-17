@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Urbanist } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { LoadingProvider } from "@/components/LoadingProvider";
@@ -10,14 +9,6 @@ import PageTransition from "@/components/PageTransition";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import PWADebugPanel from "@/components/PWADebugPanel";
 
-const urbanist = Urbanist({
-  subsets: ["latin"],
-  display: 'swap',
-  variable: '--font-urbanist',
-  weight: ['400', '500', '600', '700'],
-  preload: true,
-  adjustFontFallback: true,
-});
 
 export const metadata: Metadata = {
   title: "CLOKA - Beyond the Seen",
@@ -83,6 +74,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -100,7 +94,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-orientations" content="portrait" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       </head>
-      <body className={`${urbanist.variable} antialiased`}>
+      <body className="antialiased">
         <ErrorBoundary>
           <LoadingProvider>
             <AuthProvider>

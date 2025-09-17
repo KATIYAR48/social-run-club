@@ -13,10 +13,10 @@ export default {
         accent: "#888888",
       },
       fontFamily: {
-        sans: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
-        serif: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
-        display: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
-        body: ["var(--font-urbanist)", "Urbanist", "sans-serif"],
+        sans: ["Jersey 10", "sans-serif"],
+        serif: ["Jersey 10", "sans-serif"],
+        display: ["Jersey 10", "sans-serif"],
+        body: ["Jersey 10", "sans-serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -45,6 +45,7 @@ export default function FeedPage() {
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const activitiesRef = useRef<FeedActivity[]>([]);
 
     const loadFeed = useCallback(async (reset = false) => {
         try {
@@ -55,15 +56,18 @@ export default function FeedPage() {
                 setLoadingMore(true);
             }
 
-            const offset = reset ? 0 : activities.length;
+            const offset = reset ? 0 : activitiesRef.current.length;
             const response = await fetch(`/api/feed?type=${activeTab}&limit=20&offset=${offset}`);
             const data: FeedResponse = await response.json();
 
             if (data.success) {
                 if (reset) {
                     setActivities(data.activities);
+                    activitiesRef.current = data.activities;
                 } else {
-                    setActivities(prev => [...prev, ...data.activities]);
+                    const newActivities = [...activitiesRef.current, ...data.activities];
+                    setActivities(newActivities);
+                    activitiesRef.current = newActivities;
                 }
                 setHasMore(data.hasMore);
             } else {
@@ -76,11 +80,38 @@ export default function FeedPage() {
             setLoading(false);
             setLoadingMore(false);
         }
-    }, [activeTab, activities.length]);
+    }, [activeTab]);
 
+    const loadMore = useCallback(() => {
+        if (!loadingMore && hasMore) {
+            loadFeed(false);
+        }
+    }, [loadFeed, loadingMore, hasMore]);
+
+    // Load feed when activeTab changes
     useEffect(() => {
         loadFeed(true);
     }, [loadFeed]);
+
+    // Infinite scroll effect
+    useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+
+        const handleScroll = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 1000) {
+                    loadMore();
+                }
+            }, 100);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            clearTimeout(timeoutId);
+        };
+    }, [loadMore]);
 
     const formatTimeAgo = (dateString: string) => {
         const date = new Date(dateString);
@@ -212,16 +243,16 @@ export default function FeedPage() {
                                 >
                                     <div className="flex items-start gap-4">
                                         {/* User Avatar */}
-                                        <div className="bg-zinc-800 h-12 w-12 flex items-center justify-center text-lg font-bold border border-zinc-700 flex-shrink-0">
+                                        <div className="bg-white text-black h-12 w-12 flex items-center justify-center text-2xl font-bold border border-zinc-700 flex-shrink-0">
                                             {activity.user.name.charAt(0).toUpperCase()}
                                         </div>
 
                                         {/* Activity Content */}
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-2">
+                                            <div className="flex items-center gap-2 ">
                                                 <Link
                                                     href={`/profile/${activity.user.username}`}
-                                                    className="font-semibold hover:text-zinc-300 transition-colors"
+                                                    className="text-2xl hover:text-zinc-300 transition-colors"
                                                 >
                                                     {activity.user.name}
                                                 </Link>
@@ -262,23 +293,25 @@ export default function FeedPage() {
                                 </motion.div>
                             ))}
 
-                            {/* Load More Button */}
-                            {hasMore && (
+                            {/* Load More Button (fallback for manual loading) */}
+                            {hasMore && !loadingMore && (
                                 <div className="text-center pt-6">
                                     <Button
-                                        onClick={() => loadFeed(false)}
-                                        disabled={loadingMore}
+                                        onClick={loadMore}
                                         className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
                                     >
-                                        {loadingMore ? (
-                                            <div className="flex items-center gap-2">
-                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                                Loading...
-                                            </div>
-                                        ) : (
-                                            'Load More'
-                                        )}
+                                        Load More
                                     </Button>
+                                </div>
+                            )}
+
+                            {/* Loading indicator for infinite scroll */}
+                            {loadingMore && (
+                                <div className="text-center py-8">
+                                    <div className="flex items-center justify-center gap-2 text-zinc-400">
+                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                        Loading more activities...
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from './Button';
 import EventCard from './EventCard';
 
@@ -22,6 +22,11 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
     const [showUpcomingOnly, setShowUpcomingOnly] = useState(true);
     const [events, setEvents] = useState<ApiEventProps[]>(upcomingEvents);
 
+    // Sync events state with props changes
+    useEffect(() => {
+        setEvents(showUpcomingOnly ? upcomingEvents : allEvents);
+    }, [allEvents, upcomingEvents, showUpcomingOnly]);
+
     // Toggle between all events and upcoming events
     const toggleEvents = (showUpcoming: boolean) => {
         setShowUpcomingOnly(showUpcoming);
@@ -36,7 +41,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
                         onClick={() => toggleEvents(false)}
                         variant={!showUpcomingOnly ? 'secondary' : 'primary'}
                         size="small"
-                        className={`px-3 py-1 text-xs font-medium transition-colors ${!showUpcomingOnly
+                        className={`px-3 py-1 text-xl font-medium transition-colors ${!showUpcomingOnly
                             ? 'bg-transparent text-zinc-400 hover:text-white'
                             : ''
                             }`}
@@ -47,7 +52,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
                         onClick={() => toggleEvents(true)}
                         variant={showUpcomingOnly ? 'secondary' : 'primary'}
                         size="small"
-                        className={`px-3 py-1 text-xs font-medium transition-colors ${showUpcomingOnly
+                        className={`px-4 py-1 text-xl font-medium transition-colors ${showUpcomingOnly
                             ? ''
                             : 'bg-transparent text-zinc-400 hover:text-white'
                             }`}
@@ -58,7 +63,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
             </div>
 
             {events.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                     {events.map((event) => (
                         <EventCard
                             key={event._id}

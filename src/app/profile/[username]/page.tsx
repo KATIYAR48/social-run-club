@@ -21,25 +21,6 @@ import { CometCard } from "@/components/ui/comet-card";
 // import StravaStats from '@/components/StravaStats';
 
 
-// Error boundary component for ThreeJsRunner
-function ThreeJsRunnerWithFallback({ gender, username }: { gender: 'male' | 'female', username: string }) {
-    const [hasError, setHasError] = useState(false);
-
-    if (hasError) {
-        return (
-            <div className="bg-zinc-800 h-32 w-32 flex items-center justify-center text-4xl font-bold border border-zinc-700 rounded-lg">
-                {gender === 'male' ? '🏃‍♂️' : '🏃‍♀️'}
-            </div>
-        );
-    }
-
-    return (
-        <div onError={() => setHasError(true)}>
-            <ThreeJsRunner gender={gender} username={username} chosenThemeColor={"#ffffff"}
-                className={'md:h-120 md:w-120 h-80 w-80 filter saturate-20 contrast-200  opacity-80'} />
-        </div>
-    );
-}
 
 interface PublicProfile {
     _id: string;
@@ -287,26 +268,13 @@ export default function PublicProfilePage() {
                             className="border md:p-0 pb-3 border-zinc-800 mb-8 rounded-xl"
                         >
                             <div className="flex flex-col lg:flex-row items-center lg:items-center gap-6">
-                                <CometCard className='w-sm'>
+                                <CometCard>
                                     <div
-                                        className={`flex w-80 cursor-pointer flex-col items-stretch rounded-[10px] border-0 p-2 md:p-4`}
-                                        style={{
-                                            transformStyle: "preserve-3d",
-                                            transform: "none",
-                                            opacity: 1,
-                                        }}
+                                        className={`cursor-pointer flex flex-col items-center rounded-[10px] border-0 p-2 md:p-4`}
                                     >
-                                        <div className="flex items-center justify-center">
-                                            {/* Avatar */}
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                transition={{ duration: 0.5, delay: 0.1 }}
-                                            >
-                                                <ThreeJsRunnerWithFallback username={profile.username} gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} />
-                                            </motion.div>
-                                        </div>
-                                        <div className="flex flex-shrink-0 items-center justify-between p-4 font-mono text-white">
+                                        <ThreeJsRunner gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} username={username} chosenThemeColor={"#aaaaaa"}
+                                            className={'h-80 w-80 filter contrast-120 brightness-70'} />
+                                        <div className="flex w-full flex-shrink-0 items-center justify-between p-4 font-mono text-white">
                                             <div className="text-xs">{profile.role == 'super-admin' ? 'Founder' : profile.role}</div>
                                             <div className="text-xs text-gray-300 opacity-50">#{profile._id.slice(-4)}</div>
                                         </div>
@@ -605,7 +573,7 @@ export default function PublicProfilePage() {
                                     {displayedEvents.map((userEvent) => {
                                         const isUpcoming = new Date(userEvent.event.date) >= new Date();
                                         return (
-                                            <div key={userEvent._id} className="bg-zinc-900/50 border border-zinc-700  p-6">
+                                            <div key={userEvent._id} className="hover:invert-100 filter bg-black border border-zinc-700 p-6 transition-all duration-300">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
@@ -631,7 +599,7 @@ export default function PublicProfilePage() {
                                                     </div>
 
                                                     <div className="flex flex-col items-end gap-2">
-                                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${isUpcoming
+                                                        <div className={`px-3 py-1 rounded-full text-sm font-semibold border ${isUpcoming
                                                             ? 'border-blue-900 text-white'
                                                             : 'border-green-900 text-white'
                                                             }`}>

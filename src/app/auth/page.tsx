@@ -276,7 +276,7 @@ export default function AuthPage() {
                 username: signupData.username || undefined,
                 password: signupData.password,
                 phone: signupData.phone,
-                dateOfBirth: signupData.dateOfBirth ? new Date(signupData.dateOfBirth).toISOString() : undefined,
+                dateOfBirth: signupData.dateOfBirth ? new Date(signupData.dateOfBirth) : undefined,
                 gender: signupData.gender as 'male' | 'female' | 'other' | undefined,
                 emergencyContact: signupData.emergencyContact || undefined,
                 instagramUsername: signupData.instagramUsername,
@@ -373,7 +373,7 @@ export default function AuthPage() {
                                     <Button
                                         type="button"
                                         onClick={() => setIsLoginMode(true)}
-                                        className={`px-4 py-2 text-sm font-medium ${isLoginMode
+                                        className={`px-4 py-2 text-md font-medium ${isLoginMode
                                             ? ' text-black border border-zinc-700'
                                             : 'bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700'
                                             }`}
@@ -383,7 +383,7 @@ export default function AuthPage() {
                                     <Button
                                         type="button"
                                         onClick={() => setIsLoginMode(false)}
-                                        className={`px-4 py-2 text-sm font-medium ${!isLoginMode
+                                        className={`px-4 py-2 text-md font-medium ${!isLoginMode
                                             ? ' text-black border border-zinc-700'
                                             : 'bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700'
                                             }`}
@@ -407,7 +407,7 @@ export default function AuthPage() {
                                 // Login Form
                                 <form onSubmit={handleLoginSubmit} className="space-y-6">
                                     <div>
-                                        <label htmlFor="email" className="block text-sm font-medium mb-1">
+                                        <label htmlFor="email" className="block text-md font-medium mb-1">
                                             Email
                                         </label>
                                         <input
@@ -422,7 +422,7 @@ export default function AuthPage() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-sm font-medium mb-1">
+                                        <label htmlFor="password" className="block text-md font-medium mb-1">
                                             Password
                                         </label>
                                         <PasswordInput
@@ -438,7 +438,7 @@ export default function AuthPage() {
                                             <button
                                                 type="button"
                                                 onClick={() => router.push('/auth/forgot-password')}
-                                                className="cursor-pointer text-sm text-zinc-400 hover:text-zinc-300"
+                                                className="cursor-pointer text-md text-zinc-400 hover:text-zinc-300"
                                             >
                                                 Forgot Password?
                                             </button>
@@ -449,7 +449,7 @@ export default function AuthPage() {
                                         type="submit"
                                         variant="secondary"
                                         disabled={isLoading}
-                                        className={`w-full py-3  transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                                        className={`w-full py-3 !text-2xl transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                                             }`}
                                     >
                                         {isLoading ? 'Logging in...' : 'Login'}
@@ -460,7 +460,7 @@ export default function AuthPage() {
                                 <form onSubmit={handleSignupSubmit} className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="name" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="name" className="block text-md font-medium mb-1">
                                                 Full Name *
                                             </label>
                                             <input
@@ -475,7 +475,7 @@ export default function AuthPage() {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="gender" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="gender" className="block text-md font-medium mb-1">
                                                 Gender *
                                             </label>
                                             <select
@@ -496,7 +496,7 @@ export default function AuthPage() {
 
                                     <div className="grid grid-cols-12 gap-4">
                                         <div className="col-span-3">
-                                            <label htmlFor="dateOfBirth" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="dateOfBirth" className="block text-md font-medium mb-1">
                                                 Date of Birth *
                                             </label>
                                             <input
@@ -512,7 +512,7 @@ export default function AuthPage() {
                                         </div>
 
                                         <div className="col-span-9">
-                                            <label htmlFor="signup-email" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="signup-email" className="block text-md font-medium mb-1">
                                                 Email *
                                             </label>
                                             <input
@@ -528,7 +528,7 @@ export default function AuthPage() {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="username" className="block text-sm font-medium mb-1">
+                                        <label htmlFor="username" className="block text-md font-medium mb-1">
                                             Username (optional)
                                         </label>
                                         <input
@@ -548,7 +548,7 @@ export default function AuthPage() {
                                             maxLength={30}
                                         />
                                         {usernameStatus.message && (
-                                            <div className={`mt-1 text-sm flex items-center gap-1 ${usernameStatus.checking
+                                            <div className={`mt-1 text-md flex items-center gap-1 ${usernameStatus.checking
                                                 ? 'text-zinc-400'
                                                 : usernameStatus.available === false
                                                     ? 'text-red-400'
@@ -569,7 +569,7 @@ export default function AuthPage() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="phone" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="phone" className="block text-md font-medium mb-1">
                                                 Phone Number * (10 digits)
                                             </label>
                                             <input
@@ -586,7 +586,7 @@ export default function AuthPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="emergencyContact" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="emergencyContact" className="block text-md font-medium mb-1">
                                                 Emergency Contact
                                             </label>
                                             <input
@@ -602,7 +602,7 @@ export default function AuthPage() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="instagramUsername" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="instagramUsername" className="block text-md font-medium mb-1">
                                                 Instagram Username *
                                             </label>
                                             <input
@@ -616,7 +616,7 @@ export default function AuthPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="signup-password" className="block text-sm font-medium mb-1">
+                                            <label htmlFor="signup-password" className="block text-md font-medium mb-1">
                                                 Password *
                                             </label>
                                             <PasswordInput
@@ -641,7 +641,7 @@ export default function AuthPage() {
                                             className="h-4 w-4 text-white focus:ring-white border-zinc-700 rounded"
                                             required
                                         />
-                                        <label htmlFor="acceptTerms" className="ml-2 block text-sm">
+                                        <label htmlFor="acceptTerms" className="ml-2 block text-md">
                                             I accept the <a href="/terms" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Terms and Conditions</a> *
                                         </label>
                                     </div>
@@ -655,7 +655,7 @@ export default function AuthPage() {
                                             onChange={handleSignupChange}
                                             className="h-4 w-4 text-white focus:ring-white border-zinc-700 rounded"
                                         />
-                                        <label htmlFor="joinCrew" className="ml-2 block text-sm">
+                                        <label htmlFor="joinCrew" className="ml-2 block text-md">
                                             I want to join the crew
                                         </label>
                                     </div>
@@ -664,7 +664,7 @@ export default function AuthPage() {
                                         type="submit"
                                         disabled={isLoading}
                                         variant="secondary"
-                                        className={`w-full py-3  transition-colors hover:bg-zinc-200 mt-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                                        className={`w-full py-3 !text-2xl transition-colors hover:bg-zinc-200 mt-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                                             }`}
                                     >
                                         {isLoading ? 'Signing up...' : 'Sign Up'}
@@ -678,7 +678,7 @@ export default function AuthPage() {
                                     <Button
                                         type="button"
                                         onClick={toggleMode}
-                                        className="text-white hover:underline"
+                                        className="text-xl text-white hover:underline"
                                     >
                                         {isLoginMode ? 'Sign up' : 'Login'}
                                     </Button>

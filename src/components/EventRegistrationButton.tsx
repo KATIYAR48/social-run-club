@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Button from './Button';
+import { pwaUtils } from '@/lib/utils';
 
 interface EventRegistrationButtonProps {
     eventId: string;
@@ -76,9 +77,10 @@ export default function EventRegistrationButton({
             }
 
             if (response.ok) {
-                // Close the form and refresh the page
+                // Close the form and clear cache before refreshing
                 setShowAdditionalInfoForm(false);
                 setAdditionalInfo('');
+                await pwaUtils.clearEventsCache();
                 router.refresh();
             } else {
                 setError(data.message || 'Failed to register for event');
@@ -129,7 +131,8 @@ export default function EventRegistrationButton({
             }
 
             if (response.ok) {
-                // Refresh the page to show updated registration status
+                // Clear cache and refresh the page to show updated registration status
+                await pwaUtils.clearEventsCache();
                 router.refresh();
             } else {
                 setError(data.message || 'Failed to cancel registration');

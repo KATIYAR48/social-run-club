@@ -151,7 +151,7 @@ export default function CityScapeSection() {
             {/* Overlay text */}
             <div className="relative z-10 flex items-center justify-center h-full">
                 <div className="text-center font-mono">
-                    <h1 className="text-xl mb-24 opacity-100">CLOKA SEES YOU.</h1>
+                    <h1 className="text-5xl mb-24 opacity-100">CLOKA SEES YOU.</h1>
                     {/* <p className="text-xl opacity-80">You should see gray buildings moving forward</p> */}
                 </div>
             </div>

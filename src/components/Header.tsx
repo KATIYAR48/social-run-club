@@ -81,14 +81,14 @@ const Header = () => {
                 </div>
 
                 {/* Desktop Navigation - Right Side */}
-                <nav className="hidden md:flex w-full md:w-1/3 justify-end space-x-8 items-center">
-                    <Link href="/events" className="luxury-text hover:text-accent transition-colors hover:underline">
+                <nav className="hidden md:flex w-full md:w-1/3 justify-end text-2xl space-x-8 items-center">
+                    <Link href="/events" className=" hover:text-accent transition-colors hover:underline">
                         Events
                     </Link>
-                    {isAuthenticated && user && (<Link href="/feed" className="luxury-text hover:text-accent transition-colors hover:underline">
+                    {isAuthenticated && user && (<Link href="/feed" className="hover:text-accent transition-colors hover:underline">
                         Explore
                     </Link>)}
-                    {!isAuthenticated && !user && (<Link href="/auth?mode=signup" className="luxury-text hover:text-accent transition-colors hover:underline">
+                    {!isAuthenticated && !user && (<Link href="/auth?mode=signup" className="hover:text-accent transition-colors hover:underline">
                         Join
                     </Link>)}
 
@@ -100,7 +100,7 @@ const Header = () => {
                                 className="flex items-center focus:outline-none cursor-pointer"
                                 aria-label="Toggle profile menu"
                             >
-                                <div className="bg-white text-black rounded-full h-8 w-8 flex items-center justify-center text-sm font-bold">
+                                <div className="bg-white text-black rounded-full h-8 w-8 flex items-center justify-center text-xl font-bold">
                                     {user.name.charAt(0).toUpperCase()}
                                 </div>
                             </button>
@@ -120,19 +120,19 @@ const Header = () => {
                                 className="absolute right-0 mt-2 w-48 bg-zinc-900 border border-zinc-800 rounded-md shadow-lg py-1 z-50"
                             >
                                 <div className="px-4 py-2 border-b border-zinc-800">
-                                    <p className="text-sm font-medium">{user!.name}</p>
-                                    <p className="text-xs text-zinc-400 truncate">{user!.email}</p>
+                                    <p className="text-xl font-medium">{user!.name}</p>
+                                    <p className="text-sm text-zinc-400 truncate">{user!.email}</p>
                                 </div>
                                 <Link
                                     href="/profile"
-                                    className="block px-4 py-2 text-sm hover:bg-zinc-800"
+                                    className="block px-4 py-2 text-xl hover:bg-zinc-800"
                                     onClick={() => setIsProfileMenuOpen(false)}
                                 >
                                     My Profile
                                 </Link>
                                 <Link
                                     href="/my-events"
-                                    className="block px-4 py-2 text-sm hover:bg-zinc-800"
+                                    className="block px-4 py-2 text-xl hover:bg-zinc-800"
                                     onClick={() => setIsProfileMenuOpen(false)}
                                 >
                                     My Events
@@ -140,7 +140,7 @@ const Header = () => {
                                 {(user!.role === 'admin' || user!.role === 'super-admin') && (
                                     <Link
                                         href="/admin"
-                                        className="block px-4 py-2 text-sm hover:bg-zinc-800"
+                                        className="block px-4 py-2 text-xl hover:bg-zinc-800"
                                         onClick={() => setIsProfileMenuOpen(false)}
                                     >
                                         Admin Dashboard
@@ -148,7 +148,7 @@ const Header = () => {
                                 )}
                                 <button
                                     onClick={handleLogout}
-                                    className="cursor-pointer block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-zinc-800"
+                                    className="cursor-pointer block w-full text-left px-4 py-2 text-lg text-red-400 hover:bg-zinc-800"
                                 >
                                     Logout
                                 </button>
@@ -170,7 +170,7 @@ const Header = () => {
                     <div className="luxury-container py-4 flex flex-col space-y-4">
                         <Link
                             href="/events"
-                            className="luxury-text hover:text-accent transition-colors"
+                            className="text-3xl hover:text-accent transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Events

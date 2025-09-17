@@ -66,7 +66,7 @@ export default function QRScannerPage() {
                         className="bg-black border border-zinc-800 p-8 rounded-lg"
                     >
                         <div className="text-center">
-                            <div className="w-24 h-24 mx-auto mb-6 text-zinc-600">
+                            <div className="w-24 h-24 mx-auto mb-6 text-zinc-200">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                                 </svg>
@@ -79,7 +79,7 @@ export default function QRScannerPage() {
 
                             <button
                                 onClick={handleOpenScanner}
-                                className="px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors text-lg"
+                                className="px-8 py-4 cursor-pointer bg-white text-black font-semibold rounded-lg hover:bg-zinc-200 transition-colors text-lg"
                             >
                                 Open Camera Scanner
                             </button>

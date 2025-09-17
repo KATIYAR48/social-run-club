@@ -296,6 +296,13 @@ export default function EventRegistrationsPage() {
                     });
                 }
 
+                // Clear PWA cache to ensure users see updated approval status
+                if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                    navigator.serviceWorker.controller?.postMessage({
+                        type: "CLEAR_EVENTS_CACHE"
+                    });
+                }
+
                 // If we have complex filters applied, refresh the data to get accurate stats
                 if (searchTerm || ageRange || selectedSex) {
                     loadEventRegistrations();

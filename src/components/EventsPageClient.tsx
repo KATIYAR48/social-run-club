@@ -25,15 +25,14 @@ const EventsPageClient = () => {
         const fetchEvents = async () => {
             setLoading(true);
             try {
-                // Fetch all events
-                const data = await fetchApi<{ events: ApiEventData[] }>('/api/events');
+                // Fetch all events and upcoming events separately
+                const [allEventsData, upcomingEventsData] = await Promise.all([
+                    fetchApi<{ events: ApiEventData[] }>('/api/events?all=true'),
+                    fetchApi<{ events: ApiEventData[] }>('/api/events')
+                ]);
 
-                // Separate upcoming events (events with dates >= today)
-                const now = new Date();
-                const upcoming = data.events.filter(event => new Date(event.date) >= now);
-
-                setAllEvents(data.events);
-                setUpcomingEvents(upcoming);
+                setAllEvents(allEventsData.events);
+                setUpcomingEvents(upcomingEventsData.events);
             } catch (error) {
                 console.error('Error fetching events:', error);
                 setError('Failed to load events. Please try again later.');

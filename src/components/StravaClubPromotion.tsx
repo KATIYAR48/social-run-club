@@ -27,14 +27,14 @@ const StravaClubPromotion = () => {
                         className="md:col-span-2"
                     >
                         <div className="flex items-center mb-6">
-                            <h2 className="text-3xl md:text-4xl font-light text-white">
+                            <h2 className="text-4xl md:text-5xl font-light text-white">
                                 Join the Club on Strava
                             </h2>
                         </div>
 
 
 
-                        <p className="luxury-text text-lg mb-6 text-zinc-300 leading-relaxed">
+                        <p className="luxury-text text-2xl text-zinc-300 !leading-7">
                             Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava community. Share your runs, celebrate achievements, and find your next running buddy.
                         </p>
 
@@ -43,7 +43,7 @@ const StravaClubPromotion = () => {
                         <div className="">
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="strava-stats">
-                                    <AccordionTrigger className="underline text-md font-medium text-zinc-200 hover:text-white">
+                                    <AccordionTrigger className="underline text-xl font-medium text-zinc-200 hover:text-white">
                                         See club stats
                                     </AccordionTrigger>
                                     <AccordionContent>
@@ -66,13 +66,12 @@ const StravaClubPromotion = () => {
                                     size="medium"
                                     variant="luxury"
                                     isExternal={true}
-                                    className="px-2 mt-8 bg-[#fc4c02] py-4 flex max-w-fit justify-center items-center text-md font-bold"
+                                    className="px-2 mt-2 bg-[#fc4c02] py-4 flex max-w-fit justify-center items-center text-2xl font-bold"
                                 >
                                     <Image className="w-12 h-12 mr-2" src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
                                     <span>Join on Strava</span>
                                 </Button>
                             </div>
-
                         </div>
                     </motion.div>
                 </div>

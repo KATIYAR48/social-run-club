@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Urbanist", sans-serif;
+  --font-sans: "Jersey 10", sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -9,8 +9,8 @@
   --background: #ffffff;
   --foreground: #000000;
   --accent: #888888;
-  --font-heading: var(--font-urbanist), "Urbanist", sans-serif;
-  --font-body: var(--font-urbanist), "Urbanist", sans-serif;
+  --font-heading: "Jersey 10", sans-serif;
+  --font-body: "Jersey 10", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +26,7 @@ body {
   background: var(--background);
   font-family: var(--font-body);
   letter-spacing: 0.02em;
+  font-size: 1.2rem; /* Increase base font size for Jersey 10 */
 }
 
 h1,
@@ -124,4 +125,11 @@ h6 {
 * {
   scrollbar-width: thin;
   scrollbar-color: #18181b transparent;
+}
+
+/* Jersey 10 Font Class */
+.jersey-10-regular {
+  font-family: "Jersey 10", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }

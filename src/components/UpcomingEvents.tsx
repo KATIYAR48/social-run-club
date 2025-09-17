@@ -65,7 +65,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
         <section className="py-16 bg-black text-white mt-10">
             <div className="luxury-container">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
-                    <h2 className="text-3xl font-bold">Upcoming Events</h2>
+                    <h2 className="text-4xl font-bold">Upcoming Events</h2>
                     <p className="text-zinc-400 mt-2 md:mt-0">
                         Join us for our next exclusive roundups
                     </p>
@@ -85,7 +85,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
                         <p>No upcoming events at this time. Check back soon!</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 gap-6">
                         {events.map((event) => (
                             <EventCard key={event.id} event={event} />
                         ))}
@@ -96,7 +96,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
                     <Button
                         href="/events"
                         variant="luxury"
-                        className="inline-block"
+                        className="inline-block text-2xl"
                     >
                         View All Events
                     </Button>

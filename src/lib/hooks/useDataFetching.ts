@@ -27,7 +27,7 @@ export function useDataFetching<T>({
         setError(null);
 
         // Add cache-busting parameter if force refresh is requested
-        const fetchUrl = force ? `${url}?t=${Date.now()}` : url;
+        const fetchUrl = force ? `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}` : url;
 
         const response = await fetch(fetchUrl, {
           headers: {
@@ -43,6 +43,12 @@ export function useDataFetching<T>({
         const result = await response.json();
         setData(result);
         setLastUpdated(new Date());
+
+        // Check if response was served from cache
+        const servedFromCache = response.headers.get("X-Served-From-Cache");
+        if (servedFromCache === "true") {
+          console.log("Data served from cache, consider refreshing:", url);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } finally {
