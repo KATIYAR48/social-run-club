@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Loader from '@/components/ui/PixelLoader';
 
-export default function RegisterRedirect() {
+function RegisterRedirectContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -23,7 +24,19 @@ export default function RegisterRedirect() {
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
-            <p>Redirecting to registration page...</p>
+            <Loader text="Redirecting to registration page..." />
         </div>
+    );
+}
+
+export default function RegisterRedirect() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <Loader text="Loading..." />
+            </div>
+        }>
+            <RegisterRedirectContent />
+        </Suspense>
     );
 } 

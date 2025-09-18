@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { motion } from 'framer-motion';
@@ -11,7 +11,7 @@ import Button from '@/components/Button';
 import Image from 'next/image';
 import Loader from '@/components/ui/PixelLoader';
 
-export default function AuthPage() {
+function AuthPageContent() {
     const searchParams = useSearchParams();
     const initialMode = searchParams.get('mode') === 'signup' ? false : true;
     const [isLoginMode, setIsLoginMode] = useState(initialMode);
@@ -691,5 +691,17 @@ export default function AuthPage() {
             </div>
             <Footer />
         </>
+    );
+}
+
+export default function AuthPage() {
+    return (
+        <Suspense fallback={
+            <div className="bg-black text-white flex items-center justify-center min-h-screen">
+                <Loader text="Loading..." />
+            </div>
+        }>
+            <AuthPageContent />
+        </Suspense>
     );
 } 

@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
+import Loader from '@/components/ui/PixelLoader';
 
-export default function LoginRedirect() {
+function LoginRedirectContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { isAuthenticated } = useAuth();
@@ -27,7 +28,19 @@ export default function LoginRedirect() {
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center">
-            <p>Redirecting...</p>
+            <Loader text="Redirecting..." />
         </div>
+    );
+}
+
+export default function LoginRedirect() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <Loader text="Loading..." />
+            </div>
+        }>
+            <LoginRedirectContent />
+        </Suspense>
     );
 }

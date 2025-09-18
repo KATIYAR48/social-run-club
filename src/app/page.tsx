@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-// import HomePageBanner from '@/components/HomePageBanner';
+import HomePageBanner from '@/components/HomePageBanner';
 import UpcomingEvents from '@/components/UpcomingEvents';
 import Footer from '@/components/Footer';
 import JsonLd, { organizationSchema } from '@/components/JsonLd';
@@ -29,7 +29,7 @@ export default function Home() {
       <JsonLd data={websiteSchema} />
       <Header />
       <Hero />
-      {/* <HomePageBanner /> */}
+      <HomePageBanner />
       <UpcomingEvents />
       <StravaClubPromotion />
       <CityScapeSection />

@@ -42,28 +42,26 @@ export default function HomePageBanner() {
 
     return (
         <div
-            className="w-full py-8 px-4"
+            className="mt-10 mx-5 md:max-w-[70vw] md:mx-auto px-6 py-4 rounded-[10px]"
             style={{ backgroundColor: banner.backgroundColor || '#000000' }}
         >
-            <div className="container mx-auto">
-                <div
-                    className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6"
-                    style={{ color: banner.textColor || '#ffffff' }}
-                >
-                    <div className="flex-1 text-left">
-                        <p className="text-xl md:text-2xl leading-relaxed opacity-90">
-                            {banner.content}
-                        </p>
-                    </div>
+            <div
+                className="flex w-full flex-col md:flex-row items-center justify-between gap-6"
+                style={{ color: banner.textColor || '#ffffff' }}
+            >
+                <div className="flex-1 text-left md:max-w-3xl">
+                    <p className="text-xl md:text-2xl leading-relaxed opacity-90">
+                        {banner.content}
+                    </p>
+                </div>
 
-                    <div className="flex-shrink-0">
-                        <Link
-                            href={banner.buttonLink}
-                            className="inline-block bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
-                        >
-                            {banner.buttonText}
-                        </Link>
-                    </div>
+                <div className="flex-shrink-0">
+                    <Link
+                        href={banner.buttonLink}
+                        className="inline-block bg-white text-black px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
+                    >
+                        {banner.buttonText}
+                    </Link>
                 </div>
             </div>
         </div>

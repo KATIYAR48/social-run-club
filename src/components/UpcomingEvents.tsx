@@ -63,7 +63,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
     }, [serverEvents]);
 
     return (
-        <section className="py-16 bg-black text-white mt-10">
+        <section className="py-16 bg-black text-white">
             <div className="luxury-container">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                     <h2 className="text-4xl font-bold">Upcoming Events</h2>

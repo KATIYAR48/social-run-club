@@ -9,7 +9,7 @@ interface PageTransitionProps {
     variant?: 'default' | 'admin';
 }
 
-export default function PageTransition({ children, variant = 'default' }: PageTransitionProps) {
+export default function PageTransition({ children, }: PageTransitionProps) {
     const pathname = usePathname();
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [shouldRender, setShouldRender] = useState(false);

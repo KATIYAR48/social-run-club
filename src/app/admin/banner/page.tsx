@@ -6,6 +6,17 @@ import { useRouter } from 'next/navigation';
 import PageTransition from '@/components/PageTransition';
 import Loader from '@/components/ui/PixelLoader';
 
+interface BannerData {
+    content: string;
+    isActive: boolean;
+    backgroundColor?: string;
+    textColor?: string;
+    buttonText: string;
+    buttonLink: string;
+    updatedBy: string;
+    updatedAt: string;
+}
+
 interface BannerFormData {
     content: string;
     isActive: boolean;
@@ -198,31 +209,33 @@ export default function BannerAdminPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-white mb-2">
-                                Button Text
+                                Button Text *
                             </label>
                             <input
                                 type="text"
                                 name="buttonText"
                                 value={formData.buttonText}
                                 onChange={handleInputChange}
+                                required
                                 maxLength={50}
                                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="Enter button text (optional)"
+                                placeholder="Enter button text"
                             />
                         </div>
 
                         <div>
                             <label className="block text-sm font-medium text-white mb-2">
-                                Button Link
+                                Button Link *
                             </label>
                             <input
                                 type="url"
                                 name="buttonLink"
                                 value={formData.buttonLink}
                                 onChange={handleInputChange}
+                                required
                                 maxLength={500}
                                 className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                placeholder="https://example.com (optional)"
+                                placeholder="https://example.com"
                             />
                         </div>
                     </div>
@@ -244,7 +257,7 @@ export default function BannerAdminPage() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full cursor-pointer md:w-auto px-8 py-3 border-blue-600 border text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {isSubmitting ? 'Updating...' : 'Update Banner'}
                         </button>
@@ -252,7 +265,7 @@ export default function BannerAdminPage() {
                 </form>
 
                 {currentBanner && (
-                    <div className="mt-12 p-6 bg-zinc-800 rounded-lg">
+                    <div className="mt-12 p-6 border border-zinc-800 rounded-lg">
                         <h3 className="text-xl font-semibold text-white mb-4">Current Banner Preview</h3>
                         <div
                             className="p-6 rounded-lg flex items-center justify-between gap-6"

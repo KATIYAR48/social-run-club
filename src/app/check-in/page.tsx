@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ interface UserEvent {
     checkedInAt: string | null;
 }
 
-export default function CheckInPage() {
+function CheckInPageContent() {
     const { user, isLoading, isAuthenticated } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -380,5 +380,17 @@ export default function CheckInPage() {
                 )}
             </motion.div>
         </div>
+    );
+}
+
+export default function CheckInPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <Loader text="Loading..." />
+            </div>
+        }>
+            <CheckInPageContent />
+        </Suspense>
     );
 } 

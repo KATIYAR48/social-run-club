@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
@@ -9,7 +9,7 @@ import PasswordInput from '@/components/PasswordInput';
 import Button from '@/components/Button';
 import Loader from "@/components/ui/PixelLoader"
 
-export default function EditProfilePage() {
+function EditProfilePageContent() {
     const { user, isLoading, isAuthenticated, updateProfile } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -654,5 +654,21 @@ export default function EditProfilePage() {
             </div>
             <Footer />
         </>
+    );
+}
+
+export default function EditProfilePage() {
+    return (
+        <Suspense fallback={
+            <>
+                <Header />
+                <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                    <Loader text="Loading..." />
+                </div>
+                <Footer />
+            </>
+        }>
+            <EditProfilePageContent />
+        </Suspense>
     );
 } 
