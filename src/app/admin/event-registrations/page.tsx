@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard, Mail } from 'lucide-react';
 import Button from '@/components/Button';
 import { calculateAgeFromDateOfBirth } from '@/lib/utils';
+import Loader from '@/components/ui/PixelLoader';
 
 interface User {
     _id: string;
@@ -682,8 +683,7 @@ export default function EventRegistrationsPage() {
                     >
                         {copyingEmails ? (
                             <>
-                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Copying...
+                                <Loader text={'Copying...'} />
                             </>
                         ) : emailsCopied ? (
                             <>
@@ -703,10 +703,7 @@ export default function EventRegistrationsPage() {
                         className="flex text-sm items-center bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded"
                     >
                         {sendingApprovalEmails ? (
-                            <>
-                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Sending...
-                            </>
+                            <Loader text={"Sending..."} />
                         ) : (
                             <>
                                 <Mail className="h-4 w-4 mr-2" />
@@ -720,10 +717,7 @@ export default function EventRegistrationsPage() {
                         className="flex text-sm items-center bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded"
                     >
                         {downloadingCSV ? (
-                            <>
-                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Downloading...
-                            </>
+                            <Loader text="Downloading.." />
                         ) : (
                             <>
                                 <Download className="h-4 w-4 mr-2" />
@@ -881,10 +875,7 @@ export default function EventRegistrationsPage() {
                             className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded"
                         >
                             {sendingApprovalEmails ? (
-                                <>
-                                    <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                    Sending Emails...
-                                </>
+                                <Loader text={'Sending emails...'} />
                             ) : (
                                 <>
                                     <Mail className="h-4 w-4 mr-2" />
@@ -961,8 +952,7 @@ export default function EventRegistrationsPage() {
             {/* Loading state */}
             {loading ? (
                 <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
-                    <p>Loading registrations...</p>
+                    <Loader text={'Loading registrations...'} />
                 </div>
             ) : (
                 <>

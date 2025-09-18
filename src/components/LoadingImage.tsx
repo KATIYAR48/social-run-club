@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Loader from './Loader';
+import Loader from '@/components/ui/PixelLoader';
 
 interface LoadingImageProps {
     src: string;
@@ -39,7 +39,7 @@ export default function LoadingImage({
         <div className={`relative ${className}`} style={{ width, height }}>
             {isLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-zinc-100">
-                    <Loader size="medium" variant="pulse" />
+                    <Loader />
                 </div>
             )}
 

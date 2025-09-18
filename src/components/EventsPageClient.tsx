@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/apiUtils';
 import EventsToggle from './EventsToggle';
+import Loader from "@/components/ui/PixelLoader"
 
 // Type for the event data from the API
 type ApiEventData = {
@@ -47,8 +48,7 @@ const EventsPageClient = () => {
     if (loading) {
         return (
             <div className="text-center py-12">
-                <div className="w-12 h-12 border-t-2 border-white rounded-full animate-spin mx-auto"></div>
-                <p className="mt-4">Loading events...</p>
+                <Loader text='Loading events...' />
             </div>
         );
     }

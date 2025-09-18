@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { TrashIcon, KeyIcon } from '@heroicons/react/24/solid';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import Button from "@/components/Button"
-import { Loader } from 'lucide-react';
+import Loader from "@/components/ui/PixelLoader"
 import { useAdmin } from '@/lib/admin-context';
 import { useRouter } from 'next/navigation';
 
@@ -508,9 +508,8 @@ export default function UsersPage() {
                 <div className="bg-zinc-800 p-4 rounded shadow relative">
                     <h3 className="text-lg font-semibold mb-1">Total Users</h3>
                     {loadingStats ? (
-                        <div className="flex items-center">
-                            <Loader className="animate-spin h-4 w-4 mr-2" />
-                            <span>Loading...</span>
+                        <div className="flex items-start">
+                            <Loader />
                         </div>
                     ) : (
                         <p className="text-2xl font-bold">{genderStats.total}</p>
@@ -522,9 +521,8 @@ export default function UsersPage() {
                 <div className="bg-blue-900 p-4 rounded shadow relative">
                     <h3 className="text-lg font-semibold mb-1">Male</h3>
                     {loadingStats ? (
-                        <div className="flex items-center">
-                            <Loader className="animate-spin h-4 w-4 mr-2" />
-                            <span>Loading...</span>
+                        <div className="flex items-start">
+                            <Loader />
                         </div>
                     ) : (
                         <>
@@ -543,9 +541,8 @@ export default function UsersPage() {
                 <div className="bg-pink-900 p-4 rounded shadow relative">
                     <h3 className="text-lg font-semibold mb-1">Female</h3>
                     {loadingStats ? (
-                        <div className="flex items-center">
-                            <Loader className="animate-spin h-4 w-4 mr-2" />
-                            <span>Loading...</span>
+                        <div className="flex items-start">
+                            <Loader />
                         </div>
                     ) : (
                         <>
@@ -564,10 +561,7 @@ export default function UsersPage() {
                 <div className="bg-purple-900 p-4 rounded shadow relative">
                     <h3 className="text-lg font-semibold mb-1">Other</h3>
                     {loadingStats ? (
-                        <div className="flex items-center">
-                            <Loader className="animate-spin h-4 w-4 mr-2" />
-                            <span>Loading...</span>
-                        </div>
+                        <Loader />
                     ) : (
                         <>
                             <p className="text-2xl font-bold">{genderStats.other}</p>
@@ -657,9 +651,8 @@ export default function UsersPage() {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={7} className="p-3 text-center">
-                                    <Loader className="animate-spin inline mr-2 h-5 w-5" />
-                                    Loading...
+                                <td colSpan={7} className="p-3 py-10 text-center">
+                                    <Loader />
                                 </td>
                             </tr>
                         ) : users.length === 0 ? (

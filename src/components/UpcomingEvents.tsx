@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { fetchApi } from '@/lib/apiUtils';
 import Button from './Button';
 import EventCard, { EventCardProps } from './EventCard';
+import Loader from "@/components/ui/PixelLoader"
 
 // Type for the event data from the API
 type ApiEventData = {
@@ -73,8 +74,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
 
                 {loading ? (
                     <div className="text-center py-12">
-                        <div className="w-12 h-12 border-t-2 border-white rounded-full animate-spin mx-auto"></div>
-                        <p className="mt-4">Loading events...</p>
+                        <Loader text="Loading events..." />
                     </div>
                 ) : error ? (
                     <div className="text-center py-12">

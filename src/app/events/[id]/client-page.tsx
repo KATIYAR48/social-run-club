@@ -9,6 +9,7 @@ import TemporaryPaymentButton from '@/components/TemporaryPaymentButton';
 import EventLocalDate from '@/components/EventLocalDate';
 import { useDataFetching } from '@/lib/hooks/useDataFetching';
 import { pwaUtils } from '@/lib/utils';
+import Loader from "@/components/ui/PixelLoader"
 
 interface Event {
     _id: string;
@@ -119,8 +120,7 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                     <div className="md:container md:mx-auto">
                         <div className="flex items-center justify-center min-h-[400px]">
                             <div className="text-center">
-                                <div className="animate-spin h-12 w-12 border-t-2 border-b-2 border-white mx-auto"></div>
-                                <p className="mt-4">Loading event details...</p>
+                                <Loader text='Loading event details...' />
                             </div>
                         </div>
                     </div>

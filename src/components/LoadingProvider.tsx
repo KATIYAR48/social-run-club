@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import Loader from './Loader';
+import Loader from '@/components/ui/PixelLoader';
 
 interface LoadingContextType {
     isLoading: boolean;
@@ -43,9 +43,9 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
             {isLoading && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-                        <Loader size="large" variant="spinner" />
+                        <Loader text={loadingMessage as string} />
                         {loadingMessage && (
-                            <p className="mt-4 text-zinc-700">{loadingMessage}</p>
+                            <p className="mt-4 text-zinc-700">{loadingMessage as string}</p>
                         )}
                     </div>
                 </div>

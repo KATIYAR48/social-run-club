@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import Button from '@/components/Button';
 import { UserPlus, UserMinus } from 'lucide-react';
+import Loader from "@/components/ui/PixelLoader"
 
 interface FollowButtonProps {
     userId: string;
@@ -119,7 +120,7 @@ export default function FollowButton({
                 }`}
         >
             {isLoading ? (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                <Loader size='sm' />
             ) : isFollowing ? (
                 <>
                     <UserMinus size={16} />

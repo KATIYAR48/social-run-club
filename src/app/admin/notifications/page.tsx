@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAdmin } from '@/lib/admin-context';
 import { cn } from '@/lib/utils';
 import Button from '@/components/Button';
+import Loader from '@/components/ui/PixelLoader';
 
 interface NotificationHistory {
     _id: string;
@@ -139,10 +140,7 @@ export default function AdminNotificationsPage() {
     if (isLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-black text-white">
-                <div className="text-center">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
-                    <p>Loading...</p>
-                </div>
+                <Loader />
             </div>
         );
     }
@@ -180,7 +178,7 @@ export default function AdminNotificationsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white">
+        <div className="bg-black text-white">
             <div className="">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold mb-2">Push Notifications</h1>
@@ -292,8 +290,7 @@ export default function AdminNotificationsPage() {
                         >
                             {isSubmitting ? (
                                 <span className="flex items-center justify-center">
-                                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                                    Sending...
+                                    <Loader text={"Sending..."} />
                                 </span>
                             ) : (
                                 'Send Notification'
@@ -308,8 +305,7 @@ export default function AdminNotificationsPage() {
 
                     {isLoadingHistory ? (
                         <div className="text-center py-8">
-                            <div className="inline-block animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
-                            <p className="mt-2 text-gray-400">Loading history...</p>
+                            <Loader text={'Loading history...'} />
                         </div>
                     ) : history.length === 0 ? (
                         <p className="text-gray-400 py-8 text-center">No notifications sent yet</p>
@@ -318,16 +314,14 @@ export default function AdminNotificationsPage() {
                             {history.map((notification) => (
                                 <div key={notification._id} className="bg-zinc-800  p-4 border border-zinc-600">
                                     <div className="flex justify-between items-start mb-2">
-                                        <div>
+                                        <div className='text-wrap max-w-sm overflow-scroll'>
                                             <h3 className="font-medium">{notification.title}</h3>
                                             <p className="text-gray-400 text-sm">{notification.message}</p>
                                             {notification.url && (
-                                                <p className="text-blue-400 text-sm mt-1">{notification.url}</p>
+                                                <p className="text-blue-400 text-sm mt-1 ">{notification.url}</p>
                                             )}
                                         </div>
-                                        <span className={getStatusBadge(notification.status)}>
-                                            {notification.status}
-                                        </span>
+
                                     </div>
 
                                     <div className="flex flex-wrap gap-4 text-sm text-gray-400 mt-3">
@@ -338,6 +332,9 @@ export default function AdminNotificationsPage() {
                                         )}
                                         <span>By: {notification.sentBy.name}</span>
                                         <span>{new Date(notification.createdAt).toLocaleDateString()}</span>
+                                        <span className={getStatusBadge(notification.status)}>
+                                            {notification.status}
+                                        </span>
                                     </div>
                                 </div>
                             ))}

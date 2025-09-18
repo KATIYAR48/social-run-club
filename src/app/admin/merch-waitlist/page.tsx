@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, Table, TableHead, TableRow, TableHeaderCell, TableBody, TableCell, Badge, Text, Metric } from "@tremor/react";
+import Loader from '@/components/ui/PixelLoader';
 
 interface WaitlistEntry {
     _id: string;
@@ -79,10 +80,7 @@ export default function MerchWaitlistPage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto"></div>
-                        <p className="mt-4">Loading...</p>
-                    </div>
+                    <Loader />
                 </div>
                 <Footer />
             </>

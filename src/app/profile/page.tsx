@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Loader from "@/components/ui/PixelLoader"
 
 export default function ProfileRedirectPage() {
     const { user, isLoading, isAuthenticated } = useAuth();
@@ -32,10 +33,7 @@ export default function ProfileRedirectPage() {
         <>
             <Header />
             <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <div className="text-center flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mb-4"></div>
-                    <p className="text-zinc-400">Redirecting to your profile...</p>
-                </div>
+                <Loader text='Redirecting to your profile...' />
             </div>
             <Footer />
         </>

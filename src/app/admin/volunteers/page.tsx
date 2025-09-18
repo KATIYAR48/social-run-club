@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Clock, Search, Filter, Download, RefreshCw, Clipboard } from 'lucide-react';
 import Button from '@/components/Button';
 import { calculateAgeFromDateOfBirth } from '@/lib/utils';
+import Loader from '@/components/ui/PixelLoader';
 
 interface User {
     _id: string;
@@ -337,8 +338,7 @@ export default function VolunteersAdminPage() {
                     >
                         {copyingEmails ? (
                             <>
-                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Copying...
+                                <Loader text={"Copying..."} />
                             </>
                         ) : emailsCopied ? (
                             <>
@@ -359,8 +359,7 @@ export default function VolunteersAdminPage() {
                     >
                         {downloadingCSV ? (
                             <>
-                                <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                Downloading...
+                                <Loader text="Downloading..." />
                             </>
                         ) : (
                             <>
@@ -487,8 +486,7 @@ export default function VolunteersAdminPage() {
             {/* Loading state */}
             {loading ? (
                 <div className="text-center py-12">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
-                    <p>Loading applications...</p>
+                    <Loader text='Loading applications...' />
                 </div>
             ) : (
                 <>
@@ -516,12 +514,12 @@ export default function VolunteersAdminPage() {
                                                             <div className="text-sm text-zinc-400">{application.user.email}</div>
                                                             <div className="text-sm text-zinc-400">{application.user.phone}</div>
                                                             <div className="text-sm text-zinc-400 mt-1">
-                                                                                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && (
-                                    <span>Age: {application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)}</span>
-                                )}
-                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && application.user.gender && <span> | </span>}
-                                {application.user.gender && <span>Gender: {application.user.gender}</span>}
-                                {((application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) || application.user.gender) && application.user.instagramUsername && <span> | </span>}
+                                                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && (
+                                                                    <span>Age: {application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)}</span>
+                                                                )}
+                                                                {(application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) && application.user.gender && <span> | </span>}
+                                                                {application.user.gender && <span>Gender: {application.user.gender}</span>}
+                                                                {((application.user.age || (application.user.dateOfBirth ? calculateAgeFromDateOfBirth(application.user.dateOfBirth) : null)) || application.user.gender) && application.user.instagramUsername && <span> | </span>}
                                                                 {application.user.instagramUsername && (
                                                                     <a
                                                                         href={`https://instagram.com/${application.user.instagramUsername.replace('@', '')}`}
@@ -601,10 +599,7 @@ export default function VolunteersAdminPage() {
                                                                     }`}
                                                             >
                                                                 {updatingApplicationId === application._id ? (
-                                                                    <>
-                                                                        <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                                                        Approving...
-                                                                    </>
+                                                                    <Loader text='Approving...' />
                                                                 ) : (
                                                                     'Approve'
                                                                 )}
@@ -618,10 +613,7 @@ export default function VolunteersAdminPage() {
                                                                     }`}
                                                             >
                                                                 {updatingApplicationId === application._id ? (
-                                                                    <>
-                                                                        <div className="animate-spin h-4 w-4 mr-2 border-t-2 border-b-2 border-white rounded-full"></div>
-                                                                        Rejecting...
-                                                                    </>
+                                                                    <Loader text='Rejecting...' />
                                                                 ) : (
                                                                     'Reject'
                                                                 )}

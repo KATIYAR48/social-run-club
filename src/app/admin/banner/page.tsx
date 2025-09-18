@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAdmin } from '@/lib/admin-context';
 import { useRouter } from 'next/navigation';
 import PageTransition from '@/components/PageTransition';
+import Loader from '@/components/ui/PixelLoader';
 
 interface BannerFormData {
     content: string;
@@ -101,10 +102,7 @@ export default function BannerAdminPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
-                    <p className="text-white">Loading...</p>
-                </div>
+                <Loader />
             </div>
         );
     }

@@ -3,18 +3,14 @@
 import { useAdmin } from '@/lib/admin-context';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import Loader from '@/components/ui/PixelLoader';
 
 export default function AdminDashboard() {
     const { adminUser, isSuperAdmin, isLoading } = useAdmin();
 
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-black text-white">
-                <div className="text-center">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
-                    <p>Loading...</p>
-                </div>
-            </div>
+            <Loader />
         );
     }
 

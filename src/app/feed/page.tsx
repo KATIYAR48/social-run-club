@@ -8,6 +8,7 @@ import Button from '@/components/Button';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, CheckCircle, Users, Globe } from 'lucide-react';
 import Link from 'next/link';
+import Loader from '@/components/ui/PixelLoader';
 
 interface FeedActivity {
     _id: string;
@@ -173,7 +174,7 @@ export default function FeedPage() {
                     <div className="flex border-b border-zinc-800">
                         <button
                             onClick={() => handleTabChange('global')}
-                            className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'global'
+                            className={`flex cursor-pointer items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'global'
                                 ? 'border-white text-white'
                                 : 'border-transparent text-zinc-400 hover:text-white'
                                 }`}
@@ -183,7 +184,7 @@ export default function FeedPage() {
                         </button>
                         <button
                             onClick={() => handleTabChange('following')}
-                            className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'following'
+                            className={`flex cursor-pointer items-center gap-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'following'
                                 ? 'border-white text-white'
                                 : 'border-transparent text-zinc-400 hover:text-white'
                                 }`}
@@ -205,10 +206,7 @@ export default function FeedPage() {
                 >
                     {loading ? (
                         <div className="flex items-center justify-center py-16">
-                            <div className="text-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-                                <p className="text-zinc-400">Loading feed...</p>
-                            </div>
+                            <Loader text="Loading feed..." />
                         </div>
                     ) : error ? (
                         <div className="text-center py-16">
@@ -308,10 +306,7 @@ export default function FeedPage() {
                             {/* Loading indicator for infinite scroll */}
                             {loadingMore && (
                                 <div className="text-center py-8">
-                                    <div className="flex items-center justify-center gap-2 text-zinc-400">
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                        Loading more activities...
-                                    </div>
+                                    <Loader text='Loading more...' />
                                 </div>
                             )}
                         </div>

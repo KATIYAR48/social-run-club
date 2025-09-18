@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Loader from './Loader';
+import Loader from '@/components/ui/PixelLoader';
 
 interface PageTransitionProps {
     children: React.ReactNode;
@@ -31,22 +31,9 @@ export default function PageTransition({ children, variant = 'default' }: PageTr
         };
     }, [pathname]);
 
-    const LoaderComponent = variant === 'admin' ? (
-        <div className="fixed inset-0 bg-black z-40 flex items-center justify-center">
-            <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
-                <p className="text-white">Loading...</p>
-            </div>
-        </div>
-    ) : (
-        <div className="fixed inset-0 bg-black z-40 flex items-center justify-center">
-            <Loader
-                size="large"
-                variant="spinner"
-                text="Loading CLOKA..."
-            />
-        </div>
-    );
+    const LoaderComponent = <div className="fixed inset-0 bg-black z-40 flex items-center justify-center">
+        <Loader />
+    </div>
 
     return (
         <>

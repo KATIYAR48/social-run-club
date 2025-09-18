@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import PasswordInput from '@/components/PasswordInput';
 import Button from '@/components/Button';
 import Image from 'next/image';
+import Loader from '@/components/ui/PixelLoader';
 
 export default function AuthPage() {
     const searchParams = useSearchParams();
@@ -557,7 +558,7 @@ export default function AuthPage() {
                                                         : 'text-zinc-400'
                                                 }`}>
                                                 {usernameStatus.checking && (
-                                                    <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>
+                                                    <Loader text='Checking...' />
                                                 )}
                                                 {usernameStatus.message}
                                             </div>

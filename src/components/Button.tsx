@@ -2,7 +2,8 @@
 
 import React, { ButtonHTMLAttributes, ReactNode } from 'react';
 import Link from 'next/link';
-import Loader from './Loader';
+import Loader from "@/components/ui/PixelLoader"
+
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
@@ -80,8 +81,7 @@ export default function Button({
             >
                 {isLoading ? (
                     <>
-                        <Loader size="small" variant="spinner" className="mr-2 inline" />
-                        <span>{loadingText || children}</span>
+                        <Loader text={loadingText || children as string} />
                     </>
                 ) : (
                     children
@@ -100,8 +100,7 @@ export default function Button({
         >
             {isLoading ? (
                 <>
-                    <Loader size="small" variant="spinner" className="mr-2 inline" />
-                    <span>{loadingText || children}</span>
+                    <Loader text={loadingText || children as string} />
                 </>
             ) : (
                 children

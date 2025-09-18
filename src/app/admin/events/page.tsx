@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
+import Loader from '@/components/ui/PixelLoader';
 
 interface Event {
     _id: string;
@@ -407,8 +408,7 @@ export default function AdminEventsPage() {
 
                     {loading ? (
                         <div className="text-center py-8 text-black dark:text-white">
-                            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-black dark:border-white border-r-transparent"></div>
-                            <p className="mt-2">Loading events...</p>
+                            <Loader text={'Loading events...'} />
                         </div>
                     ) : events.length === 0 ? (
                         <div className="text-center py-8 text-black dark:text-white">

@@ -36,6 +36,7 @@ const Hero = () => {
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
+
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-wider">
                             <div className="flex items-center mb-4">
                                 <Image

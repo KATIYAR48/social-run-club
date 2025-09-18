@@ -8,6 +8,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { pwaUtils } from '@/lib/utils';
+import Loader from "@/components/ui/PixelLoader"
 
 // Define the event type
 interface Event {
@@ -112,10 +113,7 @@ export default function MyEventsPage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin h-12 w-12 border-t-2 border-b-2 border-white mx-auto"></div>
-                        <p className="mt-4">Loading...</p>
-                    </div>
+                    <Loader />
                 </div>
                 <Footer />
             </>
@@ -159,7 +157,7 @@ export default function MyEventsPage() {
 
                     {isEventsLoading ? (
                         <div className="flex justify-center py-12">
-                            <div className="animate-spin h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                            <Loader text='Loading...' />
                         </div>
                     ) : events.length > 0 ? (
                         <motion.div

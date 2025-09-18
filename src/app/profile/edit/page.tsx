@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PasswordInput from '@/components/PasswordInput';
 import Button from '@/components/Button';
+import Loader from "@/components/ui/PixelLoader"
 
 export default function EditProfilePage() {
     const { user, isLoading, isAuthenticated, updateProfile } = useAuth();
@@ -354,10 +355,7 @@ export default function EditProfilePage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto"></div>
-                        <p className="mt-4">Loading...</p>
-                    </div>
+                    <Loader />
                 </div>
                 <Footer />
             </>
@@ -447,7 +445,7 @@ export default function EditProfilePage() {
                                     />
                                     {usernameStatus.checking && (
                                         <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                                            <Loader size="sm" showText={false} />
                                         </div>
                                     )}
                                     {usernameStatus.available !== null && !usernameStatus.checking && (
@@ -466,7 +464,7 @@ export default function EditProfilePage() {
                                                 : 'text-zinc-400'
                                         }`}>
                                         {usernameStatus.checking && (
-                                            <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full"></div>
+                                            <Loader size="sm" showText={false} />
                                         )}
                                         {usernameStatus.message}
                                     </div>

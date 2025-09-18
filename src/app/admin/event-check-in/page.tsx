@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
+import Loader from '@/components/ui/PixelLoader';
 
 interface Event {
     _id: string;
@@ -141,7 +142,7 @@ export default function EventCheckInPage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                    <Loader />
                 </div>
                 <Footer />
             </>
@@ -150,7 +151,7 @@ export default function EventCheckInPage() {
 
     return (
         <>
-            <div className="min-h-screen bg-black text-white py-12 px-4">
+            <div className="bg-black text-white py-12">
                 <div className="max-w-6xl mx-auto">
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
@@ -158,7 +159,7 @@ export default function EventCheckInPage() {
                         transition={{ duration: 0.5 }}
                         className="text-3xl font-bold mb-8"
                     >
-                        Event Check-In Management
+                        Manage Event Check-Ins
                     </motion.h1>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -221,8 +222,8 @@ export default function EventCheckInPage() {
                                 <div className="flex flex-col items-center">
                                     <div className={`bg-white p-4 rounded-lg mb-4 transition-opacity duration-300 ${isQrRefreshing ? 'opacity-50' : 'opacity-100'}`}>
                                         {isQrRefreshing ? (
-                                            <div className="w-64 h-64 flex items-center justify-center">
-                                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+                                            <div className="flex items-center justify-center">
+                                                <Loader size='sm' text='Refreshing...' />
                                             </div>
                                         ) : (
                                             <QRCode

@@ -10,6 +10,7 @@ import FollowButton from '@/components/FollowButton';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Users } from 'lucide-react';
 import Link from 'next/link';
+import Loader from "@/components/ui/PixelLoader"
 
 interface Follower {
     _id: string;
@@ -100,10 +101,7 @@ export default function FollowersPage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mb-4"></div>
-                        <p className="text-zinc-400">Loading followers...</p>
-                    </div>
+                    <Loader text="Loading followers..." />
                 </div>
                 <Footer />
             </>

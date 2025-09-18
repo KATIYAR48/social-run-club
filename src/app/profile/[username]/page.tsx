@@ -18,6 +18,7 @@ import ThreeJsRunner from '@/components/ThreeJsRunner';
 import Link from 'next/link';
 import CityScapeSection from '@/components/CityScapeSection';
 import { CometCard } from "@/components/ui/comet-card";
+import Loader from "@/components/ui/PixelLoader"
 // import StravaStats from '@/components/StravaStats';
 
 
@@ -222,10 +223,7 @@ export default function PublicProfilePage() {
             <>
                 <Header />
                 <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mb-4"></div>
-                        <p className="text-zinc-400">Loading profile...</p>
-                    </div>
+                    <Loader text="Loading profile..." />
                 </div>
                 <Footer />
             </>
@@ -265,7 +263,7 @@ export default function PublicProfilePage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="border md:p-0 pb-3 border-zinc-800 mb-8 rounded-xl"
+                            className="border md:p-0 pb-3 bg-zinc-900 border-zinc-800 mb-8 rounded-[10px]"
                         >
                             <div className="flex flex-col lg:flex-row items-center lg:items-center gap-6">
                                 <CometCard>
@@ -298,7 +296,7 @@ export default function PublicProfilePage() {
                                         <div className="flex flex-wrap gap-3">
                                             <Button
                                                 onClick={handleShare}
-                                                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
+                                                className="flex items-center hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] shadow-white gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700 hover:border-none"
                                             >
                                                 <Share2 size={16} />
                                                 Share
@@ -306,7 +304,7 @@ export default function PublicProfilePage() {
 
                                             <Button
                                                 onClick={() => copyToClipboard(`${window.location.origin}/profile/${username}`)}
-                                                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
+                                                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700"
                                             >
                                                 <Copy size={16} />
                                                 {copied ? 'Copied!' : 'Copy Link'}
@@ -416,6 +414,50 @@ export default function PublicProfilePage() {
                             </motion.div>
                         )}
 
+                        {/* Stats Cards */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+                        >
+                            <div className="border border-zinc-800 p-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-zinc-800 p-3">
+                                        <Trophy size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl font-bold">{profile.stats.totalEvents}</p>
+                                        <p className="text-zinc-400">Total Events</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border border-zinc-800 p-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-zinc-800 p-3">
+                                        <Calendar size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl font-bold">{profile.stats.upcomingEvents}</p>
+                                        <p className="text-zinc-400">Upcoming Events</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border border-zinc-800 p-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-zinc-800 p-3">
+                                        <CheckCircle size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl font-bold">{profile.stats.completedEvents}</p>
+                                        <p className="text-zinc-400">Completed Events</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+
                         {/* Event Participation Timeline Chart - For all users */}
                         {statusChartData.length > 0 && (
                             <motion.div
@@ -493,49 +535,7 @@ export default function PublicProfilePage() {
                             </motion.div>
                         )}
 
-                        {/* Stats Cards */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.1 }}
-                            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-                        >
-                            <div className="border border-zinc-800 p-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <Trophy size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{profile.stats.totalEvents}</p>
-                                        <p className="text-zinc-400">Total Events</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="border border-zinc-800 p-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <Calendar size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{profile.stats.upcomingEvents}</p>
-                                        <p className="text-zinc-400">Upcoming Events</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="border border-zinc-800 p-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <CheckCircle size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{profile.stats.completedEvents}</p>
-                                        <p className="text-zinc-400">Completed Events</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
 
                         {/* Events Section */}
                         <motion.div
