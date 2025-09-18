@@ -18,9 +18,10 @@ export default function AdminDashboard() {
         { name: 'Events', href: '/admin/events', description: 'Manage and view events.' },
         { name: 'Registrations', href: '/admin/event-registrations', description: 'View and manage event registrations.' },
         { name: 'Check-In', href: '/admin/event-check-in', description: 'Check in attendees for events.' },
-        ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users', description: 'Manage all users (super-admin only).' }] : []),
         { name: 'Volunteers', href: '/admin/volunteers', description: 'Manage volunteers.' },
-        { name: 'Notifications', href: '/admin/notifications', description: 'Send push notifications to users.' },
+        ...(isSuperAdmin ? [{ name: 'Banner', href: '/admin/banner', description: 'Manage the home page banner.' }] : []),
+        ...(isSuperAdmin ? [{ name: 'Users', href: '/admin/users', description: 'Manage all users (super-admin only).' }] : []),
+        ...(isSuperAdmin ? [{ name: 'Notifications', href: '/admin/notifications', description: 'Send push notifications to users.' }] : []),
         ...(isSuperAdmin ? [{ name: 'Merch Waitlist', href: '/admin/merch-waitlist', description: 'Manage merch waitlist.' }] : []),
     ];
 
