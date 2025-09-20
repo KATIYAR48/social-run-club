@@ -42,7 +42,7 @@ export default function HomePageBanner() {
 
     return (
         <div
-            className="mt-10 mx-5 md:max-w-[70vw] md:mx-auto px-6 py-4 rounded-[10px]"
+            className="mt-10 mx-5 md:max-w-7xl md:mx-auto px-6 py-4 rounded-[10px]"
             style={{ backgroundColor: banner.backgroundColor || '#000000' }}
         >
             <div

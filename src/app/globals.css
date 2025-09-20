@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Jersey 10", sans-serif;
+  --font-sans: "Merriweather", serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -9,8 +9,8 @@
   --background: #ffffff;
   --foreground: #000000;
   --accent: #888888;
-  --font-heading: "Jersey 10", sans-serif;
-  --font-body: "Jersey 10", sans-serif;
+  --font-heading: "Merriweather", serif;
+  --font-body: "Merriweather", serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,7 +26,7 @@ body {
   background: var(--background);
   font-family: var(--font-body);
   letter-spacing: 0.02em;
-  font-size: 1.2rem; /* Increase base font size for Jersey 10 */
+  font-size: 1.2rem; /* Increase base font size for Merriweather */
 }
 
 h1,
@@ -127,9 +127,11 @@ h6 {
   scrollbar-color: #18181b transparent;
 }
 
-/* Jersey 10 Font Class */
-.jersey-10-regular {
-  font-family: "Jersey 10", sans-serif;
+/* Merriweather Font Class */
+.merriweather-regular {
+  font-family: "Merriweather", serif;
+  font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  font-variation-settings: "wdth" 100;
 }

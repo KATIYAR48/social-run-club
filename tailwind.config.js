@@ -13,10 +13,10 @@ export default {
         accent: "#888888",
       },
       fontFamily: {
-        sans: ["Jersey 10", "sans-serif"],
-        serif: ["Jersey 10", "sans-serif"],
-        display: ["Jersey 10", "sans-serif"],
-        body: ["Jersey 10", "sans-serif"],
+        sans: ["Merriweather", "serif"],
+        serif: ["Merriweather", "serif"],
+        display: ["Merriweather", "serif"],
+        body: ["Merriweather", "serif"],
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

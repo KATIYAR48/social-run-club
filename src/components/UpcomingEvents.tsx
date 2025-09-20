@@ -64,11 +64,11 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
 
     return (
         <section className="py-16 bg-black text-white">
-            <div className="luxury-container">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+            <div className="luxury-container border-t border-zinc-600">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-12 mb-10">
                     <h2 className="text-4xl font-bold">Upcoming Events</h2>
-                    <p className="text-zinc-400 mt-2 md:mt-0">
-                        Join us for our next exclusive roundups
+                    <p className="text-zinc-400 text-xl mt-2 md:mt-0">
+                        What are you waiting for?
                     </p>
                 </div>
 
@@ -95,10 +95,9 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
                 <div className="text-center mt-12">
                     <Button
                         href="/events"
-                        variant="luxury"
-                        className="inline-block text-2xl"
+                        className="inline-block !text-zinc-300 !bg-zinc-800 text-lg"
                     >
-                        View All Events
+                        View more
                     </Button>
                 </div>
             </div>

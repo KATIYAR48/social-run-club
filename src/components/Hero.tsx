@@ -28,7 +28,8 @@ const Hero = () => {
     }, []);
 
     return (
-        <section className="bg-black text-white">
+        <section className="text-white">
+
             <div className="luxury-container">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <motion.div
@@ -70,7 +71,7 @@ const Hero = () => {
                             <Button
                                 href="/auth?mode=signup"
                                 variant="luxury"
-                                className="bg-transparent text-3xl border border-white inline-block text-center"
+                                className="bg-transparent text-xl border border-white inline-block text-center"
                             >
                                 Join Cloka
                             </Button>
@@ -79,14 +80,14 @@ const Hero = () => {
                                     <span className="text-white font-bold">1500+</span>
                                 ) : (
                                     <motion.span
-                                        className="text-white text-3xl font-sans font-bold"
+                                        className="text-white text-2xl font-sans font-bold"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 0.5 }}
                                     >
                                         {registrationCount}+
                                     </motion.span>
-                                )} runners already locked in,<div className='text-2xl'>
+                                )} runners already locked in,<div className='text-xl'>
                                     what about you?
                                 </div>
                             </div>

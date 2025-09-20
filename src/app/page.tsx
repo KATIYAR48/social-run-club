@@ -1,10 +1,10 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import HomePageBanner from '@/components/HomePageBanner';
+// import HomePageBanner from '@/components/HomePageBanner';
 import UpcomingEvents from '@/components/UpcomingEvents';
 import Footer from '@/components/Footer';
 import JsonLd, { organizationSchema } from '@/components/JsonLd';
-import MerchPageClient from '@/components/MerchPageClient';
+import JoinWaitlistSection from '@/components/JoinWaitlistSection';
 import CityScapeSection from '@/components/CityScapeSection';
 import FAQ from '@/components/FAQ';
 import StravaClubPromotion from '@/components/StravaClubPromotion';
@@ -29,11 +29,11 @@ export default function Home() {
       <JsonLd data={websiteSchema} />
       <Header />
       <Hero />
-      <HomePageBanner />
+      {/* <HomePageBanner /> */}
+      <JoinWaitlistSection />
       <UpcomingEvents />
       <StravaClubPromotion />
       <CityScapeSection />
-      <MerchPageClient />
       <FAQ />
       <Footer />
     </main>

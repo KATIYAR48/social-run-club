@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-export default function MerchPageClient() {
+export default function JoinWaitlistSection() {
     const router = useRouter();
     const [form, setForm] = useState({
         preferredMerch: "T-shirt",
@@ -92,11 +92,11 @@ export default function MerchPageClient() {
 
     if (!user) {
         return (
-            <main className="container max-w-8xl mx-auto mt-12 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
+            <main className="mt-24 container max-w-8xl mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
                 {/* Banner background */}
                 <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                     <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
-                    <div className="absolute inset-0 bg-black/20 filter contrast-125" />
+                    <div className="absolute inset-0 bg-black/20 filter  contrast-125" />
                 </div>
                 {/* Content */}
                 <div className="relative z-10 flex flex-col md:flex-row w-full h-full items-center justify-between gap-0 md:gap-8">
@@ -141,7 +141,6 @@ export default function MerchPageClient() {
                             <motion.button
                                 className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                                 onClick={() => setShowForm(true)}
-
                             >
 
                                 <span className="relative z-10">Join Waitlist</span>
@@ -183,9 +182,9 @@ export default function MerchPageClient() {
     }
 
     return (
-        <main className="mt-12 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] container mx-auto px-2 md:px-4 py-6 md:py-8">
+        <main className="mt-24 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] container mx-auto px-2 md:px-4 py-6 md:py-8">
             {/* Banner background */}
-            <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+            <div className="absolute rounded-xl inset-0 w-full h-full z-0 overflow-hidden">
                 <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
                 <div className="absolute inset-0 bg-black/20 filter contrast-125" />
             </div>
@@ -230,12 +229,17 @@ export default function MerchPageClient() {
                 {/* Right: Button or Form */}
                 <div className="flex-1 w-[90%] md:w-1/2 flex md:mr-10 justify-end items-center max-w-md mx-auto">
                     {!showForm ? (
-                        <motion.button
-                            className="relative px-12 cursor-pointer bg-white shadow-lg text-black backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
-                            onClick={() => setShowForm(true)}
-                        >
-                            <span className="relative z-10 uppercase font-bold">Join Waitlist</span>
-                        </motion.button>
+                        <div className="text-center">
+                            <motion.button
+                                className="relative px-12 cursor-pointer bg-white shadow-lg text-black backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                                onClick={() => setShowForm(true)}
+                            >
+                                <span className="relative z-10 uppercase font-bold">Join Waitlist</span>
+                            </motion.button>
+                            <p className="text-md mt-3">
+                                Pre-order your drops now!
+                            </p>
+                        </div>
                     ) : (
                         <motion.form
                             onSubmit={handleSubmit}

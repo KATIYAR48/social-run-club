@@ -280,7 +280,7 @@ export default function PublicProfilePage() {
                                 </CometCard>
 
                                 {/* Profile Info */}
-                                <div className="flex-1 ml-10 pl-9 pb-3 pr-0 md:pl-3 md:pr-10">
+                                <div className="flex-1 mt-8 mb-6 md:ml-10 pl-9 pb-3 pr-0 md:pl-3 md:pr-10">
                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                         <div>
                                             <h1 className="text-3xl font-bold">{profile.name}</h1>

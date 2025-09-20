@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 
     if (showAll) {
       // Fetch all events
-      events = await Event.find({}).sort({ date: 1 });
+      events = await Event.find({}).sort({ date: -1 });
     } else {
       // Fetch upcoming events (events with date >= today)
       events = await Event.find({

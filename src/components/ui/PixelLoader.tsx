@@ -1,5 +1,4 @@
 'use client'
-
 interface PixelLoaderProps {
     size?: 'sm' | 'md' | 'lg' | 'xl';
     showText?: boolean;

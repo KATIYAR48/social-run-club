@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 const StravaClubPromotion = () => {
     return (
-        <section className="bg-black text-white py-20">
+        <section className="bg-black text-white">
             <div className="luxury-container">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
                     <div className="md:col-span-1 flex justify-center">
@@ -27,14 +27,14 @@ const StravaClubPromotion = () => {
                         className="md:col-span-2"
                     >
                         <div className="flex items-center mb-6">
-                            <h2 className="text-4xl md:text-5xl font-light text-white">
+                            <h2 className="text-2xl md:text-3xl font-bold text-white">
                                 Join the Club on Strava
                             </h2>
                         </div>
 
 
 
-                        <p className="luxury-text text-2xl text-zinc-300 !leading-7">
+                        <p className="text-xl text-zinc-300 !leading-7">
                             Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava community. Share your runs, celebrate achievements, and find your next running buddy.
                         </p>
 
@@ -43,8 +43,8 @@ const StravaClubPromotion = () => {
                         <div className="">
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="strava-stats">
-                                    <AccordionTrigger className="underline text-xl font-medium text-zinc-200 hover:text-white">
-                                        See club stats
+                                    <AccordionTrigger className="cursor-pointer italic text-xl font-medium text-zinc-200 hover:text-white">
+                                        {"> "} See club stats
                                     </AccordionTrigger>
                                     <AccordionContent>
                                         <iframe
@@ -64,11 +64,10 @@ const StravaClubPromotion = () => {
                                 <Button
                                     href="https://strava.app.link/bASEQLdAaWb"
                                     size="medium"
-                                    variant="luxury"
                                     isExternal={true}
-                                    className="px-2 mt-2 bg-[#fc4c02] py-4 flex max-w-fit justify-center items-center text-2xl font-bold"
+                                    className="px-2 mt-2 bg-[#fc4c02] hover:bg-white hover:text-black py-4 flex max-w-fit justify-center items-center text-xl font-bold"
                                 >
-                                    <Image className="w-12 h-12 mr-2" src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
+                                    <Image className="w-10 h-10 mr-4" src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
                                     <span>Join on Strava</span>
                                 </Button>
                             </div>

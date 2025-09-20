@@ -110,12 +110,12 @@ export default function NotificationPrompt({
             "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2",
             className
         )}>
-            <div className="flex items-start">
+            <div className="flex items-start w-full overflow-auto">
                 <div className="flex-1">
                     <h3 className="text-sm font-medium text-zinc-300 mb-1">
                         Stay Updated with CLOKA
                     </h3>
-                    <p className="text-sm text-zinc-200 mb-3">
+                    <p className="text-xs text-zinc-200 mb-3">
                         Get notified about new runs, events, and important updates from CLOKA Run Club.
                     </p>
 
@@ -129,7 +129,7 @@ export default function NotificationPrompt({
                         <Button
                             onClick={handleSubscribe}
                             isLoading={isActionLoading || isLoading}
-                            className="luxury-button text-sm px-3 py-1 rounded transition-colors capitalize"
+                            className="border border-white text-sm px-3 py-1 rounded transition-colors capitalize"
                         >
                             <div className='flex items-center gap-2 text-left'>{!(isActionLoading || isLoading) && <BellIcon className='h-5 w-5 mr-1' />}
                                 Enable Notifications</div>

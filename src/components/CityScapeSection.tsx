@@ -112,7 +112,7 @@ function CameraController() {
 
 export default function CityScapeSection() {
     return (
-        <section className="bg-black text-white py-2 h-[500px] relative overflow-hidden">
+        <section className="bg-black text-white filter contrast-110 brightness-150 h-[500px] relative overflow-hidden">
             <div className="absolute inset-0">
                 <Canvas
                     camera={{ position: [0, 12, 20], fov: 70 }}
@@ -151,7 +151,7 @@ export default function CityScapeSection() {
             {/* Overlay text */}
             <div className="relative z-10 flex items-center justify-center h-full">
                 <div className="text-center font-mono">
-                    <h1 className="text-3xl mb-24 opacity-100">CLOKA SEES YOU.</h1>
+                    <h1 className="text-2xl mb-24 !tracking-[5px]">CLOKA SEES YOU</h1>
                     {/* <p className="text-xl opacity-80">You should see gray buildings moving forward</p> */}
                 </div>
             </div>

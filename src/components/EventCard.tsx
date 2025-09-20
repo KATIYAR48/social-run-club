@@ -47,10 +47,10 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="bg-zinc-900 filter hover:invert-100 transition-all duration-400 flex flex-col md:flex-row gap-5 text-white p-6"
+                className="bg-zinc-900 rounded-[10px] shadow filter hover:invert-100 transition-all duration-400 flex flex-col md:flex-row gap-5 text-white p-6"
             >
                 {event.bannerImageURL ? (
-                    <div className="mb-4 w-full max-w-[12rem] order-2 md:order-1">
+                    <div className="w-full max-w-[12rem] order-2 md:order-1">
                         <img
                             src={event.bannerImageURL}
                             alt={`${event.title} banner`}
@@ -58,22 +58,22 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                         />
                     </div>
                 ) : (
-                    <div className="mb-4 w-full max-w-[12rem] order-2 md:order-1 filter hover:invert-100 transition-all duration-400">
+                    <div className="order-2 md:order-1 filter hover:invert-100 transition-all duration-400">
                         <img
                             src='logo.png'
                             alt={`${event.title} banner`}
-                            className="bg-white w-full h-64 object-cover"
+                            className="bg-white h-32 w-32 object-cover"
                         />
                     </div>
                 )}
                 <div className="flex-1 order-1 md:order-2">
-                    <div className="mb-4 flex justify-between items-start gap-3">
-                        <div>
-                            <div className="text-md text-zinc-400 uppercase tracking-wider text-accent">
+                    <div className="flex h-full justify-between items-center">
+                        <div className='flex-col'>
+                            <div className="text-sm mb-1 text-zinc-400 uppercase tracking-wider text-accent">
                                 {formatDate(event.date)}
                             </div>
-                            <h3 className="text-4xl font-bold mb-2">{event.title}</h3>
-                            <p className="text-xl text-zinc-400 mb-4">
+                            <h3 className="text-3xl font-bold mb-5">{event.title}</h3>
+                            <p className="text-lg text-zinc-400">
                                 at <span className="font-medium">{event.location}</span>
                             </p>
                         </div>
@@ -84,11 +84,6 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                         >
                             Go <ArrowTopRightOnSquareIcon className='!text-zinc-400 h-5 w-5 mb-1' />
                         </Button>
-                    </div>
-
-
-                    <div className="luxury-text text-xl text-zinc-400 mb-6 !leading-6">
-                        {event.description.slice(0, 240)}<span className='text-zinc-300'>... read more</span>
                     </div>
                 </div>
             </motion.div>
