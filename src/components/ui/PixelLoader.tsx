@@ -1,4 +1,5 @@
 'use client'
+
 interface PixelLoaderProps {
     size?: 'sm' | 'md' | 'lg' | 'xl';
     showText?: boolean;
@@ -21,7 +22,6 @@ export default function PixelLoader({
 }: PixelLoaderProps) {
     const config = sizeConfig[size];
     const loaderWidth = config.width;
-    const textSize = config.textSize;
 
     return (
         <div className={`flex gap-5 items-center justify-center ${className}`}>
@@ -57,7 +57,7 @@ export default function PixelLoader({
             `}</style>
 
             {showText && (
-                <div className={textSize}>{text}</div>
+                <div className="text-md">{text}</div>
             )}
         </div>
     );

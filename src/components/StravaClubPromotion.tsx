@@ -24,18 +24,16 @@ const StravaClubPromotion = () => {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className="md:col-span-2"
+                        className="md:col-span-2 md:text-start text-center"
                     >
-                        <div className="flex items-center mb-6">
-                            <h2 className="text-2xl md:text-3xl font-bold text-white">
-                                Join the Club on Strava
-                            </h2>
-                        </div>
+                        <h2 className="text-xl md:text-3xl mb-5 font-bold text-white">
+                            Join the Club on Strava
+                        </h2>
 
 
 
-                        <p className="text-xl text-zinc-300 !leading-7">
-                            Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava community. Share your runs, celebrate achievements, and find your next running buddy.
+                        <p className="text-lg text-zinc-300 !leading-7">
+                            Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava club.
                         </p>
 
 
@@ -43,7 +41,7 @@ const StravaClubPromotion = () => {
                         <div className="">
                             <Accordion type="single" collapsible>
                                 <AccordionItem value="strava-stats">
-                                    <AccordionTrigger className="cursor-pointer italic text-xl font-medium text-zinc-200 hover:text-white">
+                                    <AccordionTrigger className="cursor-pointer mx-15 md:mx-auto italic text-lg font-medium text-zinc-200 hover:text-white">
                                         {"> "} See club stats
                                     </AccordionTrigger>
                                     <AccordionContent>
@@ -60,7 +58,7 @@ const StravaClubPromotion = () => {
 
 
                         <div className="flex items-center gap-4 mb-8">
-                            <div className='flex justify-center md:justify-start'>
+                            <div className='flex w-full justify-center md:justify-start'>
                                 <Button
                                     href="https://strava.app.link/bASEQLdAaWb"
                                     size="medium"

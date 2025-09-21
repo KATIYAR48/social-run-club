@@ -26,7 +26,6 @@ body {
   background: var(--background);
   font-family: var(--font-body);
   letter-spacing: 0.02em;
-  font-size: 1.2rem; /* Increase base font size for Merriweather */
 }
 
 h1,

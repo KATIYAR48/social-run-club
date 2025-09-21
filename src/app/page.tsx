@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 // import HomePageBanner from '@/components/HomePageBanner';
-import UpcomingEvents from '@/components/UpcomingEvents';
+import UpcomingEventsSection from '@/components/UpcomingEventsSection';
 import Footer from '@/components/Footer';
 import JsonLd, { organizationSchema } from '@/components/JsonLd';
 import JoinWaitlistSection from '@/components/JoinWaitlistSection';
@@ -31,7 +31,7 @@ export default function Home() {
       <Hero />
       {/* <HomePageBanner /> */}
       <JoinWaitlistSection />
-      <UpcomingEvents />
+      <UpcomingEventsSection />
       <StravaClubPromotion />
       <CityScapeSection />
       <FAQ />

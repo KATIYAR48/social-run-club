@@ -28,7 +28,7 @@ const Footer = () => {
                     </div>
 
                     <div className="flex flex-col items-center justify-end text-center h-full">
-                        <h3 className="text-xl font-bold mb-4 tracking-wider underline">Quick Links</h3>
+                        <h3 className="text-md font-bold mb-4 tracking-wider underline">Quick Links</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/partnerships" className="luxury-text hover:text-accent transition-colors">
@@ -54,9 +54,9 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    <div className="flex flex-col items-center justify-end text-center h-full">
-                        <h3 className="text-xl font-bold mb-4 tracking-wider">Contact</h3>
-                        <p className="luxury-text mb-2">Email: info@cloka.in</p>
+                    <div className="flex flex-col text-sm items-center justify-end text-center h-full">
+                        <h3 className="font-bold mb-4 tracking-wider">Contact</h3>
+                        <p className="mb-2">Email: info@cloka.in</p>
                         <p>
                             <a
                                 href="/contact"

@@ -92,7 +92,7 @@ export default function JoinWaitlistSection() {
 
     if (!user) {
         return (
-            <main className="mt-24 container max-w-8xl mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
+            <main className="mt-24 container max-w-8xl mx-5 md:mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
                 {/* Banner background */}
                 <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                     <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
@@ -182,7 +182,7 @@ export default function JoinWaitlistSection() {
     }
 
     return (
-        <main className="mt-24 relative flex justify-center items-center min-h-[400px] md:min-h-[500px] container mx-auto px-2 md:px-4 py-6 md:py-8">
+        <main className="mt-12 md:mt-24 relative flex justify-center items-center min-h-[500px] md:min-h-[500px] md:container mx-5 md:mx-auto px-2 md:px-4 py-6 md:py-8">
             {/* Banner background */}
             <div className="absolute rounded-xl inset-0 w-full h-full z-0 overflow-hidden">
                 <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
@@ -223,7 +223,6 @@ export default function JoinWaitlistSection() {
                                 repeatType: "mirror",
                             }}
                         />
-
                     </motion.div>
                 </div>
                 {/* Right: Button or Form */}
@@ -231,12 +230,12 @@ export default function JoinWaitlistSection() {
                     {!showForm ? (
                         <div className="text-center">
                             <motion.button
-                                className="relative px-12 cursor-pointer bg-white shadow-lg text-black backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                                className="relative px-5 rounded-md cursor-pointer bg-white shadow-lg text-black backdrop-blur-xs font-bold py-3 text-md overflow-hidden"
                                 onClick={() => setShowForm(true)}
                             >
-                                <span className="relative z-10 uppercase font-bold">Join Waitlist</span>
+                                <span className="relative z-10 uppercase font-bold">Pre-order now!</span>
                             </motion.button>
-                            <p className="text-md mt-3">
+                            <p className="text-sm mt-3">
                                 Pre-order your drops now!
                             </p>
                         </div>

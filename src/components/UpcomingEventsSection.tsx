@@ -22,7 +22,7 @@ interface UpcomingEventsProps {
     serverEvents?: EventCardProps[];
 }
 
-const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
+const UpcomingEventsSection = ({ serverEvents }: UpcomingEventsProps) => {
     const [events, setEvents] = useState<EventCardProps[]>(serverEvents || []);
     const [loading, setLoading] = useState(!serverEvents);
     const [error, setError] = useState('');
@@ -66,8 +66,8 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
         <section className="py-16 bg-black text-white">
             <div className="luxury-container border-t border-zinc-600">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-12 mb-10">
-                    <h2 className="text-4xl font-bold">Upcoming Events</h2>
-                    <p className="text-zinc-400 text-xl mt-2 md:mt-0">
+                    <h2 className="text-xl font-bold">Upcoming Events</h2>
+                    <p className="text-zinc-400 text-md mt-2 md:mt-0">
                         What are you waiting for?
                     </p>
                 </div>
@@ -81,7 +81,7 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
                         <p className="text-red-400">{error}</p>
                     </div>
                 ) : events.length === 0 ? (
-                    <div className="text-center py-12">
+                    <div className="text-center text-zinc-500 py-5">
                         <p>No upcoming events at this time. Check back soon!</p>
                     </div>
                 ) : (
@@ -105,4 +105,4 @@ const UpcomingEvents = ({ serverEvents }: UpcomingEventsProps) => {
     );
 };
 
-export default UpcomingEvents; 
+export default UpcomingEventsSection; 

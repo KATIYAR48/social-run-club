@@ -104,8 +104,8 @@ export default function EventsClientPage() {
                 <div className="luxury-container">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
                         <div>
-                            <h1 className="text-3xl font-bold">Events</h1>
-                            <p className="text-zinc-400 mt-2">
+                            <h1 className="text-lg font-bold">Events</h1>
+                            <p className="text-zinc-400 text-md mt-2">
                                 Join us for exciting events and connect with the community
                             </p>
                         </div>

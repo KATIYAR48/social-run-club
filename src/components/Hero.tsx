@@ -38,56 +38,51 @@ const Hero = () => {
                         transition={{ duration: 0.8 }}
                     >
 
-                        <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-wider">
-                            <div className="flex items-center mb-4">
-                                <Image
-                                    src="/run-club.PNG"
-                                    alt="CLOKA Text"
-                                    width={500}
-                                    height={150}
-                                    className="h-auto invert -my-10 -mb-[150px] -ml-3 md:-ml-5"
-                                    priority
-                                />
-                            </div>
-                            <span className="block mt-2">
-                                <Image
-                                    src="/beyondtheline.png"
-                                    alt="Beyond the Line Text"
-                                    width={400}
-                                    height={120}
-                                    className="h-auto invert md:-mt-15 -ml-3 md:-ml-5"
-                                    priority
-                                />
-                            </span>
-                        </h1>
-                        <p className="luxury-text text-xl mb-8 text-zinc-300 !leading-6">
+                        <div className="text-center mb-3">
+                            <Image
+                                src="/run-club.PNG"
+                                alt="CLOKA Text"
+                                width={500}
+                                height={150}
+                                className="h-auto invert -my-10 md:-mb-[210px] -mb-[190px] md:-ml-5"
+                                priority
+                            />
+                            <Image
+                                src="/beyondtheline.png"
+                                alt="Beyond the Line Text"
+                                width={400}
+                                height={120}
+                                className="h-auto invert md:-mt-20  ml-2 md:-ml-5"
+                                priority
+                            />
+                        </div>
+                        <p className="md:text-start text-center max-w-xl text-md mb-8 text-zinc-300 !leading-6">
                             You’ve just found your crew. Your space to move, lift, sweat, and push past limits.
                             You don’t need to be an athlete—just willing to start.
                             This community meets you where you are and moves with you, every step and every rep.
-                            <br /> <br /> Cloka Sees You.
+                            &mdash;Cloka Sees You.
                         </p>
 
                         <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
                             <Button
                                 href="/auth?mode=signup"
-                                variant="luxury"
-                                className="bg-transparent text-xl border border-white inline-block text-center"
+                                className="bg-white !text-black !font-bold text-md border border-white inline-block text-center"
                             >
-                                Join Cloka
+                                JOIN TODAY
                             </Button>
-                            <div className="luxury-text text-lg text-zinc-300 md:text-start text-center">
+                            <div className="luxury-text text-md text-zinc-300 md:text-start text-center">
                                 {isLoading ? (
                                     <span className="text-white font-bold">1500+</span>
                                 ) : (
                                     <motion.span
-                                        className="text-white text-2xl font-sans font-bold"
+                                        className="text-white text-xl font-sans font-bold"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 0.5 }}
                                     >
                                         {registrationCount}+
                                     </motion.span>
-                                )} runners already locked in,<div className='text-xl'>
+                                )} runners already locked in,<div className='text-lg'>
                                     what about you?
                                 </div>
                             </div>
@@ -98,7 +93,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative h-[400px] md:h-[500px] overflow-hidden"
+                        className="relative hidden md:block rounded-lg h-[400px] md:h-[500px] overflow-hidden"
                     >
                         <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent z-10 hidden md:block"></div>
                         <video

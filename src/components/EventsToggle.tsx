@@ -19,7 +19,7 @@ interface EventsToggleProps {
 }
 
 const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
-    const [showUpcomingOnly, setShowUpcomingOnly] = useState(true);
+    const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
     const [events, setEvents] = useState<ApiEventProps[]>(upcomingEvents);
 
     // Sync events state with props changes
@@ -35,13 +35,13 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
 
     return (
         <>
-            <div className="flex justify-end mb-6">
+            <div className="flex md:justify-end justify-center mb-8">
                 <div className="inline-flex items-center bg-zinc-900 rounded-lg p-1">
                     <Button
                         onClick={() => toggleEvents(false)}
                         variant={!showUpcomingOnly ? 'secondary' : 'primary'}
                         size="small"
-                        className={`px-3 py-1 text-xl font-medium transition-colors ${!showUpcomingOnly
+                        className={`px-3 py-1 font-medium transition-colors ${!showUpcomingOnly
                             ? 'bg-transparent text-zinc-400 hover:text-white'
                             : ''
                             }`}
@@ -52,7 +52,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
                         onClick={() => toggleEvents(true)}
                         variant={showUpcomingOnly ? 'secondary' : 'primary'}
                         size="small"
-                        className={`px-4 py-1 text-xl font-medium transition-colors ${showUpcomingOnly
+                        className={`px-4 py-1 font-medium transition-colors ${showUpcomingOnly
                             ? ''
                             : 'bg-transparent text-zinc-400 hover:text-white'
                             }`}
