@@ -11,7 +11,7 @@ const StravaClubPromotion = () => {
         <section className="bg-black text-white">
             <div className="luxury-container">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
-                    <div className="md:col-span-1 flex justify-center">
+                    <div className="md:col-span-1 -mb-10 flex justify-center">
                         <ThreeJsRunner
                             username={"fabianferno"}
                             gender={"male"}
@@ -26,16 +26,13 @@ const StravaClubPromotion = () => {
                         viewport={{ once: true }}
                         className="md:col-span-2 md:text-start text-center"
                     >
-                        <h2 className="text-xl md:text-3xl mb-5 font-bold text-white">
+                        <h2 className="text-2xl md:text-3xl mb-5 font-bold text-white">
                             Join the Club on Strava
                         </h2>
 
-
-
-                        <p className="text-lg text-zinc-300 !leading-7">
+                        <p className="text-xl text-zinc-300 !leading-7">
                             Connect with fellow runners, track your progress, and stay motivated with our vibrant Strava club.
                         </p>
-
 
                         {/* Accordion from shadcn/ui for "See stats" */}
                         <div className="">
@@ -55,18 +52,16 @@ const StravaClubPromotion = () => {
                             </Accordion>
                         </div>
 
-
-
                         <div className="flex items-center gap-4 mb-8">
                             <div className='flex w-full justify-center md:justify-start'>
                                 <Button
                                     href="https://strava.app.link/bASEQLdAaWb"
                                     size="medium"
                                     isExternal={true}
-                                    className="px-2 mt-2 bg-[#fc4c02] hover:bg-white hover:text-black py-4 flex max-w-fit justify-center items-center text-xl font-bold"
+                                    className="rounded-sm px-2 w-full mt-2 bg-[#fc4c02] !font-bold hover:bg-white hover:text-black flex md:max-w-fit justify-center items-center"
                                 >
-                                    <Image className="w-10 h-10 mr-4" src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
-                                    <span>Join on Strava</span>
+                                    <Image className="w-10 h-10 mr-2 " src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
+                                    <span className='text-lg'>Join on Strava</span>
                                 </Button>
                             </div>
                         </div>
