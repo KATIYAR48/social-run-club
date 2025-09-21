@@ -194,7 +194,7 @@ export default function PWAInstallPrompt() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-4 left-4 right-4 z-50 bg-black/80 backdrop-blur-sm text-white rounded-lg shadow-lg p-4 flex items-center justify-between"
+            className="fixed bottom-4 left-4 right-4 z-50 bg-black/10 backdrop-blur-xs text-white rounded-lg shadow-lg p-4 flex items-center justify-between"
           >
             <div className="flex items-center space-x-3">
               <DevicePhoneMobileIcon className="h-6 w-6 text-white" />

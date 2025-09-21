@@ -28,7 +28,6 @@ const Footer = () => {
                     </div>
 
                     <div className="flex flex-col items-center justify-end text-center h-full">
-                        <h3 className="text-md font-bold mb-4 tracking-wider underline">Quick Links</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/partnerships" className="luxury-text hover:text-accent transition-colors">
