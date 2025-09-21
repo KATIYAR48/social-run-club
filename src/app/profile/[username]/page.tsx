@@ -573,16 +573,15 @@ export default function PublicProfilePage() {
                                     {displayedEvents.map((userEvent) => {
                                         const isUpcoming = new Date(userEvent.event.date) >= new Date();
                                         return (
-                                            <div key={userEvent._id} className="hover:invert-100 filter bg-black border border-zinc-700 p-6 transition-all duration-300">
+                                            <div key={userEvent._id} className="rounded-md hover:invert-100 filter bg-black border border-zinc-700 p-6 transition-all duration-300">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
                                                             <h3 className="text-lg hover:underline font-semibold mb-2">{userEvent.event.title}</h3>
                                                         </Link>
 
-                                                        <p className="text-zinc-400 mb-3">{userEvent.event.description.slice(0, 150)}...</p>
 
-                                                        <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
+                                                        <div className="flex flex-wrap text-sm text-zinc-500">
                                                             <div className="flex items-center gap-1">
                                                                 <Calendar size={14} />
                                                                 {formatDate(userEvent.event.date)} at {formatTime(userEvent.event.date)}
