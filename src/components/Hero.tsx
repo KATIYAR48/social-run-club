@@ -44,7 +44,7 @@ const Hero = () => {
                                 alt="CLOKA Text"
                                 width={500}
                                 height={150}
-                                className="h-auto invert -my-10 md:-mb-[210px] -mb-[190px] md:-ml-5"
+                                className="h-auto invert -my-10 md:-mb-[210px] -mb-[150px]  md:-ml-5"
                                 priority
                             />
                             <Image
@@ -52,7 +52,7 @@ const Hero = () => {
                                 alt="Beyond the Line Text"
                                 width={400}
                                 height={120}
-                                className="h-auto invert md:-mt-20  ml-2 md:-ml-5"
+                                className="h-auto invert md:-mt-15  md:-ml-5"
                                 priority
                             />
                         </div>
