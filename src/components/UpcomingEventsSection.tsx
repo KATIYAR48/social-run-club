@@ -63,12 +63,12 @@ const UpcomingEventsSection = ({ serverEvents }: UpcomingEventsProps) => {
     }, [serverEvents]);
 
     return (
-        <section className="py-16 bg-black text-white">
-            <div className="luxury-container border-t border-zinc-600">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-12 mb-10">
+        <section className="py-16 mx-5 bg-black text-white">
+            <div className="md:container mx-5 md:mx-auto border-t border-zinc-600">
+                <div className="flex flex-col md:flex-row justify-between items-center md:items-center mt-12 mb-10">
                     <h2 className="text-xl font-bold">Upcoming Events</h2>
                     <p className="text-zinc-400 text-md mt-2 md:mt-0">
-                        What are you waiting for?
+                        What are you waiting for? Click to Go!
                     </p>
                 </div>
 
@@ -85,19 +85,19 @@ const UpcomingEventsSection = ({ serverEvents }: UpcomingEventsProps) => {
                         <p>No upcoming events at this time. Check back soon!</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {events.map((event) => (
                             <EventCard key={event.id} event={event} />
                         ))}
                     </div>
                 )}
 
-                <div className="text-center mt-12">
+                <div className="text-center mt-8">
                     <Button
                         href="/events"
-                        className="inline-block !text-zinc-300 !bg-zinc-800 text-lg"
+                        className="inline-block rounded-sm !text-zinc-300 !bg-zinc-800 text-sm"
                     >
-                        View more
+                        View all
                     </Button>
                 </div>
             </div>

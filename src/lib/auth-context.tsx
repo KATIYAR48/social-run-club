@@ -14,7 +14,6 @@ export interface User {
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;
-    joinCrew?: boolean;
 }
 
 // Define the AuthContext type
@@ -40,7 +39,6 @@ export interface SignupData {
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;
-    joinCrew?: boolean;
 }
 
 // Define update profile data type
@@ -52,7 +50,6 @@ export interface UpdateProfileData {
     gender?: 'male' | 'female' | 'other';
     emergencyContact?: string;
     instagramUsername?: string;
-    joinCrew?: boolean;
     newPassword?: string;
 }
 

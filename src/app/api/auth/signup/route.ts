@@ -68,7 +68,6 @@ export async function POST(request: NextRequest) {
       gender,
       emergencyContact,
       instagramUsername,
-      joinCrew,
       username: providedUsername, // Allow users to provide their own username
     } = body;
 
@@ -165,7 +164,6 @@ export async function POST(request: NextRequest) {
       gender,
       emergencyContact,
       instagramUsername,
-      joinCrew: joinCrew === true,
       role: "user",
       createdAt: new Date(),
       updatedAt: new Date(),

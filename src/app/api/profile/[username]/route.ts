@@ -115,7 +115,6 @@ export async function GET(
       age: user.dateOfBirth ? calculateAge(user.dateOfBirth) : undefined,
       gender: user.gender,
       instagramUsername: user.instagramUsername,
-      joinCrew: user.joinCrew,
       // Strava data (only for own profile)
       ...(isOwnProfile && {
         strava: user.strava,

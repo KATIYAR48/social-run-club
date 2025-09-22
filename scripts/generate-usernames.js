@@ -39,10 +39,6 @@ const UserSchema = new mongoose.Schema({
   },
   emergencyContact: { type: String },
   instagramUsername: { type: String, sparse: true, unique: true },
-  joinCrew: {
-    type: Boolean,
-    default: false,
-  },
   role: {
     type: String,
     enum: ["user", "admin", "super-admin"],

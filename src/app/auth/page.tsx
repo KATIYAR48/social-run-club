@@ -72,7 +72,6 @@ function AuthPageContent() {
         gender: '',
         emergencyContact: '',
         instagramUsername: '',
-        joinCrew: false,
         acceptTerms: false,
     });
 
@@ -235,7 +234,7 @@ function AuthPageContent() {
         setError('');
 
         // Validate required fields
-        if (!signupData.name || !signupData.email || !signupData.password || !signupData.phone || !signupData.dateOfBirth || !signupData.gender || !signupData.instagramUsername) {
+        if (!signupData.name || !signupData.email || !signupData.password || !signupData.phone || !signupData.dateOfBirth || !signupData.gender) {
             setError('Please fill in all required fields');
             return;
         }
@@ -281,7 +280,6 @@ function AuthPageContent() {
                 gender: signupData.gender as 'male' | 'female' | 'other' | undefined,
                 emergencyContact: signupData.emergencyContact || undefined,
                 instagramUsername: signupData.instagramUsername,
-                joinCrew: signupData.joinCrew,
             });
 
             if (result.success) {
@@ -318,7 +316,7 @@ function AuthPageContent() {
         <>
             <Header />
             <div className="bg-black text-white flex items-center justify-center px-4 py-12">
-                <div className="container mx-auto max-w-6xl">
+                <div className="container mx-auto max-w-6xl ">
                     <div className="flex flex-col md:flex-row gap-6">
                         {/* Image Section */}
                         <motion.div
@@ -340,13 +338,13 @@ function AuthPageContent() {
                                     height={1000}
                                     src={isLoginMode ? "/images/runcluber.png" : "/images/returning.png"}
                                     alt={isLoginMode ? "Run Club" : "Returning Runners"}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover rounded-lg"
                                 />
                                 <div className="absolute bottom-4 left-4 right-4 md:right-auto md:w-[90%] bg-black/70 p-4 backdrop-blur-sm">
-                                    <h3 className="text-xl font-bold mb-2">
+                                    <h3 className="text-md font-bold mb-2">
                                         {isLoginMode ? "Welcome Back Runners" : "Join Our Running Community"}
                                     </h3>
-                                    <p className="text-zinc-300">
+                                    <p className="text-zinc-300 text-sm">
                                         {isLoginMode
                                             ? "Ready to hit the road again? Sign up to track your runs and join upcoming events!"
                                             : "Connect with fellow runners, track your progress, and participate in exciting events!"}
@@ -367,14 +365,14 @@ function AuthPageContent() {
                                 type: "spring",
                                 stiffness: 100
                             }}
-                            className={`p-6 md:p-8 shadow-lg w-full md:w-1/2 border border-zinc-700 bg-black order-2 ${isLoginMode ? 'md:order-2' : 'md:order-1'}`}
+                            className={`p-6 md:p-8 shadow-lg w-full md:w-1/2 rounded-lg border border-zinc-700 bg-black order-2 ${isLoginMode ? 'md:order-2' : 'md:order-1'}`}
                         >
                             <div className="flex items-center justify-between mb-6">
-                                <div className="inline-flex shadow-sm" role="group">
+                                <div className="inline-flex " role="group">
                                     <Button
                                         type="button"
                                         onClick={() => setIsLoginMode(true)}
-                                        className={`px-4 py-2 text-md font-medium ${isLoginMode
+                                        className={`px-4 py-2 rounded-l-md text-sm ${isLoginMode
                                             ? ' text-black border border-zinc-700'
                                             : 'bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700'
                                             }`}
@@ -384,7 +382,7 @@ function AuthPageContent() {
                                     <Button
                                         type="button"
                                         onClick={() => setIsLoginMode(false)}
-                                        className={`px-4 py-2 text-md font-medium ${!isLoginMode
+                                        className={`px-4 py-2 rounded-r-md text-sm ${!isLoginMode
                                             ? ' text-black border border-zinc-700'
                                             : 'bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700'
                                             }`}
@@ -393,7 +391,7 @@ function AuthPageContent() {
                                     </Button>
                                 </div>
 
-                                <h1 className="text-2xl font-bold text-end">
+                                <h1 className="text-sm font-bold text-end">
                                     {isLoginMode ? 'Welcome back!' : 'Join the club'}
                                 </h1>
                             </div>
@@ -408,7 +406,7 @@ function AuthPageContent() {
                                 // Login Form
                                 <form onSubmit={handleLoginSubmit} className="space-y-6">
                                     <div>
-                                        <label htmlFor="email" className="block text-md font-medium mb-1">
+                                        <label htmlFor="email" className="block text-xs font-medium mb-1">
                                             Email
                                         </label>
                                         <input
@@ -417,13 +415,13 @@ function AuthPageContent() {
                                             type="email"
                                             value={loginData.email}
                                             onChange={handleLoginChange}
-                                            className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                            className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="password" className="block text-md font-medium mb-1">
+                                        <label htmlFor="password" className="block text-xs font-medium mb-1">
                                             Password
                                         </label>
                                         <PasswordInput
@@ -431,7 +429,7 @@ function AuthPageContent() {
                                             name="password"
                                             value={loginData.password}
                                             onChange={handleLoginChange}
-                                            className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                            className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                             required
                                             showHelperText={false}
                                         />
@@ -439,7 +437,7 @@ function AuthPageContent() {
                                             <button
                                                 type="button"
                                                 onClick={() => router.push('/auth/forgot-password')}
-                                                className="cursor-pointer text-md text-zinc-400 hover:text-zinc-300"
+                                                className="cursor-pointer text-xs text-zinc-400 hover:text-zinc-300"
                                             >
                                                 Forgot Password?
                                             </button>
@@ -450,7 +448,7 @@ function AuthPageContent() {
                                         type="submit"
                                         variant="secondary"
                                         disabled={isLoading}
-                                        className={`w-full py-3 !text-2xl transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                                        className={`w-full py-3 !text-sm !font-bold transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                                             }`}
                                     >
                                         {isLoading ? 'Logging in...' : 'Login'}
@@ -461,7 +459,7 @@ function AuthPageContent() {
                                 <form onSubmit={handleSignupSubmit} className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="name" className="block text-md font-medium mb-1">
+                                            <label htmlFor="name" className="block text-xs font-medium mb-1">
                                                 Full Name *
                                             </label>
                                             <input
@@ -470,13 +468,13 @@ function AuthPageContent() {
                                                 type="text"
                                                 value={signupData.name}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                             />
                                         </div>
 
                                         <div>
-                                            <label htmlFor="gender" className="block text-md font-medium mb-1">
+                                            <label htmlFor="gender" className="block text-xs font-medium mb-1">
                                                 Gender *
                                             </label>
                                             <select
@@ -484,7 +482,7 @@ function AuthPageContent() {
                                                 name="gender"
                                                 value={signupData.gender}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                             >
                                                 <option value="">Select Gender</option>
@@ -496,8 +494,8 @@ function AuthPageContent() {
                                     </div>
 
                                     <div className="grid grid-cols-12 gap-4">
-                                        <div className="col-span-3">
-                                            <label htmlFor="dateOfBirth" className="block text-md font-medium mb-1">
+                                        <div className="md:col-span-3 col-span-12">
+                                            <label htmlFor="dateOfBirth" className="block text-xs font-medium mb-1">
                                                 Date of Birth *
                                             </label>
                                             <input
@@ -506,14 +504,14 @@ function AuthPageContent() {
                                                 type="date"
                                                 value={signupData.dateOfBirth}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                                 max={new Date().toISOString().split('T')[0]}
                                             />
                                         </div>
 
-                                        <div className="col-span-9">
-                                            <label htmlFor="signup-email" className="block text-md font-medium mb-1">
+                                        <div className="md:col-span-9 col-span-12">
+                                            <label htmlFor="signup-email" className="block text-xs font-medium mb-1">
                                                 Email *
                                             </label>
                                             <input
@@ -522,14 +520,14 @@ function AuthPageContent() {
                                                 type="email"
                                                 value={signupData.email}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label htmlFor="username" className="block text-md font-medium mb-1">
+                                        <label htmlFor="username" className="block text-xs font-medium mb-1">
                                             Username (optional)
                                         </label>
                                         <input
@@ -538,18 +536,18 @@ function AuthPageContent() {
                                             type="text"
                                             value={signupData.username}
                                             onChange={handleSignupChange}
-                                            className={`w-full p-3 border focus:outline-none focus:ring-2 bg-zinc-900 ${usernameStatus.available === false
+                                            className={`w-full p-2  text-sm border focus:outline-none focus:ring-2 bg-zinc-900 ${usernameStatus.available === false
                                                 ? 'border-red-500 focus:ring-red-500'
                                                 : usernameStatus.available === true
                                                     ? 'border-green-500 focus:ring-green-500'
                                                     : 'border-zinc-700 focus:ring-blue-500'
                                                 }`}
-                                            placeholder="Auto-generated from email (editable)"
+                                            placeholder="Claim yours before its gone"
                                             minLength={3}
                                             maxLength={30}
                                         />
                                         {usernameStatus.message && (
-                                            <div className={`mt-1 text-md flex items-center gap-1 ${usernameStatus.checking
+                                            <div className={`mt-1 text-xs flex items-center gap-1 ${usernameStatus.checking
                                                 ? 'text-zinc-400'
                                                 : usernameStatus.available === false
                                                     ? 'text-red-400'
@@ -570,7 +568,7 @@ function AuthPageContent() {
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="phone" className="block text-md font-medium mb-1">
+                                            <label htmlFor="phone" className="block text-xs font-medium mb-1">
                                                 Phone Number * (10 digits)
                                             </label>
                                             <input
@@ -579,7 +577,7 @@ function AuthPageContent() {
                                                 type="tel"
                                                 value={signupData.phone}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                                 pattern="[0-9]{10}"
                                                 maxLength={10}
@@ -587,24 +585,25 @@ function AuthPageContent() {
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="emergencyContact" className="block text-md font-medium mb-1">
+                                            <label htmlFor="emergencyContact" className="block text-xs font-medium mb-1">
                                                 Emergency Contact
                                             </label>
                                             <input
                                                 id="emergencyContact"
                                                 name="emergencyContact"
-                                                type="text"
+                                                type="number"
+                                                placeholder="10-digit emergency contact number"
                                                 value={signupData.emergencyContact}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                             />
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label htmlFor="instagramUsername" className="block text-md font-medium mb-1">
-                                                Instagram Username *
+                                            <label htmlFor="instagramUsername" className="block text-xs font-medium mb-1">
+                                                Instagram Username (optional)
                                             </label>
                                             <input
                                                 id="instagramUsername"
@@ -612,12 +611,12 @@ function AuthPageContent() {
                                                 type="text"
                                                 value={signupData.instagramUsername}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
-                                                required
+                                                className="w-full p-2 text-sm border focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                placeholder="Your Instagram handle"
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="signup-password" className="block text-md font-medium mb-1">
+                                            <label htmlFor="signup-password" className="block text-xs font-medium mb-1">
                                                 Password *
                                             </label>
                                             <PasswordInput
@@ -625,7 +624,7 @@ function AuthPageContent() {
                                                 name="password"
                                                 value={signupData.password}
                                                 onChange={handleSignupChange}
-                                                className="w-full p-3 border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
+                                                className="w-full p-2 text-sm border  focus:outline-none focus:ring-2 bg-zinc-900 border-zinc-700"
                                                 required
                                                 minLength={6}
                                             />
@@ -642,30 +641,17 @@ function AuthPageContent() {
                                             className="h-4 w-4 text-white focus:ring-white border-zinc-700 rounded"
                                             required
                                         />
-                                        <label htmlFor="acceptTerms" className="ml-2 block text-md">
+                                        <label htmlFor="acceptTerms" className="ml-2 block text-xs">
                                             I accept the <a href="/terms" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Terms and Conditions</a> *
                                         </label>
                                     </div>
 
-                                    <div className="flex items-center">
-                                        <input
-                                            id="joinCrew"
-                                            name="joinCrew"
-                                            type="checkbox"
-                                            checked={signupData.joinCrew}
-                                            onChange={handleSignupChange}
-                                            className="h-4 w-4 text-white focus:ring-white border-zinc-700 rounded"
-                                        />
-                                        <label htmlFor="joinCrew" className="ml-2 block text-md">
-                                            I want to join the crew
-                                        </label>
-                                    </div>
 
                                     <Button
                                         type="submit"
                                         disabled={isLoading}
                                         variant="secondary"
-                                        className={`w-full py-3 !text-2xl transition-colors hover:bg-zinc-200 mt-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                                        className={`w-full py-3 !text-sm !font-bold transition-colors hover:bg-zinc-200 mt-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                                             }`}
                                     >
                                         {isLoading ? 'Signing up...' : 'Sign Up'}
@@ -673,16 +659,15 @@ function AuthPageContent() {
                                 </form>
                             )}
 
-                            <div className="mt-6 text-center">
-                                <p className="text-zinc-400">
+                            <div className="mt-6">
+                                <p className="text-zinc-400 w-full justify-center md:justify-end text-sm flex gap-2">
                                     {isLoginMode ? "Don't have an account?" : "Already have an account?"}{' '}
-                                    <Button
-                                        type="button"
+                                    <div
                                         onClick={toggleMode}
-                                        className="text-xl text-white hover:underline"
+                                        className="cursor-pointer underline text-white text-sm"
                                     >
                                         {isLoginMode ? 'Sign up' : 'Login'}
-                                    </Button>
+                                    </div>
                                 </p>
                             </div>
                         </motion.div>

@@ -27,13 +27,20 @@ export function useDataFetching<T>({
         setError(null);
 
         // Add cache-busting parameter if force refresh is requested
-        const fetchUrl = force ? `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}` : url;
+        const fetchUrl = force
+          ? `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`
+          : url;
 
         const response = await fetch(fetchUrl, {
           headers: {
-            "Cache-Control": force ? "no-cache" : "default",
+            "Cache-Control": force
+              ? "no-cache, no-store, must-revalidate"
+              : "default",
             Pragma: force ? "no-cache" : "default",
+            Expires: force ? "0" : "default",
           },
+          // Force bypass cache for fresh data
+          cache: force ? "no-cache" : "default",
         });
 
         if (!response.ok) {

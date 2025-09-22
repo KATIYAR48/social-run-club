@@ -31,7 +31,6 @@ const UserSchema = new mongoose.Schema({
   gender: String,
   emergencyContact: String,
   instagramUsername: String,
-  joinCrew: Boolean,
   role: String,
   strava: Object,
   createdAt: Date,

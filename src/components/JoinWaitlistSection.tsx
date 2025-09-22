@@ -92,9 +92,9 @@ export default function JoinWaitlistSection() {
 
     if (!user) {
         return (
-            <main className="mt-24 container max-w-8xl mx-5 md:mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
+            <main className="mt-24 md:container max-w-8xl mx-5 md:mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
                 {/* Banner background */}
-                <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+                <div className="absolute inset-0 w-full h-full z-0 overflow-hidden  rounded-lg">
                     <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
                     <div className="absolute inset-0 bg-black/20 filter  contrast-125" />
                 </div>
@@ -145,7 +145,7 @@ export default function JoinWaitlistSection() {
 
                                 <span className="relative z-10">Join Waitlist</span>
                             </motion.button> : <motion.button
-                                className="relative px-12 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
+                                className="relative px-6 cursor-pointer bg-white/80 text-black shadow-inner backdrop-blur-xs font-bold py-4 text-lg overflow-hidden"
                                 onClick={() => router.push("/auth?redirect=/")}
                                 initial={{ boxShadow: '0 0 0 0 #fff' }}
                                 animate={{
@@ -173,7 +173,7 @@ export default function JoinWaitlistSection() {
                                         transition={{ duration: 2, repeat: Infinity, repeatType: 'loop' }}
                                     />
                                 </span>
-                                <span className="uppercase font-normal relative z-10">Login to Join <strong className="font-bold">Waitlist</strong></span>
+                                <span className="font-normal relative z-10">Sign-in to <strong className="font-bold">Preorder</strong></span>
                             </motion.button>}
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default function JoinWaitlistSection() {
     }
 
     return (
-        <main className="mt-12 md:mt-24 relative flex justify-center items-center min-h-[500px] md:min-h-[500px] md:container mx-5 md:mx-auto px-2 md:px-4 py-6 md:py-8">
+        <main className="mt-12 md:mt-24 relative flex justify-center items-center min-h-[500px] md:min-h-[500px] lg:mx-auto lg:container mx-5 px-2 md:px-4 py-6 md:py-8">
             {/* Banner background */}
             <div className="absolute rounded-xl inset-0 w-full h-full z-0 overflow-hidden">
                 <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />

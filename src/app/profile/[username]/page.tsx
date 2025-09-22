@@ -33,7 +33,6 @@ interface PublicProfile {
     age?: number;
     gender?: string;
     instagramUsername?: string;
-    joinCrew?: boolean;
     email?: string;
     phone?: string;
     emergencyContact?: string;

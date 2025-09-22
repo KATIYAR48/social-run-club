@@ -61,6 +61,21 @@ export const pwaUtils = {
       });
       console.log("Events cache cleared");
     }
+    // Also clear browser cache for events endpoints
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      for (const cacheName of cacheNames) {
+        const cache = await caches.open(cacheName);
+        const keys = await cache.keys();
+        const eventKeys = keys.filter(
+          (request) =>
+            request.url.includes("/api/events") ||
+            request.url.includes("/api/user/events") ||
+            request.url.includes("/api/feed")
+        );
+        await Promise.all(eventKeys.map((key) => cache.delete(key)));
+      }
+    }
   },
 
   // Invalidate cache for specific URL pattern

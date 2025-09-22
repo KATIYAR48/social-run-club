@@ -50,7 +50,6 @@ export interface IUser extends Document {
   gender?: "male" | "female" | "other";
   emergencyContact?: string;
   instagramUsername?: string;
-  joinCrew?: boolean;
   role: "user" | "admin" | "super-admin";
   strava?: {
     athleteId?: string;
@@ -98,10 +97,6 @@ const UserSchema: Schema = new Schema({
   },
   emergencyContact: { type: String },
   instagramUsername: { type: String, sparse: true, unique: true, index: true },
-  joinCrew: {
-    type: Boolean,
-    default: false,
-  },
   role: {
     type: String,
     enum: ["user", "admin", "super-admin"],

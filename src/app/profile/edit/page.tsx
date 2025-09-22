@@ -22,7 +22,6 @@ function EditProfilePageContent() {
         gender: '',
         emergencyContact: '',
         instagramUsername: '',
-        joinCrew: false,
         currentPassword: '',
         newPassword: '',
     });
@@ -153,7 +152,6 @@ function EditProfilePageContent() {
                 gender: user.gender || '',
                 emergencyContact: user.emergencyContact || '',
                 instagramUsername: user.instagramUsername || '',
-                joinCrew: user.joinCrew || false,
                 currentPassword: '',
                 newPassword: '',
             });
@@ -317,7 +315,6 @@ function EditProfilePageContent() {
                 gender: formData.gender as 'male' | 'female' | 'other' | undefined,
                 emergencyContact: formData.emergencyContact,
                 instagramUsername: formData.instagramUsername,
-                joinCrew: formData.joinCrew,
                 newPassword: changePassword ? formData.newPassword : undefined,
             };
 
@@ -566,21 +563,6 @@ function EditProfilePageContent() {
                             </div>
                         </div>
 
-                        <div className="mb-6">
-                            <div className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    id="joinCrew"
-                                    name="joinCrew"
-                                    checked={formData.joinCrew}
-                                    onChange={handleChange}
-                                    className="mr-2"
-                                />
-                                <label htmlFor="joinCrew" className="font-medium">
-                                    I want to join the Cloka Crew
-                                </label>
-                            </div>
-                        </div>
 
                         <div className="border-t border-zinc-800 pt-6 mb-6">
                             <h2 className="text-xl font-bold mb-4">Password</h2>

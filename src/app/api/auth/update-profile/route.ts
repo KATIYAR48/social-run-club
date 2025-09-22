@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
       gender,
       emergencyContact,
       instagramUsername,
-      joinCrew,
       newPassword,
       currentPassword,
     } = body;
@@ -104,7 +103,6 @@ export async function POST(request: NextRequest) {
       instagramUsername !== undefined
         ? instagramUsername
         : user.instagramUsername;
-    user.joinCrew = joinCrew !== undefined ? joinCrew : user.joinCrew;
     user.updatedAt = new Date();
 
     // Update password if provided

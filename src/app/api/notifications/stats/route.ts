@@ -34,22 +34,7 @@ export async function GET(request: NextRequest) {
 
     const totalSubscribers = subscriberAggregation[0]?.totalSubscribers || 0;
 
-    // Get subscriber user IDs
-    const subscriberUserIds = await NotificationSubscription.find({
-      isActive: true,
-    }).distinct("userId");
-
-    // Get crew member subscribers
-    const crewSubscribers = await User.countDocuments({
-      _id: { $in: subscriberUserIds },
-      joinCrew: true,
-    });
-
-    // Get non-crew member subscribers
-    const nonCrewSubscribers = await User.countDocuments({
-      _id: { $in: subscriberUserIds },
-      $or: [{ joinCrew: false }, { joinCrew: { $exists: false } }],
-    });
+    // All subscribers are now treated equally (no crew distinction)
 
     // Get total active subscriptions (can be multiple per user)
     const totalSubscriptions = await NotificationSubscription.countDocuments({
@@ -60,8 +45,6 @@ export async function GET(request: NextRequest) {
       success: true,
       stats: {
         subscribers: totalSubscribers,
-        crewMembers: crewSubscribers,
-        nonCrewMembers: nonCrewSubscribers,
         totalSubscriptions: totalSubscriptions,
       },
     });

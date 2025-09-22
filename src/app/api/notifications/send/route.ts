@@ -61,20 +61,16 @@ export async function POST(request: NextRequest) {
 
     // Build query for target audience
     let userQuery = {};
-    if (targetAudience === "crew") {
-      userQuery = { joinCrew: true };
-    } else if (targetAudience === "non-crew") {
-      userQuery = {
-        $or: [{ joinCrew: false }, { joinCrew: { $exists: false } }],
-      };
-    } else if (Array.isArray(targetAudience)) {
+    if (Array.isArray(targetAudience)) {
       userQuery = { _id: { $in: targetAudience } };
     }
-    // For "all", we don't filter users
+    // For "all", "crew", and "non-crew", we don't filter users (crew distinction removed)
 
     // Get target users
     const targetUsers =
-      targetAudience === "all"
+      targetAudience === "all" ||
+      targetAudience === "crew" ||
+      targetAudience === "non-crew"
         ? await User.find({})
         : await User.find(userQuery);
 

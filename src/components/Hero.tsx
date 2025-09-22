@@ -29,36 +29,33 @@ const Hero = () => {
 
     return (
         <section className="text-white">
-
-            <div className="luxury-container">
+            <div className="md:container md:mx-auto mx-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-
-                        <div className="text-center mb-3">
+                        <div className="text-center flex-col justify-center my-3 mx-8 md:mx-0">
                             <Image
                                 src="/run-club.PNG"
                                 alt="CLOKA Text"
-                                width={500}
-                                height={150}
-                                className="h-auto invert -my-10 md:-mb-[210px] -mb-[150px]  md:-ml-5"
+                                width={400}
+                                height={120}
+                                className="invert"
                                 priority
                             />
                             <Image
                                 src="/beyondtheline.png"
                                 alt="Beyond the Line Text"
-                                width={400}
+                                width={300}
                                 height={120}
-                                className="h-auto invert md:-mt-15  md:-ml-5"
+                                className="invert mt-5"
                                 priority
                             />
                         </div>
-                        <p className="md:text-start text-center max-w-xl text-md mb-8 text-zinc-300 !leading-6">
-                            You’ve just found your crew. Your space to move, lift, sweat, and push past limits.
-                            You don’t need to be an athlete—just willing to start.
+                        <p className="md:text-start text-center max-w-xl text-md mt-4 mb-8 text-zinc-300 !leading-6">
+                            You’ve just found your crew. Your space to move, lift, sweat & push past limits.
                             This community meets you where you are and moves with you, every step and every rep.
                             &mdash;Cloka Sees You.
                         </p>
@@ -66,16 +63,16 @@ const Hero = () => {
                         <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
                             <Button
                                 href="/auth?mode=signup"
-                                className="bg-white !text-black !font-bold text-md border border-white inline-block text-center"
+                                className="rounded-sm bg-white !text-black !font-bold text-md border border-white inline-block text-center"
                             >
                                 JOIN TODAY
                             </Button>
-                            <div className="luxury-text text-md text-zinc-300 md:text-start text-center">
+                            <div className="luxury-text text-md text-zinc-400 md:text-start text-center">
                                 {isLoading ? (
-                                    <span className="text-white font-bold">1500+</span>
+                                    <span className="font-bold">1500+</span>
                                 ) : (
                                     <motion.span
-                                        className="text-white text-xl font-sans font-bold"
+                                        className="text-white text-md font-sans font-bold"
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         transition={{ duration: 0.5 }}
@@ -83,7 +80,7 @@ const Hero = () => {
                                         {registrationCount}+
                                     </motion.span>
                                 )} runners already locked in,<div className='text-lg'>
-                                    what about you?
+                                    what about <span className='text-white font-bold'>you</span>?
                                 </div>
                             </div>
                         </div>

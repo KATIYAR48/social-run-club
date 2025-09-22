@@ -62,8 +62,8 @@ const FAQ = () => {
                     <h2 className="text-3xl md:text-3xl font-bold mb-6 tracking-wider">
                         FAQs
                     </h2>
-                    <p className="luxury-text text-lg text-zinc-300 max-w-2xl mx-auto">
-                        (aka everything you wanted to know but didn&apos;t know who to ask)
+                    <p className="text-sm text-zinc-300 md:max-w-xl max-w-xs mx-auto">
+                        aka everything you wanted to know but didn&apos;t know who to ask
                     </p>
                 </motion.div>
 
@@ -81,7 +81,7 @@ const FAQ = () => {
                                 className="cursor-pointer w-full text-left p-3 backdrop-blur-2xl transition-all duration-300 border-t border-zinc-800 hover:border-zinc-700"
                             >
                                 <div className="flex justify-between items-center">
-                                    <h3 className="luxury-text text-md pr-8">
+                                    <h3 className="text-sm pr-8">
                                         {index + 1}. {item.question}
                                     </h3>
                                     <div className="flex-shrink-0">
@@ -113,7 +113,7 @@ const FAQ = () => {
                                 className="overflow-hidden"
                             >
                                 <div className="p-6 bg-zinc-950 border-t border-zinc-800">
-                                    <p className="text-md text-zinc-300 leading-relaxed">
+                                    <p className="text-sm text-zinc-300 leading-relaxed">
                                         {item.answer}
                                     </p>
                                 </div>

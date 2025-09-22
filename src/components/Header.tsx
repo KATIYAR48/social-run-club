@@ -38,8 +38,8 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-black/50 text-white py-4 sticky top-0 z-50 backdrop-blur-md">
-            <div className="luxury-container flex flex-col md:flex-row items-center">
+        <header className="bg-black/50 text-white p-4 sticky top-0 z-50 backdrop-blur-md">
+            <div className="md:container md:mx-auto flex flex-col md:flex-row items-center">
                 {/* Left Side with Text-Mark Logo */}
                 <div className="w-full md:w-1/3 flex items-center">
                     <button
@@ -81,7 +81,7 @@ const Header = () => {
                 </div>
 
                 {/* Desktop Navigation - Right Side */}
-                <nav className="hidden md:flex w-full md:w-1/3 justify-end text-lg space-x-8 items-center">
+                <nav className="hidden md:flex w-full md:w-1/3 justify-end text-sm space-x-8 items-center">
                     <Link href="/events" className=" hover:text-accent transition-colors hover:underline">
                         Events
                     </Link>
@@ -165,7 +165,7 @@ const Header = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="md:hidden bg-black"
+                    className="md:hidden mt-3"
                 >
                     <div className="luxury-container py-4 flex flex-col space-y-4">
                         <Link

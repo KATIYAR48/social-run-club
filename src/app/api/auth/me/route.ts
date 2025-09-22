@@ -52,7 +52,6 @@ export async function GET(request: NextRequest) {
         gender: user.gender,
         emergencyContact: user.emergencyContact,
         instagramUsername: user.instagramUsername,
-        joinCrew: user.joinCrew,
       },
     });
   } catch (error) {

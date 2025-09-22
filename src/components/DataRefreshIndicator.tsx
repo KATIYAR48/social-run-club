@@ -38,13 +38,13 @@ export default function DataRefreshIndicator({
         if (!lastUpdated) return true;
         const now = new Date();
         const diffInMinutes = (now.getTime() - lastUpdated.getTime()) / (1000 * 60);
-        return diffInMinutes > 5; // Consider data stale after 5 minutes
+        return diffInMinutes > 2; // Consider data stale after 2 minutes (more aggressive)
     };
 
     return (
         <div className={`flex items-center gap-2 text-sm text-gray-600 ${className}`}>
             {lastUpdated && (
-                <span className={`${isDataStale() ? 'text-orange-600' : 'text-green-600'}`}>
+                <span className={`${isDataStale() ? 'text-zinc-500' : 'text-zinc-600'}`}>
                     Last updated: {formatTimeAgo(lastUpdated)}
                 </span>
             )}
@@ -64,11 +64,7 @@ export default function DataRefreshIndicator({
                 />
             </button>
 
-            {isDataStale() && lastUpdated && (
-                <span className="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded">
-                    Data may be outdated
-                </span>
-            )}
+
         </div>
     );
 }

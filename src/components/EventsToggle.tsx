@@ -19,7 +19,7 @@ interface EventsToggleProps {
 }
 
 const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
-    const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+    const [showUpcomingOnly, setShowUpcomingOnly] = useState(true);
     const [events, setEvents] = useState<ApiEventProps[]>(upcomingEvents);
 
     // Sync events state with props changes
@@ -35,7 +35,8 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
 
     return (
         <>
-            <div className="flex md:justify-end justify-center mb-8">
+            <div className="flex md:justify-end justify-center items-center mb-8 gap-4">
+                <p className="text-sm text-zinc-400">Show</p>
                 <div className="inline-flex items-center bg-zinc-900 rounded-lg p-1">
                     <Button
                         onClick={() => toggleEvents(false)}
@@ -46,7 +47,7 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
                             : ''
                             }`}
                     >
-                        All Events
+                        All
                     </Button>
                     <Button
                         onClick={() => toggleEvents(true)}
@@ -57,13 +58,13 @@ const EventsToggle = ({ allEvents, upcomingEvents }: EventsToggleProps) => {
                             : 'bg-transparent text-zinc-400 hover:text-white'
                             }`}
                     >
-                        Upcoming Only
+                        Upcoming
                     </Button>
                 </div>
             </div>
 
             {events.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {events.map((event) => (
                         <EventCard
                             key={event._id}
