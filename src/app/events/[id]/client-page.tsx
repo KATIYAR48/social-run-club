@@ -184,7 +184,7 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                         </div>
                     )}
 
-                    <div className="bg-black text-white luxury-border">
+                    <div className="bg-black text-white border border-zinc-700 rounded-xl">
                         {/* Event Header */}
                         <div className={`relative w-full ${event.bannerImageURL ? 'h-[32rem]' : 'h-96'}`}>
                             {event.bannerImageURL ? (
@@ -200,7 +200,7 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                                     muted
                                     loop
                                     playsInline
-                                    className="absolute inset-0 w-full h-full object-cover"
+                                    className="absolute rounded-t-xl inset-0 w-full h-full object-cover"
                                 />
                             )}
                             <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
@@ -216,16 +216,16 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                         <div className="p-6 md:p-8">
                             <div className="flex flex-col md:flex-row gap-8">
                                 <div className="md:w-2/3">
-                                    <h2 className="text-xl font-bold mb-4">About This Event</h2>
-                                    <p className="text-zinc-300 whitespace-pre-line">{event.description}</p>
+                                    <h2 className="text-lg font-bold mb-4">About This Event</h2>
+                                    <p className="text-zinc-400 text-sm whitespace-pre-line">{event.description}</p>
 
                                     <div className="mt-8">
-                                        <h2 className="text-xl font-bold mb-4">Location</h2>
+                                        <h2 className="text-lg font-bold mb-4">Where?</h2>
                                         {isApproved === true ? (
                                             <>
                                                 <p className="text-zinc-300">{event.location}</p>
                                                 {isLoggedIn && event.exactLocation && (
-                                                    <div className="mt-4 p-4 bg-zinc-900 luxury-border">
+                                                    <div className="mt-4 p-4  bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg">
                                                         <p className="text-zinc-300 mb-2">Exact Location:</p>
                                                         <p className="text-zinc-300">{event.exactLocation}</p>
                                                         {event.exactLocation.includes("maps.google.com") ||
@@ -245,14 +245,14 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
 
                                                 {/* Display post-approval message if available */}
                                                 {event.postApprovalMessage && (
-                                                    <div className="mt-4 p-4 bg-zinc-900 luxury-border">
+                                                    <div className="mt-4 p-4  bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg">
                                                         <h3 className="text-lg font-semibold mb-2">Important Information</h3>
                                                         <p className="text-zinc-300 whitespace-pre-line">{event.postApprovalMessage}</p>
                                                     </div>
                                                 )}
                                             </>
                                         ) : (
-                                            <div className="p-4 bg-zinc-900 luxury-border">
+                                            <div className="p-4  bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg">
                                                 <p className="text-zinc-300 whitespace-pre-line">
                                                     {isRegistered ? (
                                                         isApproved === false ? (
@@ -268,7 +268,7 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                                             </div>
                                         )}
                                         {!isLoggedIn && event.exactLocation && (
-                                            <div className="mt-4 p-4 bg-zinc-900 luxury-border">
+                                            <div className="mt-4 p-4  bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg">
                                                 <p className="text-zinc-300">
                                                     <Link href={`/auth?redirect=/events/${eventId}`} className="text-accent hover:underline">
                                                         Log in
@@ -280,8 +280,8 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                                 </div>
 
                                 <div className="md:w-1/3">
-                                    <div className="bg-zinc-900 luxury-border p-6">
-                                        <h2 className="text-xl font-bold mb-4">Registration</h2>
+                                    <div className=" bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg p-6">
+                                        <h2 className="text-lg font-bold mb-4">Registration</h2>
                                         {isPastEvent ? (
                                             <div className="p-3 bg-zinc-800 text-zinc-300 rounded-md">
                                                 This event has already taken place.
@@ -300,6 +300,10 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                                                         fieldType: event.additionalInfoField.fieldType,
                                                         options: event.additionalInfoField.options
                                                     } : undefined}
+                                                    onRegistrationChange={() => {
+                                                        refreshEvent();
+                                                        refreshUserEvents();
+                                                    }}
                                                 />
 
                                                 {/* Show payment button if approved and razorpayButtonId exists */}

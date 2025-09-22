@@ -18,6 +18,7 @@ interface EventRegistrationButtonProps {
         fieldType: 'text' | 'number' | 'select';
         options?: string[];
     };
+    onRegistrationChange?: () => void;
 }
 
 export default function EventRegistrationButton({
@@ -27,6 +28,7 @@ export default function EventRegistrationButton({
     isPastEvent = false,
     autoApprove = false,
     additionalInfoField,
+    onRegistrationChange,
 }: EventRegistrationButtonProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -81,7 +83,7 @@ export default function EventRegistrationButton({
                 setShowAdditionalInfoForm(false);
                 setAdditionalInfo('');
                 await pwaUtils.clearEventsCache();
-                router.refresh();
+                onRegistrationChange?.();
             } else {
                 setError(data.message || 'Failed to register for event');
             }
@@ -133,7 +135,7 @@ export default function EventRegistrationButton({
             if (response.ok) {
                 // Clear cache and refresh the page to show updated registration status
                 await pwaUtils.clearEventsCache();
-                router.refresh();
+                onRegistrationChange?.();
             } else {
                 setError(data.message || 'Failed to cancel registration');
             }
@@ -152,10 +154,10 @@ export default function EventRegistrationButton({
                     <button
                         onClick={() => handleRegister()}
                         disabled={isLoading}
-                        className={`w-full py-3 px-6 cursor-pointer transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                        className={`w-full rounded-md py-3 px-5 cursor-pointer font-bold transition-colors bg-white text-black hover:bg-zinc-200 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                             }`}
                     >
-                        {isLoading ? 'Registering...' : 'Register for Event'}
+                        {isLoading ? 'Registering...' : 'Click to Register'}
                     </button>
 
                     {/* Show auto-approval message if enabled */}
@@ -226,7 +228,7 @@ export default function EventRegistrationButton({
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className={`flex-1 cursor-pointer px-4 border border-white py-2 bg-black text-white hover:bg-white hover:text-black transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                        className={`flex-1 !font-bold cursor-pointer px-4 border border-white py-2 bg-black text-white hover:bg-white hover:text-black transition-colors ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
                                     >
                                         {isLoading ? 'Registering...' : 'Register'}
                                     </button>
@@ -244,15 +246,15 @@ export default function EventRegistrationButton({
         <div>
             <div className="mb-4">
                 {isApproved === true ? (
-                    <div className="p-3 bg-green-900/30 border border-green-800 text-green-300 ">
+                    <div className="p-3 bg-green-900/30 border  rounded-lg border-green-800 text-green-300 ">
                         Your registration has been approved!
                     </div>
                 ) : isApproved === false ? (
-                    <div className="p-3 bg-red-900/30 border border-red-800 text-red-300 ">
+                    <div className="p-3 bg-red-900/30 border  rounded-lg border-red-800 text-red-300 ">
                         Your registration has been declined.
                     </div>
                 ) : (
-                    <div className="p-3 bg-yellow-900/30 border border-yellow-800 text-yellow-300 ">
+                    <div className="p-3 bg-yellow-900/30 border rounded-lg border-yellow-800 text-yellow-300 ">
                         Your registration is pending approval.
                     </div>
                 )}
@@ -261,7 +263,7 @@ export default function EventRegistrationButton({
             <Button
                 onClick={handleCancel}
                 disabled={isLoading}
-                className={`w-full py-3 px-6 transition-colors bg-red-900 hover:bg-red-800 text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                className={`w-full py-3 px-6 rounded-lg transition-colors bg-red-900 hover:bg-red-800 text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
                     }`}
             >
                 {isLoading ? 'Cancelling...' : 'Cancel Registration'}
