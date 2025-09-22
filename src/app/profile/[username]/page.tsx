@@ -205,7 +205,7 @@ export default function PublicProfilePage() {
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
-            month: 'long',
+            month: 'short',
             day: 'numeric'
         });
     };
@@ -255,22 +255,22 @@ export default function PublicProfilePage() {
         <section>
             <div className='max-w-7xl mx-auto'>
                 <Header />
-                <div className="min-h-screen bg-black text-white">
-                    <div className="container mx-auto px-4 py-8">
+                <div className="text-white">
+                    <div className="container mx-auto md:px-4 py-8">
                         {/* Profile Header */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="border md:p-0 pb-3 bg-zinc-900 border-zinc-800 mb-8 rounded-[10px]"
+                            className="md:p-0 pb-3 md:border md:border-zinc-800 md:bg-gradient-to-br from-black to-zinc-700 bg-zinc-900/50 px-2 mb-8 rounded-md"
                         >
                             <div className="flex flex-col lg:flex-row items-center lg:items-center gap-6">
                                 <CometCard>
                                     <div
-                                        className={`cursor-pointer flex flex-col items-center rounded-[10px] border-0 p-2 md:p-4`}
+                                        className={`cursor-pointer flex flex-col items-center rounded-md border-0 md:p-4`}
                                     >
                                         <ThreeJsRunner gender={profile.gender?.toLowerCase() === 'female' ? 'female' : 'male'} username={username} chosenThemeColor={"#aaaaaa"}
-                                            className={'h-80 w-80 filter contrast-120 brightness-70'} />
+                                            className={'h-80 w-80 filter contrast-120'} />
                                         <div className="flex w-full flex-shrink-0 items-center justify-between p-4 font-mono text-white">
                                             <div className="text-xs">{profile.role == 'super-admin' ? 'Founder' : profile.role}</div>
                                             <div className="text-xs text-gray-300 opacity-50">#{profile._id.slice(-4)}</div>
@@ -279,40 +279,41 @@ export default function PublicProfilePage() {
                                 </CometCard>
 
                                 {/* Profile Info */}
-                                <div className="flex-1 mt-8 mb-6 md:ml-10 pl-9 pb-3 pr-0 md:pl-3 md:pr-10">
-                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                        <div>
+                                <div className="flex-col w-full justify-center items-center mt-4 mb-6 md:ml-3 md:text-left text-center">
+                                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                                        <div className='flex-col w-full justify-center items-center'>
                                             <h1 className="text-3xl font-bold">{profile.name}</h1>
                                             <p className="text-zinc-400 text-lg">@{profile.username}</p>
-                                            {profile.role === 'admin' && (
+                                            {profile.role === 'admin' || profile.role === 'super-admin' && (
                                                 <span className="inline-block mt-2 px-3 py-1 bg-white text-black text-xs font-semibold rounded">
-                                                    Admin
+                                                    {profile.role}
                                                 </span>
                                             )}
                                         </div>
 
                                         {/* Action Buttons */}
-                                        <div className="flex flex-wrap gap-3">
+                                        <div className="flex w-full justify-center items-center gap-3">
                                             <Button
+                                                size='small'
                                                 onClick={handleShare}
-                                                className="flex items-center hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] shadow-white gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700 hover:border-none"
+                                                className="flex items-center rounded-md hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] shadow-white gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700 hover:border-none"
                                             >
                                                 <Share2 size={16} />
                                                 Share
                                             </Button>
 
-                                            <Button
+                                            <Button size='small'
                                                 onClick={() => copyToClipboard(`${window.location.origin}/profile/${username}`)}
-                                                className="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700"
+                                                className="flex items-center gap-2 rounded-md px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700"
                                             >
                                                 <Copy size={16} />
                                                 {copied ? 'Copied!' : 'Copy Link'}
                                             </Button>
 
                                             {profile.isOwnProfile && (
-                                                <Button
+                                                <Button size='small'
                                                     onClick={() => router.push('/profile/edit')}
-                                                    className="flex items-center gap-2 px-4 py-2 bg-zinc-600 hover:bg-zinc-700"
+                                                    className="flex items-center rounded-md gap-2 px-4 py-2 bg-zinc-600 hover:bg-zinc-700"
                                                 >
                                                     Edit Profile
                                                 </Button>
@@ -326,7 +327,7 @@ export default function PublicProfilePage() {
                                     </div>
 
                                     {/* Additional Info */}
-                                    <div className="mt-4 flex flex-wrap gap-4 text-sm text-zinc-400">
+                                    <div className="mt-4 mx-5 md:mx-0 flex flex-wrap gap-4 text-sm text-zinc-400 text-center md:text-start">
                                         <FollowStats
                                             userId={profile._id}
                                             username={profile.username}
@@ -418,13 +419,11 @@ export default function PublicProfilePage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
-                            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+                            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 md:mx-0 mx-3"
                         >
-                            <div className="border border-zinc-800 p-6">
+                            <div className="rounded-md bg-gradient-to-tl from-black to-zinc-700  p-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <Trophy size={24} />
-                                    </div>
+                                    <Trophy size={40} className='mr-3' />
                                     <div>
                                         <p className="text-2xl font-bold">{profile.stats.totalEvents}</p>
                                         <p className="text-zinc-400">Total Events</p>
@@ -432,23 +431,10 @@ export default function PublicProfilePage() {
                                 </div>
                             </div>
 
-                            <div className="border border-zinc-800 p-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <Calendar size={24} />
-                                    </div>
-                                    <div>
-                                        <p className="text-2xl font-bold">{profile.stats.upcomingEvents}</p>
-                                        <p className="text-zinc-400">Upcoming Events</p>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="border border-zinc-800 p-6">
+                            <div className="rounded-md bg-gradient-to-tl from-black to-zinc-700 p-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-zinc-800 p-3">
-                                        <CheckCircle size={24} />
-                                    </div>
+                                    <CheckCircle size={40} className='mr-3' />
                                     <div>
                                         <p className="text-2xl font-bold">{profile.stats.completedEvents}</p>
                                         <p className="text-zinc-400">Completed Events</p>
@@ -476,7 +462,7 @@ export default function PublicProfilePage() {
                                     color: white !important;
                                 }
                             `}</style>
-                                <Card className="border border-zinc-800 p-6" style={{ color: tremorTheme.colors.content }}>
+                                <Card className="border rounded-lg border-zinc-800 p-6" style={{ color: tremorTheme.colors.content }}>
                                     <Title className="text-white mb-4 text-lg font-bold">Event Participation Timeline</Title>
                                     <div className="text-white text-sm mb-2">
                                         {profile.isOwnProfile
@@ -541,7 +527,7 @@ export default function PublicProfilePage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="mt-10"
+                            className="mt-10 md:mx-0 mx-3"
                         >
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                                 <h2 className="text-2xl font-bold">Events</h2>
@@ -568,11 +554,11 @@ export default function PublicProfilePage() {
                                     <p className="text-zinc-400">No events to display</p>
                                 </div>
                             ) : (
-                                <div className="space-y-4 overflow-y-auto max-h-[500px]">
+                                <div className="space-y-4 overflow-y-auto max-h-[500px] grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {displayedEvents.map((userEvent) => {
                                         const isUpcoming = new Date(userEvent.event.date) >= new Date();
                                         return (
-                                            <div key={userEvent._id} className="rounded-md hover:invert-100 filter bg-black border border-zinc-700 p-6 transition-all duration-300">
+                                            <div key={userEvent._id} className="rounded-md hover:invert-100 filter bg-gradient-to-tl from-black to-zinc-700 p-6 transition-all duration-300">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
@@ -580,7 +566,7 @@ export default function PublicProfilePage() {
                                                         </Link>
 
 
-                                                        <div className="flex flex-wrap text-sm text-zinc-500">
+                                                        <div className="flex flex-wrap text-sm text-zinc-500 gap-x-2">
                                                             <div className="flex items-center gap-1">
                                                                 <Calendar size={14} />
                                                                 {formatDate(userEvent.event.date)} at {formatTime(userEvent.event.date)}
@@ -597,7 +583,7 @@ export default function PublicProfilePage() {
                                                     </div>
 
                                                     <div className="flex flex-col items-end gap-2">
-                                                        <div className={`px-3 py-1 rounded-full text-sm font-semibold border ${isUpcoming
+                                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold border ${isUpcoming
                                                             ? 'border-blue-900 text-white'
                                                             : 'border-green-900 text-white'
                                                             }`}>
@@ -629,13 +615,12 @@ export default function PublicProfilePage() {
                                     <h3 className="text-xl font-semibold mb-4">Pending Approval</h3>
                                     <div className="space-y-4">
                                         {profile.events.pending.map((userEvent) => (
-                                            <div key={userEvent._id} className="bg-zinc-900 border border-zinc-600 p-6">
+                                            <div key={userEvent._id} className="bg-gradient-to-tl from-black to-zinc-700 p-6 rounded-lg">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
                                                             <h4 className="text-lg hover:underline font-semibold mb-2">{userEvent.event.title}</h4>
                                                         </Link>
-                                                        <p className="text-zinc-400 mb-3">{userEvent.event.description}</p>
 
                                                         <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
                                                             <div className="flex items-center gap-1">
@@ -649,7 +634,7 @@ export default function PublicProfilePage() {
                                                         </div>
                                                     </div>
 
-                                                    <div className="px-3 py-1 rounded-full border border-zinc-600  text-xs font-semibold">
+                                                    <div className="px-3 py-1 rounded-full border border-zinc-600 max-w-fit text-xs font-semibold">
                                                         Pending Approval
                                                     </div>
                                                 </div>
@@ -666,27 +651,27 @@ export default function PublicProfilePage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
-                                className="mt-12 bg-zinc-900/80 border border-zinc-800 p-6"
+                                className="mt-12 bg-zinc-900/80 border border-zinc-800 p-6 rounded-lg md:mx-0 mx-3"
                             >
                                 <h2 className="text-xl font-bold mb-4">Account Settings</h2>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <Button
                                         variant="primary"
-                                        className="w-full py-2 px-4 bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700"
+                                        className="w-full rounded-md py-2 px-4 bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700"
                                         onClick={() => router.push('/profile/edit')}
                                     >
                                         Edit Profile
                                     </Button>
                                     <Button
                                         variant="primary"
-                                        className="w-full py-2 px-4 bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700"
+                                        className="w-full rounded-md py-2 px-4 bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700"
                                         onClick={() => router.push('/profile/change-password')}
                                     >
                                         Change Password
                                     </Button>
                                     <Button
                                         // variant="danger"
-                                        className="w-full py-2 px-4 hover:bg-red-800 transition-colors border border-red-900"
+                                        className="w-full rounded-md py-2 px-4 hover:bg-red-800 transition-colors border border-red-900"
                                         onClick={handleLogout}
                                     >
                                         Logout

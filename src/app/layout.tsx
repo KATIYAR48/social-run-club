@@ -8,6 +8,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import PageTransition from "@/components/PageTransition";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import PWADebugPanel from "@/components/PWADebugPanel";
+import { ReactLenis } from "lenis/react";
 
 
 export const metadata: Metadata = {
@@ -95,18 +96,20 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
       </head>
       <body className="antialiased">
-        <ErrorBoundary>
-          <LoadingProvider>
-            <AuthProvider>
-              <GoogleAnalytics />
-              <PageTransition>
-                {children}
-              </PageTransition>
-              <PWAInstallPrompt />
-              <PWADebugPanel />
-            </AuthProvider>
-          </LoadingProvider>
-        </ErrorBoundary>
+        <ReactLenis root options={{ lerp: 0.1, duration: 1.5, orientation: 'vertical', gestureOrientation: 'vertical', smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 2 }}>
+          <ErrorBoundary>
+            <LoadingProvider>
+              <AuthProvider>
+                <GoogleAnalytics />
+                <PageTransition>
+                  {children}
+                </PageTransition>
+                <PWAInstallPrompt />
+                <PWADebugPanel />
+              </AuthProvider>
+            </LoadingProvider>
+          </ErrorBoundary>
+        </ReactLenis>
         <Script src="/register-sw.js" strategy="lazyOnload" />
       </body>
     </html>

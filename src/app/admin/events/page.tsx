@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import Button from '@/components/Button';
 import Loader from '@/components/ui/PixelLoader';
+import { PenIcon, TrashIcon } from 'lucide-react';
 
 interface Event {
     _id: string;
@@ -385,12 +386,12 @@ export default function AdminEventsPage() {
             >
                 <div className="bg-white dark:bg-black rounded-lg shadow-md mb-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl md:text-5xl font-bold text-black dark:text-white">Manage Events</h2>
+                        <h2 className="text-xl md:text-3xl font-bold text-black dark:text-white">Manage Events</h2>
                         <Button
                             onClick={() => openEventForm(false)}
-                            className="px-4 py-2 bg-black text-white text-right underline rounded-md hover:bg-zinc-900 transition-colors"
+                            className="px-4 py-2 bg-zinc-800 text-white text-right rounded-md hover:bg-zinc-900 transition-colors"
                         >
-                            Add New Event
+                            Create a new event +
                         </Button>
                     </div>
 
@@ -417,41 +418,41 @@ export default function AdminEventsPage() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {events.map((event) => (
-                                <div key={event._id} className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md border border-zinc-200 dark:border-zinc-800">
-                                    <div className="p-4">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <h3 className="text-xl font-bold text-black dark:text-white">{event.title}</h3>
-                                            {event.autoApprove && (
-                                                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-zinc-800 dark:bg-zinc-900 dark:text-green-200">
-                                                    OpenForAll
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p className="text-black dark:text-white mb-2">
-                                            <span className="font-semibold">Date:</span> {formatDate(event.date)}
-                                        </p>
-                                        <p className="text-black dark:text-white mb-2">
-                                            <span className="font-semibold">Location:</span> {event.location}
-                                        </p>
-                                        <p className="text-black dark:text-white mb-4 line-clamp-3">
-                                            {event.description}
-                                        </p>
-                                        <div className="flex justify-between">
-                                            <Button
-                                                onClick={() => openEventForm(true, event)}
-                                                className="px-3 py-1 bg-black text-white border border-black rounded hover:bg-zinc-900 transition-colors"
-                                            >
-                                                Edit
-                                            </Button>
-                                            <Button
-                                                onClick={() => openConfirmDialog(event._id, event.title, 'delete')}
-                                                disabled={isDeleting === event._id}
-                                                className="border border-zinc-700 bg-zinc-800 text-white px-3 py-1 rounded hover:bg-black hover:text-white hover:border-zinc-700 transition-colors"
+                                <div key={event._id} className="bg-gradient-to-bl p-5 from-black to-zinc-800 rounded-lg overflow-hidden shadow-md border border-zinc-400 dark:border-zinc-800">
+                                    <div className="flex items-start justify-between mb-2">
+                                        <h3 className="text-xl font-bold text-black dark:text-white">{event.title}</h3>
+                                        {event.autoApprove && (
+                                            <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-zinc-800 dark:bg-zinc-900 dark:text-green-200">
+                                                OpenForAll
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-black dark:text-white mb-2">
+                                        <span className="font-semibold">Date:</span> {formatDate(event.date)}
+                                    </p>
+                                    <p className="text-black dark:text-white mb-2">
+                                        <span className="font-semibold">Location:</span> {event.location}
+                                    </p>
+                                    <p className="text-black dark:text-white mb-4 line-clamp-3">
+                                        {event.description}
+                                    </p>
+                                    <div className="flex justify-between">
+                                        <Button
+                                            onClick={() => openEventForm(true, event)}
+                                            className="px-3 py-1 flex items-center bg-black text-white border border-black rounded hover:bg-zinc-900 transition-colors"
+                                        >
+                                            <PenIcon className="h-4 w-4 mr-2" />
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            onClick={() => openConfirmDialog(event._id, event.title, 'delete')}
+                                            disabled={isDeleting === event._id}
+                                            className="flex items-center border border-zinc-700 bg-zinc-800 text-white px-3 py-1 rounded hover:bg-red-900 hover:text-white hover:border-zinc-700 transition-colors"
+                                        >
+                                            <TrashIcon className="h-4 w-4 mr-2" />
 
-                                            >
-                                                {isDeleting === confirmDialog.eventId ? 'Deleting...' : 'Delete'}
-                                            </Button>
-                                        </div>
+                                            {isDeleting === confirmDialog.eventId ? 'Deleting...' : 'Delete'}
+                                        </Button>
                                     </div>
                                 </div>
                             ))}

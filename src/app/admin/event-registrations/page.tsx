@@ -674,7 +674,7 @@ export default function EventRegistrationsPage() {
     return (
         <div className="mb-5">
             <div className="flex flex-col md:flex-row justify-between items-start mb-6">
-                <h1 className="text-3xl md:text-5xl font-bold text-start md:text-left mb-4 md:mb-0">Registrations</h1>
+                <h1 className="text-xl md:text-3xl font-bold text-start md:text-left mb-4 md:mb-0">Registrations</h1>
                 <div className="flex space-x-2">
                     <Button
                         onClick={copyEmailsToClipboard}
@@ -700,15 +700,15 @@ export default function EventRegistrationsPage() {
                     <Button
                         onClick={() => setShowCustomMessage(!showCustomMessage)}
                         disabled={!selectedEvent || sendingApprovalEmails}
-                        className="flex text-sm items-center bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded"
+                        className="flex text-sm items-center bg-zinc-700 hover:bg-green-700 !text-white px-4 py-2 rounded"
                     >
                         {sendingApprovalEmails ? (
                             <Loader text={"Sending..."} />
                         ) : (
-                            <>
+                            <div className='flex items-center'>
                                 <Mail className="h-4 w-4 mr-2" />
                                 Send Approval mails
-                            </>
+                            </div>
                         )}
                     </Button>
                     <Button

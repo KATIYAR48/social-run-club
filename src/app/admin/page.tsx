@@ -26,15 +26,15 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="min-h-[80vh] flex flex-col items-start justify-center bg-black text-white">
+        <div className="min-h-[70vh] flex flex-col items-start justify-center bg-black text-white">
             <div className="mb-8">
                 <div className="flex items-start md:items-center gap-2">
                     <img src="/android-chrome-512x512.png" className='mb-3 w-24 h-24' alt="Admin Icon" width={500} height={500} />
                     <div className="ml-4 flex flex-col items-start justify-start gap-2">
-                        <h1 className="text-4xl md:text-6xl font-bold">
+                        <h1 className="text-3xl md:text-5xl font-bold">
                             Hello, {adminUser?.name || 'Admin'}
                         </h1>
-                        <div className="text-xl md:text-2xl font-normal">Here&apos;s what you can do as a <Link href='/' className='font-bold'>Cloka</Link> Admin</div>
+                        <div className="text-lg md:text-xl font-normal">Here&apos;s what you can do as a <Link href='/' className='font-bold'>Cloka</Link> Admin</div>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-8 w-full max-w-5xl">
@@ -43,11 +43,11 @@ export default function AdminDashboard() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                'block bg-zinc-900 rounded-lg shadow-md p-6 hover:bg-white hover:text-black border border-zinc-700 transition-all duration-300',
+                                'block bg-gradient-to-tl from-black to-zinc-700 rounded-lg shadow-md p-6 hover:invert filter transition-all duration-300',
                                 'text-start cursor-pointer'
                             )}
                         >
-                            <div className="text-xl font-semibold mb-2">{item.name}</div>
+                            <div className="text-lg font-semibold mb-2">{item.name}</div>
                             <div className="text-zinc-400 text-sm">{item.description}</div>
                         </Link>
                     ))}

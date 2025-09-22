@@ -107,7 +107,7 @@ export default function NotificationPrompt({
 
     return (
         <div className={cn(
-            "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2",
+            "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2 mx-3 md:mx-0 rounded-md",
             className
         )}>
             <div className="flex items-start w-full overflow-auto">
@@ -129,7 +129,7 @@ export default function NotificationPrompt({
                         <Button
                             onClick={handleSubscribe}
                             isLoading={isActionLoading || isLoading}
-                            className="border border-white text-sm px-3 py-1 rounded transition-colors capitalize"
+                            className="bg-white !text-black text-sm px-3 py-1 rounded transition-colors capitalize"
                         >
                             <div className='flex items-center gap-2 text-left'>{!(isActionLoading || isLoading) && <BellIcon className='h-5 w-5 mr-1' />}
                                 Enable Notifications</div>

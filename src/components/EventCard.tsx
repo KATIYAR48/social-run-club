@@ -43,7 +43,7 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="h-full bg-zinc-900 rounded-[10px] shadow filter hover:invert-100 transition-all duration-400 flex md:flex-row gap-5 text-white p-6"
+                className="h-full bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg shadow filter hover:invert-100 transition-all duration-400 flex md:flex-row gap-5 text-white p-6"
             >
                 {event.bannerImageURL ? (
                     <div className="h-[6rem] w-[6rem] flex-shrink-0 overflow-hidden rounded-md bg-zinc-800">

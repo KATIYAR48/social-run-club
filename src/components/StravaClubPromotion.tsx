@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 const StravaClubPromotion = () => {
     return (
-        <section className="rounded-lg border md:px-10 px-8 border-zinc-600 md:container md:mx-auto mx-5 text-white md:py-10">
+        <section className="rounded-lg border md:px-10 px-8 border-zinc-800 md:container md:mx-auto mx-5 text-white md:py-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
                 <div className="md:col-span-1 -mb-10 flex justify-center">
                     <ThreeJsRunner
