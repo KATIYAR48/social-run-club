@@ -5,7 +5,11 @@ export const useSmoothScroll = () => {
 
   const scrollTo = (
     target: string | number | HTMLElement,
-    options?: { offset?: number; duration?: number; easing?: any }
+    options?: {
+      offset?: number;
+      duration?: number;
+      easing?: (t: number) => number;
+    }
   ) => {
     if (lenis) {
       lenis.scrollTo(target, options);

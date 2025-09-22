@@ -8,6 +8,7 @@ import JoinWaitlistSection from '@/components/JoinWaitlistSection';
 import CityScapeSection from '@/components/CityScapeSection';
 import FAQ from '@/components/FAQ';
 import StravaClubPromotion from '@/components/StravaClubPromotion';
+// import { LifeAtClokaSection } from '@/components/LifeAtClokaSection';
 
 export default function Home() {
   // Website schema
@@ -32,6 +33,7 @@ export default function Home() {
       {/* <HomePageBanner /> */}
       <JoinWaitlistSection />
       <UpcomingEventsSection />
+      {/* <LifeAtClokaSection /> */}
       <StravaClubPromotion />
       <CityScapeSection />
       <FAQ />

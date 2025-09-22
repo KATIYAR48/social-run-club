@@ -124,15 +124,15 @@ export default function MyEventsPage() {
         <>
             <Header />
             <div className="min-h-screen bg-black text-white py-12 px-4">
-                <div className="max-w-4xl mx-auto">
+                <div className="md:container md:mx-auto mx-3">
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4"
+                        className="flex flex-col sm:flex-row sm:items-center md:justify-between justify-center md:text-end text-center mb-8 gap-4"
                     >
-                        <h1 className="text-3xl font-bold">My Events</h1>
-                        <div className="flex gap-3">
+                        <h1 className="text-2xl font-bold">My Events</h1>
+                        <div className="flex gap-3 text-sm justify-center md:justify-end">
                             <button
                                 onClick={handleRefresh}
                                 disabled={isEventsLoading}
@@ -164,7 +164,7 @@ export default function MyEventsPage() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="space-y-6"
+                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                         >
                             {events.map((event, index) => (
                                 <motion.div
@@ -172,24 +172,24 @@ export default function MyEventsPage() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3, delay: index * 0.1 }}
-                                    className="bg-black border border-zinc-800 p-6"
+                                    className="bg-gradient-to-br from-black to-zinc-700 border border-zinc-800 p-6 rounded-xl"
                                 >
-                                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                    <div className="flex justify-between items-center gap-4">
                                         <div>
-                                            <h2 className="text-xl font-bold">{event.title}</h2>
-                                            <p className="text-zinc-400 mt-1">{formatDate(event.date)}</p>
-                                            <p className="text-zinc-400">{event.location}</p>
+                                            <h2 className="text-lg font-bold">{event.title}</h2>
+                                            <p className="text-zinc-400 text-sm mt-1">{formatDate(event.date)}</p>
+                                            <p className="text-zinc-400 text-sm">{event.location}</p>
                                         </div>
-                                        <div className="flex flex-col items-start md:items-end">
-                                            <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-col items-end text-end">
+                                            <div className="flex flex-wrap justify-end items-center gap-2 text-end text-xs">
                                                 {getStatusBadge(event.approved)}
                                                 {getCheckInBadge(event.checkedIn, event.approved)}
                                             </div>
                                             <Link
                                                 href={`/events/${event._id}`}
-                                                className="mt-3 text-sm text-white hover:underline"
+                                                className="mt-3 underline text-sm text-white hover:underline"
                                             >
-                                                View Event Details
+                                                View Details
                                             </Link>
                                             {event.approved === true && !event.checkedIn && (
                                                 <p className="mt-2 text-sm text-zinc-400">
@@ -198,7 +198,6 @@ export default function MyEventsPage() {
                                             )}
                                         </div>
                                     </div>
-                                    <p className="mt-4 text-zinc-300">{event.description}</p>
                                 </motion.div>
                             ))}
                         </motion.div>

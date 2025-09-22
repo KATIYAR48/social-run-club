@@ -133,7 +133,7 @@ const FAQ = () => {
                     </p>
                     <a
                         href="/contact"
-                        className="luxury-button inline-block"
+                        className="luxury-button rounded-lg !font-bold inline-block"
                     >
                         Get in Touch
                     </a>
