@@ -11,6 +11,15 @@ const nextConfig = {
   // Enable experimental optimizeCss
   experimental: {
     optimizeCss: true,
+    // Disable turbopack for production builds to avoid runtime issues
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
   },
   // Configure static file handling
   async headers() {

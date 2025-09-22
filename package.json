@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:stable": "next dev",
     "build": "next build",
+    "build:clean": "rm -rf .next && next build",
     "start": "next start",
     "lint": "next lint",
     "download-images": "node scripts/download-placeholders.js",

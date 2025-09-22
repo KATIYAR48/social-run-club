@@ -68,7 +68,7 @@ export function useDataFetching<T>({
   // Initial fetch
   useEffect(() => {
     fetchData(forceRefresh);
-  }, [fetchData, forceRefresh, ...dependencies]);
+  }, [fetchData, forceRefresh, ...(dependencies || [])]);
 
   // Set up refresh interval
   useEffect(() => {
