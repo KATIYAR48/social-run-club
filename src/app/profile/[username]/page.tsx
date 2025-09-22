@@ -419,25 +419,14 @@ export default function PublicProfilePage() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
-                            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 md:mx-0 mx-3"
+                            className="grid grid-cols-1 gap-6 mb-8 md:mx-0 mx-3"
                         >
-                            <div className="rounded-md bg-gradient-to-tl from-black to-zinc-700  p-6">
+                            <div className="rounded-md bg-gradient-to-tl from-black to-zinc-700 border border-zinc-700 p-3 px-5">
                                 <div className="flex items-center gap-3">
-                                    <Trophy size={40} className='mr-3' />
+                                    <Trophy size={36} className='mr-3' />
                                     <div>
-                                        <p className="text-2xl font-bold">{profile.stats.totalEvents}</p>
-                                        <p className="text-zinc-400">Total Events</p>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className="rounded-md bg-gradient-to-tl from-black to-zinc-700 p-6">
-                                <div className="flex items-center gap-3">
-                                    <CheckCircle size={40} className='mr-3' />
-                                    <div>
-                                        <p className="text-2xl font-bold">{profile.stats.completedEvents}</p>
-                                        <p className="text-zinc-400">Completed Events</p>
+                                        <p className="text-zinc-400">total events you&apos;ve participated</p>
+                                        <p className="text-xl font-bold">{profile.stats.totalEvents}</p>
                                     </div>
                                 </div>
                             </div>
@@ -463,8 +452,8 @@ export default function PublicProfilePage() {
                                 }
                             `}</style>
                                 <Card className="border rounded-lg border-zinc-800 p-6" style={{ color: tremorTheme.colors.content }}>
-                                    <Title className="text-white mb-4 text-lg font-bold">Event Participation Timeline</Title>
-                                    <div className="text-white text-sm mb-2">
+                                    <Title className="text-white mb-2 text-md font-bold">Track your events</Title>
+                                    <div className="text-white text-xs mb-2">
                                         {profile.isOwnProfile
                                             ? "Track your event participation over the last 6 months"
                                             : `${profile.name}'s event participation over the last 6 months`
@@ -476,7 +465,7 @@ export default function PublicProfilePage() {
                                             index="month"
                                             categories={["registered", "approved"]}
                                             colors={["#ffffff", "#10b981"]}
-                                            className="h-72 mt-4 text-white"
+                                            className="h-72 mt-4 text-white text-xs"
                                             showAnimation={true}
                                             valueFormatter={(value) => `${value}`}
                                             showLegend={false}
@@ -487,7 +476,7 @@ export default function PublicProfilePage() {
                                             connectNulls={true}
                                             curveType="monotone"
                                             customTooltip={(props) => (
-                                                <div className="bg-zinc-900 border border-zinc-800 p-2 shadow-lg">
+                                                <div className="bg-zinc-900 text-xs border border-zinc-800 p-2 shadow-lg">
                                                     <p className="text-white font-medium">{props.payload?.[0]?.payload.month}</p>
                                                     <div className="flex items-center gap-2 mt-1">
                                                         <span className="w-3 h-3 bg-white"></span>
@@ -513,7 +502,7 @@ export default function PublicProfilePage() {
                                         <Legend
                                             categories={["Registered", "Approved"]}
                                             colors={["#ffffff", "#10b981"]}
-                                            className="text-zinc-300"
+                                            className="text-zinc-300 text-xs"
                                         />
                                     </div>
                                 </Card>
@@ -530,7 +519,7 @@ export default function PublicProfilePage() {
                             className="mt-10 md:mx-0 mx-3"
                         >
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                                <h2 className="text-2xl font-bold">Events</h2>
+                                <h2 className="text-lg font-bold">Events</h2>
 
                                 <div className="flex items-center gap-4 mt-4 sm:mt-0">
                                     <div className="flex items-center gap-2">
@@ -558,15 +547,15 @@ export default function PublicProfilePage() {
                                     {displayedEvents.map((userEvent) => {
                                         const isUpcoming = new Date(userEvent.event.date) >= new Date();
                                         return (
-                                            <div key={userEvent._id} className="rounded-md hover:invert-100 filter bg-gradient-to-tl from-black to-zinc-700 p-6 transition-all duration-300">
+                                            <div key={userEvent._id} className="border border-zinc-700 rounded-md hover:invert-100 filter bg-gradient-to-bl from-black to-zinc-700 p-6 transition-all duration-300">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
-                                                            <h3 className="text-lg hover:underline font-semibold mb-2">{userEvent.event.title}</h3>
+                                                            <h3 className="text-md hover:underline font-semibold mb-2">{userEvent.event.title}</h3>
                                                         </Link>
 
 
-                                                        <div className="flex flex-wrap text-sm text-zinc-500 gap-x-2">
+                                                        <div className="flex flex-wrap text-xs text-zinc-500 gap-x-2">
                                                             <div className="flex items-center gap-1">
                                                                 <Calendar size={14} />
                                                                 {formatDate(userEvent.event.date)} at {formatTime(userEvent.event.date)}
@@ -612,17 +601,17 @@ export default function PublicProfilePage() {
                             {/* Pending Events (Only for profile owner) */}
                             {profile.isOwnProfile && profile.events.pending && profile.events.pending.length > 0 && (
                                 <div className="mt-8 pt-8 border-t border-zinc-800">
-                                    <h3 className="text-xl font-semibold mb-4">Pending Approval</h3>
+                                    <h3 className="text-lg font-semibold mb-4">Pending Approval</h3>
                                     <div className="space-y-4">
                                         {profile.events.pending.map((userEvent) => (
-                                            <div key={userEvent._id} className="bg-gradient-to-tl from-black to-zinc-700 p-6 rounded-lg">
+                                            <div key={userEvent._id} className="border border-zinc-700 bg-gradient-to-br from-black to-zinc-700 p-6 rounded-lg">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                                     <div className="flex-1">
                                                         <Link href={`/events/${userEvent.event._id}`}>
-                                                            <h4 className="text-lg hover:underline font-semibold mb-2">{userEvent.event.title}</h4>
+                                                            <h4 className="text-md hover:underline font-semibold mb-2">{userEvent.event.title}</h4>
                                                         </Link>
 
-                                                        <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
+                                                        <div className="flex flex-wrap gap-4 text-xs text-zinc-500">
                                                             <div className="flex items-center gap-1">
                                                                 <Calendar size={14} />
                                                                 {formatDate(userEvent.event.date)} at {formatTime(userEvent.event.date)}

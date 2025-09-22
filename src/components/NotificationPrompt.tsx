@@ -5,7 +5,7 @@ import { useNotifications } from '@/lib/hooks/useNotifications';
 import { useAuth } from '@/lib/auth-context';
 import Button from './Button';
 import { cn } from '@/lib/utils';
-import { BellIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { BellIcon, } from '@heroicons/react/24/solid';
 
 interface NotificationPromptProps {
     className?: string;
@@ -107,7 +107,7 @@ export default function NotificationPrompt({
 
     return (
         <div className={cn(
-            "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2 mx-3 md:mx-0 rounded-md",
+            "bg-black backdrop-blur-2xl border border-zinc-800 p-4 my-2 mx-3 md:mx-0 rounded-lg",
             className
         )}>
             <div className="flex items-start w-full overflow-auto">
@@ -116,7 +116,7 @@ export default function NotificationPrompt({
                         Stay Updated with CLOKA
                     </h3>
                     <p className="text-xs text-zinc-200 mb-3">
-                        Get notified about new runs, events, and important updates from CLOKA Run Club.
+                        Get notified about important updates from CLOKA.
                     </p>
 
                     {error && (
@@ -129,28 +129,22 @@ export default function NotificationPrompt({
                         <Button
                             onClick={handleSubscribe}
                             isLoading={isActionLoading || isLoading}
-                            className="bg-white !text-black text-sm px-3 py-1 rounded transition-colors capitalize"
+                            className="bg-white !text-black text-xs px-3 py-1 rounded transition-colors capitalize"
                         >
                             <div className='flex items-center gap-2 text-left'>{!(isActionLoading || isLoading) && <BellIcon className='h-5 w-5 mr-1' />}
                                 Enable Notifications</div>
                         </Button>
                         <Button
                             onClick={handleDismiss}
-                            className="text-zinc-400 hover:text-zinc-300 text-sm px-3 py-1 transition-colors"
+                            className="text-zinc-400 hover:text-zinc-300 text-xs px-3 py-1 transition-colors"
                         >
                             Don&apos;t Ask Again
-                        </Button>
-                        <Button
-                            onClick={handleNotNow}
-                            className="text-zinc-300 hover:text-zinc-200 text-sm px-3 py-1 transition-colors"
-                        >
-                            <XMarkIcon className='h-4 w-4' />
                         </Button>
                     </div>
                 </div>
 
                 <button
-                    onClick={handleDismiss}
+                    onClick={handleNotNow}
                     className="text-zinc-400 hover:text-zinc-300 ml-4"
                     aria-label="Dismiss"
                 >

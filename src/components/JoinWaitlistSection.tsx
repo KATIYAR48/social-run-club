@@ -95,7 +95,7 @@ export default function JoinWaitlistSection() {
             <main className="mt-24 md:container max-w-8xl mx-5 md:mx-auto relative flex justify-center items-center min-h-[400px] md:min-h-[500px] md:px-4 py-6 md:py-8">
                 {/* Banner background */}
                 <div className="absolute inset-0 w-full h-full z-0 overflow-hidden  rounded-lg">
-                    <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
+                    <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full  filter brightness-50" priority />
                     <div className="absolute inset-0 bg-black/20 filter  contrast-125" />
                 </div>
                 {/* Content */}
@@ -132,7 +132,6 @@ export default function JoinWaitlistSection() {
                                     repeatType: "mirror",
                                 }}
                             />
-
                         </motion.div>
                     </div>
                     {/* Right: Button or Form */}
@@ -185,7 +184,7 @@ export default function JoinWaitlistSection() {
         <main className="mt-12 md:mt-24 relative flex justify-center items-center min-h-[500px] md:min-h-[500px] lg:mx-auto lg:container mx-5 px-2 md:px-4 py-6 md:py-8">
             {/* Banner background */}
             <div className="absolute rounded-xl inset-0 w-full h-full z-0 overflow-hidden">
-                <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full" priority />
+                <Image src="/images/merch-banner-landscape.png" alt="Merch Banner" fill className="object-cover w-full h-full filter brightness-50" priority />
                 <div className="absolute inset-0 bg-black/20 filter contrast-125" />
             </div>
             {/* Content */}
