@@ -63,7 +63,7 @@ const Hero = () => {
                         <div className="flex flex-col sm:flex-row justify-start items-center gap-4">
                             <Button
                                 href="/auth?mode=signup"
-                                className="rounded-sm bg-white !text-black !font-bold text-md border border-white inline-block text-center"
+                                className="rounded-md hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] shadow-white gap-2 px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700 hover:border-white inline-block text-center"
                             >
                                 JOIN TODAY
                             </Button>

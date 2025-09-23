@@ -43,7 +43,7 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="h-full bg-gradient-to-tl border border-zinc-800 from-black to-zinc-700 rounded-lg shadow filter hover:invert-100 transition-all duration-400 flex md:flex-row gap-5 text-white p-6"
+                className="h-full flex md:flex-row gap-5 rounded-md hover:shadow-[0_0_10px_rgba(255,255,255,0.5)] shadow-white p-4 bg-zinc-800 hover:bg-white hover:text-black border border-zinc-700 hover:border-white transition-all duration-300"
             >
                 {event.bannerImageURL ? (
                     <div className="h-[6rem] w-[6rem] flex-shrink-0 overflow-hidden rounded-md bg-zinc-800">
@@ -54,7 +54,7 @@ const EventCard = ({ event }: { event: EventCardProps }) => {
                         />
                     </div>
                 ) : (
-                    <div className="h-[6rem] w-[6rem] flex-shrink-0 overflow-hidden rounded-md bg-white flex items-center justify-center">
+                    <div className="h-[6rem] border border-zinc-600 w-[6rem] flex-shrink-0 overflow-hidden rounded-md bg-white flex items-center justify-center">
                         <img
                             src='logo.png'
                             alt={`${event.title} banner`}

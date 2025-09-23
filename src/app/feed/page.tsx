@@ -152,7 +152,7 @@ export default function FeedPage() {
         <div className="min-h-screen bg-black text-white">
             <Header />
 
-            <div className="container mx-auto px-4 py-8 max-w-7xl">
+            <div className="md:container md:mx-auto mx-5 px-4 py-8 max-w-7xl">
                 {/* Page Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -160,7 +160,7 @@ export default function FeedPage() {
                     transition={{ duration: 0.5 }}
                     className="mb-8"
                 >
-                    <h1 className="text-4xl font-bold mb-4">See what the community is upto!</h1>
+                    <h1 className="text-xl font-bold mb-4">See what the community is upto!</h1>
                     <p className="text-zinc-400">Stay connected with the latest check-ins and activities from the Cloka community</p>
                 </motion.div>
 
@@ -237,11 +237,11 @@ export default function FeedPage() {
                                     key={activity._id}
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    className="border border-zinc-800 p-6 hover:border-zinc-700 transition-colors"
+                                    className="border rounded-lg border-zinc-800 p-6"
                                 >
                                     <div className="flex items-start gap-4">
                                         {/* User Avatar */}
-                                        <div className="bg-white text-black h-12 w-12 flex items-center justify-center text-2xl font-bold border border-zinc-700 flex-shrink-0">
+                                        <div className="bg-white text-black h-12 w-12 flex items-center justify-center text-lg font-bold  rder border-zinc-700 flex-shrink-0">
                                             {activity.user.name.charAt(0).toUpperCase()}
                                         </div>
 
@@ -250,7 +250,7 @@ export default function FeedPage() {
                                             <div className="flex items-center gap-2 ">
                                                 <Link
                                                     href={`/profile/${activity.user.username}`}
-                                                    className="text-2xl hover:text-zinc-300 transition-colors"
+                                                    className="text-lg hover:text-zinc-300 transition-colors"
                                                 >
                                                     {activity.user.name}
                                                 </Link>
@@ -267,14 +267,11 @@ export default function FeedPage() {
                                             {/* Event Info */}
                                             <Link
                                                 href={`/events/${activity.event._id}`}
-                                                className="block bg-zinc-900 border border-zinc-800 p-4 hover:border-zinc-700 transition-colors"
+                                                className="block bg-gradient-to-bl rounded-lg from-zinc-800 to-black border border-zinc-800 p-4 hover:border-zinc-700 transition-colors"
                                             >
                                                 <h4 className="font-semibold text-lg mb-2 hover:text-zinc-300">
                                                     {activity.event.title}
                                                 </h4>
-                                                <p className="text-zinc-400 text-sm mb-3 line-clamp-2">
-                                                    {activity.event.description}
-                                                </p>
                                                 <div className="flex flex-wrap gap-4 text-sm text-zinc-500">
                                                     <div className="flex items-center gap-1">
                                                         <Calendar size={14} />

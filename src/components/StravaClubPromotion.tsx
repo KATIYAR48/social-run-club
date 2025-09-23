@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 
 const StravaClubPromotion = () => {
     return (
-        <section className="rounded-lg border md:px-10 px-8 border-zinc-800 md:container md:mx-auto mx-5 text-white md:py-10">
+        <section className="rounded-xl border md:px-10 px-8 border-zinc-800 md:container md:mx-auto mx-5 text-white md:py-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center justify-start md:[&>*:first-child]:col-start-3 md:[&>*:last-child]:col-start-1 md:[&>*]:row-start-1">
                 <div className="md:col-span-1 -mb-10 flex justify-center">
                     <ThreeJsRunner
@@ -25,11 +25,11 @@ const StravaClubPromotion = () => {
                     viewport={{ once: true }}
                     className="md:col-span-2 md:text-start text-center"
                 >
-                    <h2 className="text-xl md:text-2xl mb-5 font-bold text-white">
+                    <h2 className="text-lg mb-2 font-bold text-white">
                         Join the Club on Strava
                     </h2>
 
-                    <p className="text-md text-zinc-300 !leading-7">
+                    <p className="text-sm text-zinc-300 !leading-7">
                         Connect with fellow runners, track your progress, and stay motivated with our vibrant club.
                     </p>
 
@@ -37,7 +37,7 @@ const StravaClubPromotion = () => {
                     <div className="">
                         <Accordion type="single" collapsible>
                             <AccordionItem value="strava-stats">
-                                <AccordionTrigger className="cursor-pointer mx-10 md:mx-auto italic text-md font-medium text-zinc-200 hover:text-white">
+                                <AccordionTrigger className="cursor-pointer mx-10 md:mx-auto italic text-sm font-medium text-zinc-200 hover:text-white">
                                     {"> "} See club stats
                                 </AccordionTrigger>
                                 <AccordionContent>
@@ -57,10 +57,10 @@ const StravaClubPromotion = () => {
                                 href="https://strava.app.link/bASEQLdAaWb"
                                 size="medium"
                                 isExternal={true}
-                                className="rounded-sm px-2 w-full mt-2 bg-[#fc4c02] !font-bold hover:bg-white hover:text-black flex md:max-w-fit justify-center items-center"
+                                className="rounded-md !px-3 w-full mt-2 bg-gradient-to-br from-zinc-700 to-zinc-900 !font-bold flex md:max-w-fit justify-center items-center transition-colors ease-in-out duration-300"
                             >
-                                <Image className="w-10 h-10 mr-2 " src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
-                                <span className='text-lg'>Join on Strava</span>
+                                <Image className="w-10 h-10 mr-3" src={'/strava-logo.svg'} alt='Strava Logo' width={24} height={24} />
+                                <span className='text-sm'>Join on Strava</span>
                             </Button>
                         </div>
                     </div>

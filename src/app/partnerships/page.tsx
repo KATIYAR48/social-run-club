@@ -96,14 +96,14 @@ export default function PartnershipsPage() {
 
             <main className="flex-grow">
                 {/* Hero Section */}
-                <div className="container mx-auto px-4 py-8">
+                <div className="md:container md:mx-auto mx-5 px-4 py-8">
                     <div className="max-w-4xl mx-auto">
                         <section className="text-center space-y-4">
-                            <h1 className="text-5xl font-bold">Partner with Cloka</h1>
-                            <p className="text-xl text-gray-300">Let&apos;s Build Something Inspiring, Together</p>
+                            <h1 className="text-2xl font-bold">Partner with Cloka</h1>
+                            <p className="text-md text-gray-300">Let&apos;s Build Something Inspiring, Together</p>
                             <div className="max-w-3xl mx-auto">
-                                <p className="text-zinc-400">
-                                    Cloka isn&apos;t just a run club. We&apos;re a growing community built on movement, motivation, and meaningful connections. Whether you&apos;re a local café, a creative collective, a wellness brand, or a community-first initiative—we&apos;re always looking to collaborate with people and organizations that share our spirit.
+                                <p className="text-zinc-400 text-sm">
+                                    We&apos;re a growing community built on movement, motivation, and meaningful connections. Whether you&apos;re a local café, a creative collective, a wellness brand, or a community-first initiative—we&apos;re always looking to collaborate with people and organizations that share our spirit.
                                 </p>
                             </div>
                         </section>
@@ -127,11 +127,11 @@ export default function PartnershipsPage() {
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                             </section>
-                            <section className="bg-zinc-800 p-8">
-                                <h2 className="text-4xl font-bold mb-6">Why Partner with Cloka?</h2>
-                                <ul className="space-y-4 text-md text-gray-300">
-                                    <li>• <strong>Tap into a 3,500+ strong engaged community</strong> across India&apos;s top cities.</li>
-                                    <li>• <strong>Get featured in our events, merch drops, reels, and stories</strong> on Instagram and our mobile app, reaching over 12,000+ followers.</li>
+                            <section className="bg-gradient-to-tr from-zinc-700 to-zinc-900 rounded-lg p-8">
+                                <h2 className="text-xl font-bold mb-6">Why Partner with Cloka?</h2>
+                                <ul className="space-y-4 text-sm text-zinc-300 font-light">
+                                    <li>• <strong>Tap into a 7,000+ strong engaged community</strong> across India&apos;s top cities.</li>
+                                    <li>• <strong>Get featured in our events, merch drops, reels, and stories</strong> on Instagram and our mobile app, reaching over 16,000+ followers.</li>
                                     <li>• <strong>Create value-driven local experiences</strong> that bring your brand or idea to life.</li>
                                     <li>• <strong>Join forces on CSR, wellness, art, or fitness initiatives</strong> that align with your ethos.</li>
                                 </ul>
@@ -139,10 +139,10 @@ export default function PartnershipsPage() {
                         </div>
 
                         {/* Who Should Collaborate Section */}
-                        <section className="bg-zinc-800 p-8 ">
-                            <h2 className="text-3xl font-bold mb-6">Who Should Collaborate?</h2>
-                            <p className="mb-4">We love teaming up with:</p>
-                            <ul className="space-y-2 text-gray-300">
+                        <section className="bg-gradient-to-tr from-zinc-700 to-zinc-900 rounded-lg p-8 ">
+                            <h2 className="text-xl font-bold mb-6">Who Should Collaborate?</h2>
+                            <p className="mb-4 text-sm">We love teaming up with:</p>
+                            <ul className="space-y-2 text-gray-300 text-sm">
                                 <li>• Cafés & Eateries (perfect for our post-run community meetups)</li>
                                 <li>• Fitness brands, nutritionists & wellness experts</li>
                                 <li>• Local artists, musicians, theatre collectives</li>
@@ -158,20 +158,20 @@ export default function PartnershipsPage() {
                                 src="/images/partner.png"
                                 alt="Cloka Community"
                                 fill
-                                className="object-cover"
+                                className="object-cover rounded-lg"
                                 priority
                             />
                         </section>
 
 
                         {/* Partnership Form */}
-                        <section className="bg-zinc-800 p-8 ">
-                            <h2 className="text-3xl font-bold mb-6">Interested? Let&apos;s Talk.</h2>
+                        <section className="bg-gradient-to-tr from-zinc-700 to-zinc-900 rounded-lg p-8 ">
+                            <h2 className="text-xl font-bold mb-6">Interested? Let&apos;s Talk.</h2>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Basic Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label htmlFor="name" className="block text-sm font-medium mb-1">Your Name *</label>
+                                        <label htmlFor="name" className="block text-xs font-medium mb-1">Your Name *</label>
                                         <input
                                             id="name"
                                             name="name"
@@ -183,7 +183,7 @@ export default function PartnershipsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="organizationName" className="block text-sm font-medium mb-1">Organization / Brand Name *</label>
+                                        <label htmlFor="organizationName" className="block text-xs font-medium mb-1">Organization / Brand Name *</label>
                                         <input
                                             id="organizationName"
                                             name="organizationName"
@@ -199,7 +199,7 @@ export default function PartnershipsPage() {
                                 {/* Contact Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label htmlFor="email" className="block text-sm font-medium mb-1">Email Address *</label>
+                                        <label htmlFor="email" className="block text-xs font-medium mb-1">Email Address *</label>
                                         <input
                                             id="email"
                                             name="email"
@@ -211,7 +211,7 @@ export default function PartnershipsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone Number *</label>
+                                        <label htmlFor="phone" className="block text-xs font-medium mb-1">Phone Number *</label>
                                         <input
                                             id="phone"
                                             name="phone"
@@ -227,7 +227,7 @@ export default function PartnershipsPage() {
                                 {/* Links and Cities */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
-                                        <label htmlFor="links" className="block text-sm font-medium mb-1">Website / Instagram / Relevant Links *</label>
+                                        <label htmlFor="links" className="block text-xs font-medium mb-1">Website / Instagram / Relevant Links *</label>
                                         <input
                                             id="links"
                                             name="links"
@@ -239,7 +239,7 @@ export default function PartnershipsPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="cities" className="block text-sm font-medium mb-1">City / Cities You Operate In *</label>
+                                        <label htmlFor="cities" className="block text-xs font-medium mb-1">City / Cities You Operate In *</label>
                                         <input
                                             id="cities"
                                             name="cities"
@@ -254,7 +254,7 @@ export default function PartnershipsPage() {
 
                                 {/* Description */}
                                 <div>
-                                    <label htmlFor="description" className="block text-sm font-medium mb-1">What do you do? (Short Description of your brand / org) *</label>
+                                    <label htmlFor="description" className="block text-xs font-medium mb-1">What do you do? (Short Description of your brand / org) *</label>
                                     <textarea
                                         id="description"
                                         name="description"
@@ -268,7 +268,7 @@ export default function PartnershipsPage() {
 
                                 {/* Collaboration Type */}
                                 <div>
-                                    <label htmlFor="collaborationType" className="block text-sm font-medium mb-1">How do you want to collaborate with Cloka? *</label>
+                                    <label htmlFor="collaborationType" className="block text-xs font-medium mb-1">How do you want to collaborate with Cloka? *</label>
                                     <textarea
                                         id="collaborationType"
                                         name="collaborationType"
@@ -283,7 +283,7 @@ export default function PartnershipsPage() {
 
                                 {/* Optional Fields */}
                                 <div>
-                                    <label htmlFor="pastCollaboration" className="block text-sm font-medium mb-1">Any Past Collaboration Example or Work We Should See? (Optional)</label>
+                                    <label htmlFor="pastCollaboration" className="block text-xs font-medium mb-1">Any Past Collaboration Example or Work We Should See? (Optional)</label>
                                     <textarea
                                         id="pastCollaboration"
                                         name="pastCollaboration"
@@ -295,7 +295,7 @@ export default function PartnershipsPage() {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="collaborationReason" className="block text-sm font-medium mb-1">Why does this collab excite you? (Optional)</label>
+                                    <label htmlFor="collaborationReason" className="block text-xs font-medium mb-1">Why does this collab excite you? (Optional)</label>
                                     <textarea
                                         id="collaborationReason"
                                         name="collaborationReason"
@@ -307,7 +307,7 @@ export default function PartnershipsPage() {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="additionalInfo" className="block text-sm font-medium mb-1">Any additional info or ideas? (Optional)</label>
+                                    <label htmlFor="additionalInfo" className="block text-xs font-medium mb-1">Any additional info or ideas? (Optional)</label>
                                     <textarea
                                         id="additionalInfo"
                                         name="additionalInfo"
@@ -334,9 +334,9 @@ export default function PartnershipsPage() {
                                     type="submit"
                                     variant='secondary'
                                     disabled={isLoading}
-                                    className="cursor-pointer w-full"
+                                    className="cursor-pointer w-full !font-bold rounded-md"
                                 >
-                                    {isLoading ? 'Submitting...' : 'Submit Partnership Inquiry'}
+                                    {isLoading ? 'Submitting...' : 'Submit'}
                                 </Button>
                             </form>
                         </section>
