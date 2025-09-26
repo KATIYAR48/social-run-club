@@ -491,7 +491,7 @@ export default function AdminEventsPage() {
 
             {/* Event Form Dialog */}
             {eventForm.show && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/20 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white dark:bg-black rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-zinc-200 dark:border-zinc-800">
                         <h3 className="text-xl font-bold mb-4 text-black dark:text-white">
                             {eventForm.isEdit ? 'Edit Event' : 'Add New Event'}
@@ -519,45 +519,47 @@ export default function AdminEventsPage() {
                                 />
                             </div>
 
-                            <div>
-                                <label htmlFor="date" className="block text-sm font-medium mb-1 text-black dark:text-white">
-                                    Date *
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        id="date"
-                                        name="date"
-                                        type="datetime-local"
-                                        value={eventForm.event.date}
-                                        onChange={handleFormChange}
-                                        className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white [color-scheme:light] cursor-pointer"
-                                        required
-                                        onClick={(e) => {
-                                            // This ensures the datetime picker opens when clicking anywhere on the input
-                                            const input = e.currentTarget;
-                                            input.showPicker();
-                                        }}
-                                    />
+                            <div className='flex gap-5'>
+                                <div>
+                                    <label htmlFor="date" className="block text-sm font-medium mb-1 text-black dark:text-white">
+                                        Date *
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            id="date"
+                                            name="date"
+                                            type="datetime-local"
+                                            value={eventForm.event.date}
+                                            onChange={handleFormChange}
+                                            className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white [color-scheme:light] cursor-pointer"
+                                            required
+                                            onClick={(e) => {
+                                                // This ensures the datetime picker opens when clicking anywhere on the input
+                                                const input = e.currentTarget;
+                                                input.showPicker();
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <label htmlFor="location" className="block text-sm font-medium mb-1 text-black dark:text-white">
-                                    Location * (General Area)
-                                </label>
-                                <input
-                                    id="location"
-                                    name="location"
-                                    type="text"
-                                    value={eventForm.event.location}
-                                    onChange={handleFormChange}
-                                    className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
-                                    required
-                                    placeholder="e.g. Downtown Miami"
-                                />
-                                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
-                                    Enter a general location that will be publicly visible
-                                </p>
+                                <div>
+                                    <label htmlFor="location" className="block text-sm font-medium mb-1 text-black dark:text-white">
+                                        Location * (General Area)
+                                    </label>
+                                    <input
+                                        id="location"
+                                        name="location"
+                                        type="text"
+                                        value={eventForm.event.location}
+                                        onChange={handleFormChange}
+                                        className="w-full p-2 border border-black dark:border-white rounded-md bg-white dark:bg-black text-black dark:text-white"
+                                        required
+                                        placeholder="e.g. Downtown Miami"
+                                    />
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                                        Enter a general location that will be publicly visible
+                                    </p>
+                                </div>
                             </div>
 
                             <div>

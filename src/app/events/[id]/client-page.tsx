@@ -311,7 +311,21 @@ export default function EventDetailClientPage({ eventId }: { eventId: string }) 
                                                     <div className="mt-4 p-4 bg-zinc-800 rounded-md">
                                                         <h3 className="text-lg font-semibold mb-2">Payment</h3>
                                                         <p className="text-zinc-300 mb-4">Complete your payment to confirm your spot. Ignore this if you have already paid.</p>
-                                                        <TemporaryPaymentButton paymentButtonId={event.razorpayButtonId} />
+
+                                                        {/* TEMPORARY HOTFIX: Special Razorpay link for specific event */}
+                                                        {/* TODO: Remove this hotfix after event 68cd5165934643c79d2b33ec is complete */}
+                                                        {eventId === '68cd5165934643c79d2b33ec' ? (
+                                                            <a
+                                                                href="https://rzp.io/rzp/ov9Y9Vp"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="w-full rounded-md py-3 px-5 cursor-pointer font-bold transition-colors bg-white text-black hover:bg-zinc-200 inline-block text-center"
+                                                            >
+                                                                Complete Payment
+                                                            </a>
+                                                        ) : (
+                                                            <TemporaryPaymentButton paymentButtonId={event.razorpayButtonId} />
+                                                        )}
                                                     </div>
                                                 )}
                                             </>
