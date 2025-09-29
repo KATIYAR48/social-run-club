@@ -13,7 +13,7 @@ interface CacheInfo {
 export default function PWADebugPanel() {
     const [isOpen, setIsOpen] = useState(false);
     const [cacheInfo, setCacheInfo] = useState<CacheInfo[]>([]);
-    const [isOnline, setIsOnline] = useState(navigator.onLine);
+    const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
     const [isPWA, setIsPWA] = useState(false);
 
     useEffect(() => {

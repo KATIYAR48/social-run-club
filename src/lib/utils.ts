@@ -36,7 +36,7 @@ export function calculateAgeFromDateOfBirth(
 export const pwaUtils = {
   // Clear all PWA caches
   clearAllCaches: async () => {
-    if ("caches" in window) {
+    if (typeof window !== 'undefined' && "caches" in window) {
       const cacheNames = await caches.keys();
       await Promise.all(
         cacheNames.map((cacheName) => caches.delete(cacheName))
@@ -47,7 +47,7 @@ export const pwaUtils = {
 
   // Clear specific cache by name
   clearCache: async (cacheName: string) => {
-    if ("caches" in window) {
+    if (typeof window !== 'undefined' && "caches" in window) {
       await caches.delete(cacheName);
       console.log(`Cache ${cacheName} cleared`);
     }
@@ -55,14 +55,14 @@ export const pwaUtils = {
 
   // Clear events-related caches
   clearEventsCache: async () => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if (typeof navigator !== 'undefined' && "serviceWorker" in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         type: "CLEAR_EVENTS_CACHE",
       });
       console.log("Events cache cleared");
     }
     // Also clear browser cache for events endpoints
-    if ("caches" in window) {
+    if (typeof window !== 'undefined' && "caches" in window) {
       const cacheNames = await caches.keys();
       for (const cacheName of cacheNames) {
         const cache = await caches.open(cacheName);
@@ -80,7 +80,7 @@ export const pwaUtils = {
 
   // Invalidate cache for specific URL pattern
   invalidateCache: async (urlPattern: string) => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if (typeof navigator !== 'undefined' && "serviceWorker" in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         type: "INVALIDATE_CACHE",
         urlPattern,
@@ -98,7 +98,7 @@ export const pwaUtils = {
 
   // Get cache size information
   getCacheInfo: async () => {
-    if ("caches" in window) {
+    if (typeof window !== 'undefined' && "caches" in window) {
       const cacheNames = await caches.keys();
       const cacheInfo = await Promise.all(
         cacheNames.map(async (name) => {
@@ -118,15 +118,18 @@ export const pwaUtils = {
 
   // Force refresh the app
   forceRefresh: () => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if (typeof navigator !== 'undefined' && "serviceWorker" in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({ type: "SKIP_WAITING" });
     }
     // Fallback to window reload
-    window.location.reload();
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   },
 
   // Check if app is installed as PWA
   isPWAInstalled: () => {
+    if (typeof window === 'undefined') return false;
     return (
       window.matchMedia("(display-mode: standalone)").matches ||
       (window.navigator as { standalone?: boolean }).standalone === true
@@ -135,11 +138,15 @@ export const pwaUtils = {
 
   // Check if app is online
   isOnline: () => {
-    return navigator.onLine;
+    return typeof navigator !== 'undefined' ? navigator.onLine : true;
   },
 
   // Add network status listener
   onNetworkChange: (callback: (online: boolean) => void) => {
+    if (typeof window === 'undefined') {
+      return () => {}; // Return empty cleanup function for SSR
+    }
+    
     const handleOnline = () => callback(true);
     const handleOffline = () => callback(false);
 
